@@ -19,6 +19,9 @@ logs/
 *.safetensors
 *.patch
 
+# Local/generated experiment configs
+*.yaml
+
 # Python cache
 __pycache__/
 *.py[cod]
