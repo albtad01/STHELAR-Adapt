@@ -66,9 +66,28 @@ from models.segmentation.cell_segmentation.utils import Conv2DBlock
 
 from cell_segmentation.utils.HED_augmentation import HEDAugAlbumentations, ComposeWithExtra
 
-from models.adapters.utils import insert_lora, insert_plora, insert_adaptformer, insert_bottleneck
-
 from utils.tools import close_logger
+
+from models.adapters.utils import (
+    insert_lora,
+    insert_lora2,
+    insert_vera,
+    insert_plora,
+    insert_adaptformer,
+    insert_decoder_conv_adapters,
+    insert_bottleneck,
+    set_ntonly_trainable,
+    set_lora_all_decoders_trainable,
+    set_lora_ntonly_trainable,
+    apply_peft_trainability,
+    format_trainable_parameter_groups,
+    freeze_all,
+)
+
+from models.adapters.lora_ntonly import set_lora_ntonly_trainable
+
+from models.utils.model_summary import log_trainable_parameter_report
+from utils.export_adapter_checkpoint import export_adapter_checkpoint
 
 
 class ExperimentCellVitPanNuke(BaseExperiment):
@@ -269,18 +288,157 @@ class ExperimentCellVitPanNuke(BaseExperiment):
 
         # Select best model if not provided by early stopping
         checkpoint_dir = Path(self.run_conf["logging"]["log_dir"]) / "checkpoints"
-        latest_checkpoint = max(checkpoint_dir.glob("checkpoint_*.pth"), key=lambda x: int(x.stem.split("_")[1]), default=None)
-        if not (checkpoint_dir / "model_best.pth").is_file():
-            shutil.copy(
-                latest_checkpoint,
-                checkpoint_dir / "model_best.pth",
+        latest_checkpoint = self._latest_epoch_checkpoint(checkpoint_dir)
+        checkpointing_conf = self.run_conf.get("checkpointing")
+        save_best = (
+            True
+            if checkpointing_conf is None
+            else bool(checkpointing_conf.get("save_best", True))
+        )
+        best_checkpoint = checkpoint_dir / "model_best.pth"
+        if save_best and not best_checkpoint.is_file():
+            if latest_checkpoint is None:
+                raise FileNotFoundError(
+                    "Cannot create model_best.pth because no epoch checkpoint exists"
+                )
+            temporary_best = checkpoint_dir / ".model_best.pth.tmp"
+            try:
+                os.link(latest_checkpoint, temporary_best)
+            except OSError:
+                shutil.copy2(latest_checkpoint, temporary_best)
+            os.replace(temporary_best, best_checkpoint)
+            self.logger.info(
+                f"No validation-selected best checkpoint existed; copied {latest_checkpoint.name} "
+                "to model_best.pth"
             )
+
+        self._export_adapters_after_training(
+            trainer=trainer,
+            checkpoint_dir=checkpoint_dir,
+            latest_checkpoint=latest_checkpoint,
+        )
 
         # At the end close logger
         self.logger.info(f"Finished run {run.id}")
         close_logger(self.logger)
 
         return self.run_conf["logging"]["log_dir"]
+
+    @staticmethod
+    def _latest_epoch_checkpoint(checkpoint_dir: Path):
+        candidates = []
+        for path in checkpoint_dir.glob("checkpoint_*.pth"):
+            try:
+                epoch = int(path.stem.split("_")[-1])
+            except ValueError:
+                continue
+            candidates.append((epoch, path))
+        return max(candidates, default=(None, None), key=lambda item: item[0])[1]
+
+    @staticmethod
+    def _serializable_metrics(metrics):
+        if metrics is None:
+            return None
+        output = {}
+        for key, value in metrics.items():
+            if isinstance(value, torch.Tensor):
+                value = value.detach().cpu().item() if value.numel() == 1 else value.detach().cpu().tolist()
+            elif hasattr(value, "item"):
+                try:
+                    value = value.item()
+                except (TypeError, ValueError):
+                    pass
+            output[str(key)] = value
+        return output
+
+    def _export_adapters_after_training(
+        self, trainer, checkpoint_dir: Path, latest_checkpoint: Path
+    ) -> None:
+        export_conf = self.run_conf.get("adapter_export", {})
+        if not export_conf.get("enabled", False):
+            return
+
+        adapter_type = str(
+            self.run_conf.get("adapters", {}).get("adapter_type", "")
+        ).lower()
+        supported_peft_modes = {
+            "lora",
+            "adaptformer",
+            "lora_adaptformer",
+            "vera",
+            "vera_adaptformer",
+            "ntonly",
+            "lora_ntonly",
+            "lora_adaptformer_ntonly",
+        }
+        if adapter_type not in supported_peft_modes:
+            self.logger.info(
+                f"Adapter export skipped for non-PEFT adapter_type={adapter_type!r}"
+            )
+            return
+
+        export_format = str(export_conf.get("format", "pth")).lower()
+        if export_format != "pth":
+            raise ValueError(
+                f"Unsupported adapter_export.format={export_format!r}; use 'pth'"
+            )
+
+        output_dir = Path(export_conf.get("output_dir", "adapters"))
+        if not output_dir.is_absolute():
+            output_dir = Path.cwd() / output_dir
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        targets = []
+        if export_conf.get("export_best", True):
+            best_checkpoint = checkpoint_dir / "model_best.pth"
+            if best_checkpoint.is_file():
+                targets.append(
+                    (
+                        "best",
+                        best_checkpoint,
+                        trainer.best_validation_metrics,
+                    )
+                )
+            else:
+                self.logger.warning(
+                    "adapter_export.export_best=true but model_best.pth is unavailable"
+                )
+        if export_conf.get("export_last", False):
+            if latest_checkpoint is not None and latest_checkpoint.is_file():
+                targets.append(
+                    (
+                        "last",
+                        latest_checkpoint,
+                        trainer.last_validation_metrics,
+                    )
+                )
+            else:
+                self.logger.warning(
+                    "adapter_export.export_last=true but no epoch checkpoint is available"
+                )
+
+        run_name = self.run_conf["logging"]["log_comment"]
+        include_variant = len(targets) > 1
+        for variant, source_checkpoint, metrics in targets:
+            suffix = f"_{variant}" if include_variant else ""
+            out_path = output_dir / f"{run_name}{suffix}_adapter.pth"
+            self.logger.info(
+                f"Exporting {variant} adapter checkpoint from {source_checkpoint} to {out_path}"
+            )
+            exported = export_adapter_checkpoint(
+                run_dir=self.run_conf["logging"]["log_dir"],
+                checkpoint_path=source_checkpoint,
+                out_path=out_path,
+                base_checkpoint=self.run_conf["model"].get("pretrained"),
+                verify_load=bool(export_conf.get("verify_load", True)),
+                extra_metadata={
+                    "checkpoint_variant": variant,
+                    "metrics": {
+                        "validation": self._serializable_metrics(metrics)
+                    },
+                },
+            )
+            self.logger.info(f"Adapter export completed: {exported}")
 
     def load_dataset_setup(self, dataset_path: Union[Path, str]) -> None:
         """Load the configuration of the cell segmentation dataset.
@@ -639,13 +797,52 @@ class ExperimentCellVitPanNuke(BaseExperiment):
                 drop_path_rate=self.run_conf["training"].get("drop_path_rate", 0),
                 regression_loss=regression_loss,
             )
-            model.load_pretrained_encoder(model.model256_path)
+            if pretrained_encoder is not None:
+                model.load_pretrained_encoder(model.model256_path)
             if pretrained_model is not None:
                 self.logger.info(
                     f"Loading pretrained CellViT model from path: {pretrained_model}"
                 )
                 cellvit_pretrained = torch.load(pretrained_model, map_location="cpu")
-                self.logger.info(model.load_state_dict(cellvit_pretrained, strict=True))
+                if (
+                    isinstance(cellvit_pretrained, dict)
+                    and "model_state_dict" in cellvit_pretrained
+                ):
+                    self.logger.info(
+                        f"Just have a look to the config of the pretrained CellViT model: {cellvit_pretrained.get('config')}"
+                    )
+                    pretrained_state_dict = cellvit_pretrained["model_state_dict"]
+                    model_state_dict = model.state_dict()
+                    pretrained_dict_filtered = {}
+                    skipped_shape = []
+                    skipped_missing = []
+
+                    for k, v in pretrained_state_dict.items():
+                        if k not in model_state_dict:
+                            skipped_missing.append(k)
+                            continue
+                        if model_state_dict[k].shape != v.shape:
+                            skipped_shape.append((k, tuple(v.shape), tuple(model_state_dict[k].shape)))
+                            continue
+                        pretrained_dict_filtered[k] = v
+
+                    self.logger.info(
+                        f"Loading {len(pretrained_dict_filtered)} compatible pretrained tensors "
+                        f"out of {len(pretrained_state_dict)} tensors."
+                    )
+                    if skipped_shape:
+                        self.logger.info("Skipped pretrained tensors with incompatible shape:")
+                        for k, ckpt_shape, model_shape in skipped_shape:
+                            self.logger.info(
+                                f"  {k}: checkpoint={ckpt_shape}, current_model={model_shape}"
+                            )
+                    if skipped_missing:
+                        self.logger.debug(
+                            f"Skipped {len(skipped_missing)} pretrained tensors not present in current model."
+                        )
+                    self.logger.info(model.load_state_dict(pretrained_dict_filtered, strict=False))
+                else:
+                    self.logger.info(model.load_state_dict(cellvit_pretrained, strict=True))
             model.freeze_encoder()
             self.logger.info("Loaded CellVit256 model")
         
@@ -773,53 +970,266 @@ class ExperimentCellVitPanNuke(BaseExperiment):
 
             # --------------- Part of the model to train --------------- #
 
-            adapter_type = self.run_conf["adapters"].get("adapter_type", None)
+            adapter_conf = self.run_conf.get("adapters", {})
+            adapter_type = adapter_conf.get("adapter_type", None)
+            decoder_train_scope = adapter_conf.get("decoder_train_scope", "all")
 
-            # 'NTonly' = Train only the NT branch and the classifier head for tissues
-            if adapter_type == 'NTonly':
+            def maybe_insert_decoder_conv_adapters() -> None:
+                if str(decoder_train_scope).lower() != "conv_adapters":
+                    return
+                inserted = insert_decoder_conv_adapters(
+                    model,
+                    reduction=adapter_conf.get("decoder_adapter_reduction", 16),
+                    activation=adapter_conf.get("decoder_adapter_activation", "GELU"),
+                    alpha_init=adapter_conf.get("decoder_adapter_alpha_init", 1.0),
+                    train_alpha=adapter_conf.get("decoder_adapter_train_alpha", True),
+                )
+                self.logger.info(
+                    "Adding decoder conv adapters for decoder_train_scope=conv_adapters"
+                )
+                self.logger.info(f"Inserted {len(inserted)} decoder Conv2d adapters")
+
+            def vera_options() -> dict:
+                vera_conf = adapter_conf.get("vera", {})
+                return {
+                    "rank": vera_conf.get("rank", adapter_conf.get("vera_rank", 8)),
+                    "alpha": vera_conf.get("alpha", adapter_conf.get("vera_alpha", 8)),
+                    "targets": vera_conf.get(
+                        "targets",
+                        adapter_conf.get("vera_targets", ["q", "v"]),
+                    ),
+                    "dropout": vera_conf.get(
+                        "dropout",
+                        adapter_conf.get("vera_dropout", 0.0),
+                    ),
+                    "shared_matrices": vera_conf.get(
+                        "shared_matrices",
+                        adapter_conf.get("vera_shared_matrices", True),
+                    ),
+                    "train_alpha": vera_conf.get(
+                        "train_alpha",
+                        adapter_conf.get("vera_train_alpha", True),
+                    ),
+                    "seed": vera_conf.get(
+                        "seed",
+                        adapter_conf.get("vera_seed", self.run_conf.get("random_seed", 42)),
+                    ),
+                }
+
+            if adapter_type == "NTonly":
+                self.logger.info("Training mode: NTonly")
+
                 for name, param in model.named_parameters():
-                    if not name.startswith('nuclei_type_maps_decoder') and not name.startswith('classifier_head'):
+                    if name.startswith("nuclei_type_maps_decoder") or name.startswith("classifier_head"):
+                        param.requires_grad = True
+                    else:
+                        param.requires_grad = False
+
+
+            elif adapter_type == "ntonly":
+                self.logger.info("Training mode: ntonly")
+
+                freeze_all(model)
+                set_ntonly_trainable(model)
+
+
+            elif adapter_type == "lora":
+                self.logger.info("Training mode: lora")
+                self.logger.info("Adding adapters: lora")
+
+                insert_lora2(
+                    model,
+                    rank=self.run_conf["adapters"]["lora"]["rank"],
+                    alpha=self.run_conf["adapters"]["lora"]["alpha"],
+                    targets=self.run_conf["adapters"]["lora"].get("targets", ["q", "v"]),
+                    dropout=self.run_conf["adapters"]["lora"].get("dropout", 0.0),
+                )
+
+                maybe_insert_decoder_conv_adapters()
+                apply_peft_trainability(model, decoder_train_scope=decoder_train_scope)
+
+
+            elif adapter_type == "lora_ntonly":
+                self.logger.info("Training mode: lora_ntonly")
+                self.logger.info("Adding adapters: lora_ntonly")
+
+                insert_lora2(
+                    model,
+                    rank=self.run_conf["adapters"]["lora"]["rank"],
+                    alpha=self.run_conf["adapters"]["lora"]["alpha"],
+                    targets=self.run_conf["adapters"]["lora"].get("targets", ["q", "v"]),
+                    dropout=self.run_conf["adapters"]["lora"].get("dropout", 0.0),
+                )
+
+                # LoRA-NTOnly mode:
+                # - freeze original encoder;
+                # - train LoRA adapter parameters;
+                # - train nuclei type decoder;
+                # - train classifier head;
+                # - keep NP/HV decoders frozen.
+                set_lora_ntonly_trainable(model)
+
+
+            elif adapter_type == "vera":
+                self.logger.info("Training mode: vera")
+                self.logger.info("Adding adapters: vera")
+                insert_vera(model, **vera_options())
+
+                maybe_insert_decoder_conv_adapters()
+                apply_peft_trainability(model, decoder_train_scope=decoder_train_scope)
+
+
+            elif adapter_type == "vera_adaptformer":
+                self.logger.info("Training mode: vera_adaptformer")
+                self.logger.info("Adding adapters: vera")
+                insert_vera(model, **vera_options())
+
+                self.logger.info("Adding adapters: adaptformer")
+                insert_adaptformer(
+                    model,
+                    self.run_conf["adapters"]["adaptformer"]["activation"],
+                    self.run_conf["adapters"]["adaptformer"]["reduction"],
+                )
+
+                maybe_insert_decoder_conv_adapters()
+                apply_peft_trainability(model, decoder_train_scope=decoder_train_scope)
+
+
+            elif adapter_type == "lora_adaptformer_ntonly":
+                self.logger.info("Training mode: lora_adaptformer_ntonly")
+                self.logger.info("Adding adapters: lora")
+
+                insert_lora2(
+                    model,
+                    rank=self.run_conf["adapters"]["lora"]["rank"],
+                    alpha=self.run_conf["adapters"]["lora"]["alpha"],
+                    targets=self.run_conf["adapters"]["lora"].get("targets", ["q", "v"]),
+                    dropout=self.run_conf["adapters"]["lora"].get("dropout", 0.0),
+                )
+
+                self.logger.info("Adding adapters: adaptformer")
+                insert_adaptformer(
+                    model,
+                    self.run_conf["adapters"]["adaptformer"]["activation"],
+                    self.run_conf["adapters"]["adaptformer"]["reduction"],
+                )
+
+                set_lora_ntonly_trainable(model)
+
+
+            elif adapter_type == "lora_adaptformer":
+                self.logger.info("Training mode: lora_adaptformer")
+                self.logger.info("Adding adapters: lora")
+
+                insert_lora2(
+                    model,
+                    rank=self.run_conf["adapters"]["lora"]["rank"],
+                    alpha=self.run_conf["adapters"]["lora"]["alpha"],
+                    targets=self.run_conf["adapters"]["lora"].get("targets", ["q", "v"]),
+                    dropout=self.run_conf["adapters"]["lora"].get("dropout", 0.0),
+                )
+
+                self.logger.info("Adding adapters: adaptformer")
+                insert_adaptformer(
+                    model,
+                    self.run_conf["adapters"]["adaptformer"]["activation"],
+                    self.run_conf["adapters"]["adaptformer"]["reduction"],
+                )
+
+                # LoRA + AdaptFormer mode:
+                # - freeze original encoder parameters;
+                # - keep LoRA and AdaptFormer adapter parameters trainable;
+                # - keep all decoder branches and classifier head trainable.
+                maybe_insert_decoder_conv_adapters()
+                apply_peft_trainability(model, decoder_train_scope=decoder_train_scope)
+
+
+            elif adapter_type == "plora":
+                self.logger.info("Training mode: plora")
+                self.logger.info("Adding adapters: plora")
+
+                insert_plora(
+                    model,
+                    self.run_conf["adapters"]["plora"]["rank"],
+                    self.run_conf["adapters"]["plora"]["alpha"],
+                )
+
+                for name, param in model.named_parameters():
+                    if "encoder" in name and "adapter" not in name:
                         param.requires_grad = False
                     else:
                         param.requires_grad = True
 
-            # 'lora', 'plora', 'adaptformer', 'bottleneck' = Freeze the encoder and train the corresponding adapter and the decoder and the classifier head for tissues
-            elif adapter_type in ['lora', 'plora', 'adaptformer', 'bottleneck']:
-                
-                # Add adapters
-                self.logger.info(f"Adding adapters: {adapter_type}")
-                if adapter_type == 'lora':
-                    insert_lora(model, self.run_conf["adapters"]["lora"]["rank"], self.run_conf["adapters"]["lora"]["alpha"])
-                elif adapter_type == 'plora':
-                    insert_plora(model, self.run_conf["adapters"]["plora"]["rank"], self.run_conf["adapters"]["plora"]["alpha"])
-                elif adapter_type == 'adaptformer':
-                    insert_adaptformer(model, self.run_conf["adapters"]["adaptformer"]["activation"], self.run_conf["adapters"]["adaptformer"]["reduction"])
-                elif adapter_type == 'bottleneck':
-                    insert_bottleneck(model, self.run_conf["adapters"]["bottleneck"]["activation"], self.run_conf["adapters"]["bottleneck"]["reduction"])
 
-                # Freeze only the encoder except the adapters
+            elif adapter_type == "adaptformer":
+                self.logger.info("Training mode: adaptformer")
+                self.logger.info("Adding adapters: adaptformer")
+
+                insert_adaptformer(
+                    model,
+                    self.run_conf["adapters"]["adaptformer"]["activation"],
+                    self.run_conf["adapters"]["adaptformer"]["reduction"],
+                )
+
+                maybe_insert_decoder_conv_adapters()
+                apply_peft_trainability(model, decoder_train_scope=decoder_train_scope)
+
+
+            elif adapter_type == "bottleneck":
+                self.logger.info("Training mode: bottleneck")
+                self.logger.info("Adding adapters: bottleneck")
+
+                insert_bottleneck(
+                    model,
+                    self.run_conf["adapters"]["bottleneck"]["activation"],
+                    self.run_conf["adapters"]["bottleneck"]["reduction"],
+                )
+
                 for name, param in model.named_parameters():
-                    if 'encoder' in name and 'adapter' not in name:
+                    if "encoder" in name and "adapter" not in name:
                         param.requires_grad = False
                     else:
                         param.requires_grad = True
-            
-            # 'all' : Train the whole model (no adapter) -> choose in unfreeze_epoch the epoch to unfreeze the encoder
-            elif adapter_type == 'all':
+
+
+            elif adapter_type == "all":
+                self.logger.info("Training mode: all")
+
+                # Full fine-tuning mode.
+                # Usually the encoder may still start frozen and then be unfrozen by the trainer
+                # according to training.unfreeze_encoder and training.unfreeze_epoch.
                 for name, param in model.named_parameters():
-                    if 'encoder' not in name:
+                    if "encoder" not in name:
                         param.requires_grad = True
-            
-            elif adapter_type == 'freeze':  # Freeze the whole model => for debbuging (memory considerations)
-                for name, param in model.named_parameters():
+
+
+            elif adapter_type in {"fullft", "full_finetuning"}:
+                self.logger.info("Training mode: full fine-tuning")
+
+                for _, param in model.named_parameters():
+                    param.requires_grad = True
+
+
+            elif adapter_type == "freeze":
+                self.logger.info("Training mode: freeze")
+
+                for _, param in model.named_parameters():
                     param.requires_grad = False
-            
+
+
             else:
                 raise NotImplementedError(f"Unknown adapter type: {adapter_type}")
 
             # ------------------------------------------------------- #
 
-        
+        log_trainable_parameter_report(
+            model=model,
+            logger=self.logger,
+            experiment_name=self.run_conf["logging"].get("log_comment", "unknown"),
+            adapter_type=self.run_conf["adapters"].get("adapter_type", "unknown"),
+            top_k=30,
+        )
+        self.logger.info(format_trainable_parameter_groups(model, max_names_per_group=40))
         self.logger.info(f"\n\n\n")
         for name, param in model.named_parameters():
             self.logger.info(f"{name}: {param.requires_grad}")

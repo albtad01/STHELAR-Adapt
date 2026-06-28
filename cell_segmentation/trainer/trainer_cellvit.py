@@ -148,7 +148,14 @@ class CellViTTrainer(BaseTrainer):
                 * Image metrics
         """
         self.model.train()
-        if epoch >= unfreeze_epoch:
+        adapter_type = self.experiment_config.get("adapters", {}).get("adapter_type", None)
+
+        unfreeze_encoder = self.experiment_config.get("training", {}).get(
+            "unfreeze_encoder",
+            adapter_type == "all",
+        )
+
+        if unfreeze_encoder and epoch >= unfreeze_epoch:
             self.logger.info("Unfreezing encoder")
             self.model.unfreeze_encoder()
 

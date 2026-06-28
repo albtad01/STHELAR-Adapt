@@ -33,6 +33,7 @@ from typing import List, Tuple, Union
 
 import albumentations as A
 import numpy as np
+import pandas as pd
 import torch
 import torch.nn.functional as F
 import tqdm
@@ -76,7 +77,21 @@ from models.segmentation.cell_segmentation.cellvit_shared import (
 )
 from utils.logger import Logger
 
-from models.adapters.utils import insert_lora, insert_plora, insert_adaptformer, insert_bottleneck
+from models.adapters.utils import (
+    insert_lora,
+    insert_lora2,
+    insert_vera,
+    insert_plora,
+    insert_adaptformer,
+    insert_decoder_conv_adapters,
+    insert_bottleneck,
+)
+from utils.qc_sweep import (
+    compute_qc_sweep,
+    format_qc_record_lines,
+    normalize_thresholds,
+    save_qc_sweep,
+)
 
 
 class InferenceCellViT:
@@ -87,6 +102,9 @@ class InferenceCellViT:
         magnification: int = 40,
         checkpoint_name: str = "model_best.pth",
         cell_tokens: str = "no",
+        qc_metric: str = None,
+        qc_thresholds: list = None,
+        qc_bins: list = None,
     ) -> None:
         """Inference for HoverNet
 
@@ -106,6 +124,9 @@ class InferenceCellViT:
         self.magnification = magnification
         self.checkpoint_name = checkpoint_name
         self.cell_tokens = cell_tokens
+        self.qc_metric_override = qc_metric
+        self.qc_thresholds_override = qc_thresholds
+        self.qc_bins_override = qc_bins
         self.all_cell_tokens = {}
 
         self.__load_run_conf()
@@ -307,17 +328,140 @@ class InferenceCellViT:
             adapter_type = self.run_conf["adapters"].get("adapter_type", None)
         except KeyError:
             adapter_type = None
-        if adapter_type in ['lora', 'plora', 'adaptformer', 'bottleneck']:
-            # Add adapters
+        adapter_conf = self.run_conf.get("adapters", {})
+        decoder_train_scope = adapter_conf.get("decoder_train_scope", "all")
+
+        def maybe_insert_decoder_conv_adapters() -> None:
+            if str(decoder_train_scope).lower() != "conv_adapters":
+                return
+            inserted = insert_decoder_conv_adapters(
+                model,
+                reduction=adapter_conf.get("decoder_adapter_reduction", 16),
+                activation=adapter_conf.get("decoder_adapter_activation", "GELU"),
+                alpha_init=adapter_conf.get("decoder_adapter_alpha_init", 1.0),
+                train_alpha=adapter_conf.get("decoder_adapter_train_alpha", True),
+            )
+            self.logger.info(
+                "Adding decoder conv adapters for inference: decoder_train_scope=conv_adapters"
+            )
+            self.logger.info(f"Inserted {len(inserted)} decoder Conv2d adapters")
+
+        def vera_options() -> dict:
+            vera_conf = adapter_conf.get("vera", {})
+            return {
+                "rank": vera_conf.get("rank", adapter_conf.get("vera_rank", 8)),
+                "alpha": vera_conf.get("alpha", adapter_conf.get("vera_alpha", 8)),
+                "targets": vera_conf.get(
+                    "targets",
+                    adapter_conf.get("vera_targets", ["q", "v"]),
+                ),
+                "dropout": vera_conf.get(
+                    "dropout",
+                    adapter_conf.get("vera_dropout", 0.0),
+                ),
+                "shared_matrices": vera_conf.get(
+                    "shared_matrices",
+                    adapter_conf.get("vera_shared_matrices", True),
+                ),
+                "train_alpha": vera_conf.get(
+                    "train_alpha",
+                    adapter_conf.get("vera_train_alpha", True),
+                ),
+                "seed": vera_conf.get(
+                    "seed",
+                    adapter_conf.get("vera_seed", self.run_conf.get("random_seed", 42)),
+                ),
+            }
+
+        if adapter_type in ["lora", "lora_ntonly"]:
             self.logger.info(f"Adding adapters: {adapter_type}")
-            if adapter_type == 'lora':
-                insert_lora(model, self.run_conf["adapters"]["lora"]["rank"], self.run_conf["adapters"]["lora"]["alpha"])
-            elif adapter_type == 'plora':
-                insert_plora(model, self.run_conf["adapters"]["plora"]["rank"], self.run_conf["adapters"]["plora"]["alpha"])
-            elif adapter_type == 'adaptformer':
-                insert_adaptformer(model, self.run_conf["adapters"]["adaptformer"]["activation"], self.run_conf["adapters"]["adaptformer"]["reduction"])
-            elif adapter_type == 'bottleneck':
-                insert_bottleneck(model, self.run_conf["adapters"]["bottleneck"]["activation"], self.run_conf["adapters"]["bottleneck"]["reduction"])
+
+            insert_lora2(
+                model,
+                rank=self.run_conf["adapters"]["lora"]["rank"],
+                alpha=self.run_conf["adapters"]["lora"]["alpha"],
+                targets=self.run_conf["adapters"]["lora"].get("targets", ["q", "v"]),
+                dropout=self.run_conf["adapters"]["lora"].get("dropout", 0.0),
+            )
+            maybe_insert_decoder_conv_adapters()
+
+        elif adapter_type == "plora":
+            self.logger.info("Adding adapters: plora")
+            insert_plora(
+                model,
+                self.run_conf["adapters"]["plora"]["rank"],
+                self.run_conf["adapters"]["plora"]["alpha"],
+            )
+
+        elif adapter_type == "adaptformer":
+            self.logger.info("Adding adapters: adaptformer")
+            insert_adaptformer(
+                model,
+                self.run_conf["adapters"]["adaptformer"]["activation"],
+                self.run_conf["adapters"]["adaptformer"]["reduction"],
+            )
+            maybe_insert_decoder_conv_adapters()
+
+        elif adapter_type == "vera":
+            self.logger.info("Adding adapters for inference: vera")
+            insert_vera(model, **vera_options())
+            maybe_insert_decoder_conv_adapters()
+
+        elif adapter_type == "vera_adaptformer":
+            self.logger.info("Adding adapters for inference: vera_adaptformer")
+            insert_vera(model, **vera_options())
+            insert_adaptformer(
+                model,
+                self.run_conf["adapters"]["adaptformer"]["activation"],
+                self.run_conf["adapters"]["adaptformer"]["reduction"],
+            )
+            maybe_insert_decoder_conv_adapters()
+
+        elif adapter_type == "lora_adaptformer_ntonly":
+            self.logger.info("Adding adapters for inference: lora_adaptformer_ntonly")
+            insert_lora2(
+                model,
+                rank=self.run_conf["adapters"]["lora"]["rank"],
+                alpha=self.run_conf["adapters"]["lora"]["alpha"],
+                targets=self.run_conf["adapters"]["lora"].get("targets", ["q", "v"]),
+                dropout=self.run_conf["adapters"]["lora"].get("dropout", 0.0),
+            )
+            insert_adaptformer(
+                model,
+                self.run_conf["adapters"]["adaptformer"]["activation"],
+                self.run_conf["adapters"]["adaptformer"]["reduction"],
+            )
+            maybe_insert_decoder_conv_adapters()
+
+        elif adapter_type == "lora_adaptformer":
+            self.logger.info("Adding adapters for inference: lora_adaptformer")
+            insert_lora2(
+                model,
+                rank=self.run_conf["adapters"]["lora"]["rank"],
+                alpha=self.run_conf["adapters"]["lora"]["alpha"],
+                targets=self.run_conf["adapters"]["lora"].get("targets", ["q", "v"]),
+                dropout=self.run_conf["adapters"]["lora"].get("dropout", 0.0),
+            )
+            insert_adaptformer(
+                model,
+                self.run_conf["adapters"]["adaptformer"]["activation"],
+                self.run_conf["adapters"]["adaptformer"]["reduction"],
+            )
+            maybe_insert_decoder_conv_adapters()
+
+        elif adapter_type == "bottleneck":
+            self.logger.info("Adding adapters: bottleneck")
+            insert_bottleneck(
+                model,
+                self.run_conf["adapters"]["bottleneck"]["activation"],
+                self.run_conf["adapters"]["bottleneck"]["reduction"],
+            )
+
+        elif adapter_type == "ntonly":
+            self.logger.info(
+                "Adding adapters for inference: ntonly requires no architectural adapters"
+            )
+
         else:
             self.logger.info("No adapters added")
         
@@ -417,6 +561,7 @@ class InferenceCellViT:
         cell_type_pq_scores = []  # pq-scores per cell type and image
         cell_type_dq_scores = []  # dq-scores per cell type and image
         cell_type_sq_scores = []  # sq-scores per cell type and image
+        detection_stats_per_image = []  # sufficient statistics for QC re-aggregation
         tissue_pred = []  # tissue predictions for each image
         tissue_gt = []  # ground truth tissue image class
         tissue_types_inf = []  # string repr of ground truth tissue image class
@@ -477,6 +622,9 @@ class InferenceCellViT:
                 )
                 cell_type_sq_scores = (
                     cell_type_sq_scores + batch_metrics["cell_type_sq_scores"]
+                )
+                detection_stats_per_image.extend(
+                    batch_metrics["detection_stats_per_image"]
                 )
                 tissue_pred.append(batch_metrics["tissue_pred"])
                 tissue_gt.append(batch_metrics["tissue_gt"])
@@ -696,17 +844,44 @@ class InferenceCellViT:
 
         # save all folds
         image_metrics = {}
+        nuclei_types_by_id = {
+            class_id: class_name
+            for class_name, class_id in dataset_config["nuclei_types"].items()
+        }
         for idx, image_name in enumerate(image_names):
+            per_class = {}
+            for class_id, class_name in nuclei_types_by_id.items():
+                if class_name.lower() == "background":
+                    continue
+                per_class[class_name] = {
+                    "DQ": float(cell_type_dq_scores[idx][class_id]),
+                    "SQ": float(cell_type_sq_scores[idx][class_id]),
+                    "PQ": float(cell_type_pq_scores[idx][class_id]),
+                }
             image_metrics[image_name] = {
                 "Dice": float(binary_dice_scores[idx]),
                 "Jaccard": float(binary_jaccard_scores[idx]),
                 "bPQ": float(pq_scores[idx]),
+                "mPQ": float(np.nanmean(cell_type_pq_scores[idx])),
+                "bDQ": float(dq_scores[idx]),
+                "bSQ": float(sq_scores[idx]),
+                "mDQ": float(np.nanmean(cell_type_dq_scores[idx])),
+                "mSQ": float(np.nanmean(cell_type_sq_scores[idx])),
+                "per_class": per_class,
+                "detection_stats": detection_stats_per_image[idx],
                 "type_proba_per_nuclei": type_proba_per_nuclei[idx],
             }
+        qc_filtered_metrics = self.compute_qc_filtered_image_metrics(image_metrics)
+        qc_sweep_metrics = self.compute_and_save_qc_sweep(
+            image_metrics=image_metrics,
+            dataset_config=dataset_config,
+        )
         all_metrics = {
             "dataset": dataset_metrics,
             "tissue_metrics": tissue_metrics,
             "image_metrics": image_metrics,
+            "qc_filtered_metrics": qc_filtered_metrics,
+            "qc_sweep_metrics": qc_sweep_metrics,
             "nuclei_metrics_pq": nuclei_metrics_pq,
             "nuclei_metrics_d": nuclei_metrics_d,
         }
@@ -724,6 +899,231 @@ class InferenceCellViT:
         # # save pannuke labels for gt (pannuke_labels_gt)
         # torch.save(dict(self.pannuke_labels_gt), f"{self.run_dir}/pannuke_labels_gt.pth")
         # ### END CHOOSE OR NOT ###
+
+
+    def _get_qc_sweep_options(self) -> tuple:
+        inference_conf = self.run_conf.get("inference", {})
+        metric = self.qc_metric_override
+        if metric is None:
+            metric = inference_conf.get(
+                "qc_metric", self.run_conf.get("qc_metric", None)
+            )
+
+        thresholds = self.qc_thresholds_override
+        if thresholds is None:
+            thresholds = inference_conf.get(
+                "qc_thresholds", self.run_conf.get("qc_thresholds", None)
+            )
+
+        bins = self.qc_bins_override
+        if bins is None:
+            bins = inference_conf.get("qc_bins", self.run_conf.get("qc_bins", None))
+
+        # Backward compatibility with the original Jaccard-only option.
+        if thresholds is None:
+            thresholds = inference_conf.get(
+                "qc_jaccard_thresholds",
+                inference_conf.get(
+                    "qc_jaccard_threshold",
+                    self.run_conf.get(
+                        "qc_jaccard_thresholds",
+                        self.run_conf.get("qc_jaccard_threshold", None),
+                    ),
+                ),
+            )
+            if thresholds is not None and metric is None:
+                metric = "Jaccard"
+
+        if thresholds is not None and not isinstance(thresholds, list):
+            thresholds = [thresholds]
+        if bins is not None and not isinstance(bins, list):
+            bins = [bins]
+        return (
+            metric,
+            normalize_thresholds(thresholds),
+            normalize_thresholds(bins),
+        )
+
+
+    def compute_and_save_qc_sweep(
+        self, image_metrics: dict, dataset_config: dict
+    ) -> dict:
+        metric, thresholds, bins = self._get_qc_sweep_options()
+        if metric is None or (not thresholds and not bins):
+            return {}
+
+        patch_info_path = (
+            Path(self.run_conf["data"]["dataset_path"])
+            / "patch_info_with_split.csv"
+        )
+        if not patch_info_path.exists():
+            self.logger.warning(
+                f"QC sweep requested but missing patch metadata: {patch_info_path}"
+            )
+            return {}
+
+        result = compute_qc_sweep(
+            image_metrics=image_metrics,
+            patch_info=pd.read_csv(patch_info_path),
+            nuclei_types=dataset_config["nuclei_types"],
+            qc_metric=metric,
+            thresholds=thresholds,
+            bins=bins,
+        )
+        json_path, csv_path = save_qc_sweep(result, self.run_dir)
+        self.logger.info(f"Saved QC sweep JSON: {json_path}")
+        self.logger.info(f"Saved QC sweep CSV: {csv_path}")
+
+        for record in result["cumulative"] + result["bin_results"]:
+            for line in format_qc_record_lines(record):
+                self.logger.info(line)
+        for warning in result["warnings"]:
+            self.logger.warning(warning)
+        return result
+
+
+    def run_qc_sweep_from_saved_results(self) -> dict:
+        results_path = self.run_dir / "inference_results.json"
+        if not results_path.exists():
+            raise FileNotFoundError(f"Missing saved inference results: {results_path}")
+        with results_path.open() as handle:
+            saved_results = json.load(handle)
+        if "image_metrics" not in saved_results:
+            raise KeyError(f"No image_metrics found in {results_path}")
+        result = self.compute_and_save_qc_sweep(
+            image_metrics=saved_results["image_metrics"],
+            dataset_config=self.dataset_config,
+        )
+        if result and not all(
+            record.get("has_detailed_detection_statistics")
+            for record in result["cumulative"]
+            if record["n_retained"] > 0
+        ):
+            self.logger.warning(
+                "Saved results predate detailed per-patch detection statistics. "
+                "Scalar Dice/Jaccard/PQ metrics were reused, but detection, "
+                "per-class detection, and confusion matrices require one inference "
+                "rerun with the updated evaluator."
+            )
+        return result
+
+
+    def _get_qc_filter_specs(self) -> list[dict]:
+        inference_conf = self.run_conf.get("inference", {})
+        specs = []
+
+        for key in ["qc_filters"]:
+            value = inference_conf.get(key)
+            if isinstance(value, list):
+                specs.extend(value)
+
+        metric, thresholds, _ = self._get_qc_sweep_options()
+        if metric is not None:
+            specs.extend(
+                {"column": metric, "threshold": threshold}
+                for threshold in thresholds
+            )
+
+        for key in ["qc_jaccard_threshold", "qc_jaccard_thresholds"]:
+            value = inference_conf.get(key, self.run_conf.get(key))
+            if value is None:
+                continue
+            values = value if isinstance(value, list) else [value]
+            for threshold in values:
+                specs.append({"column": "Jaccard", "threshold": threshold})
+
+        normalized = []
+        for spec in specs:
+            if not isinstance(spec, dict):
+                continue
+            column = spec.get("column", spec.get("metric", "Jaccard"))
+            threshold = spec.get("threshold", spec.get("min", None))
+            if threshold is None:
+                continue
+            normalized.append({"column": str(column), "threshold": float(threshold)})
+        deduplicated = []
+        seen = set()
+        for spec in normalized:
+            key = (spec["column"], spec["threshold"])
+            if key not in seen:
+                seen.add(key)
+                deduplicated.append(spec)
+        return deduplicated
+
+    def compute_qc_filtered_image_metrics(self, image_metrics: dict) -> dict:
+        specs = self._get_qc_filter_specs()
+        if not specs:
+            return {}
+
+        patch_info_path = Path(self.run_conf["data"]["dataset_path"]) / "patch_info_with_split.csv"
+        if not patch_info_path.exists():
+            self.logger.info(
+                f"QC-filtered metrics requested but missing patch metadata: {patch_info_path}"
+            )
+            return {}
+
+        patch_info = pd.read_csv(patch_info_path)
+        if "packed_file_name" not in patch_info.columns:
+            self.logger.info(
+                "QC-filtered metrics requested but patch_info_with_split.csv has no packed_file_name column"
+            )
+            return {}
+
+        patch_info = patch_info.set_index("packed_file_name", drop=False)
+        metric_keys = ["Dice", "Jaccard", "bPQ", "mPQ", "bDQ", "bSQ"]
+        output = {}
+        image_name_set = set(image_metrics.keys())
+
+        for spec in specs:
+            column = spec["column"]
+            threshold = spec["threshold"]
+            label = f"{column}_ge_{threshold:g}"
+            if column not in patch_info.columns:
+                self.logger.info(
+                    f"Skipping QC filter {label}: column not present in patch_info_with_split.csv"
+                )
+                continue
+
+            if threshold <= 0:
+                passing = set(image_name_set)
+            else:
+                passing = set(
+                    patch_info.loc[
+                        patch_info[column].astype(float) >= threshold,
+                        "packed_file_name",
+                    ]
+                    .astype(str)
+                    .tolist()
+                )
+            selected = sorted(image_name_set & passing)
+            skipped = sorted(image_name_set - passing)
+            metrics = {
+                "column": column,
+                "threshold": threshold,
+                "n_total_images": len(image_name_set),
+                "n_retained_images": len(selected),
+                "n_removed_images": len(skipped),
+                "retained_fraction": (
+                    float(len(selected) / len(image_name_set)) if image_name_set else 0.0
+                ),
+            }
+            for metric_key in metric_keys:
+                values = [
+                    image_metrics[name][metric_key]
+                    for name in selected
+                    if metric_key in image_metrics[name]
+                ]
+                metrics[metric_key] = float(np.nanmean(values)) if values else float("nan")
+
+            output[label] = metrics
+            self.logger.info(
+                "QC-filtered metrics "
+                f"{label}: retained={metrics['n_retained_images']}/"
+                f"{metrics['n_total_images']} "
+                f"mPQ={metrics.get('mPQ')} bPQ={metrics.get('bPQ')}"
+            )
+
+        return output
 
 
     def inference_step(
@@ -1055,6 +1455,7 @@ class InferenceCellViT:
         paired_image_names_all = []
         true_unpaired_image_names_all = []
         pred_unpaired_image_names_all = []
+        detection_stats_per_image = []
 
         # for detections scores
         true_idx_offset = 0
@@ -1163,6 +1564,32 @@ class InferenceCellViT:
             paired, unpaired_true, unpaired_pred = pair_coordinates(
                 true_centroids, pred_centroids, pairing_radius
             )
+            paired_true_local = true_instance_type[paired[:, 0]].astype(int)
+            paired_pred_local = pred_instance_type[paired[:, 1]].astype(int)
+            paired_confusion = np.zeros(
+                (self.num_classes, self.num_classes), dtype=np.int64
+            )
+            for true_type, pred_type in zip(
+                paired_true_local, paired_pred_local
+            ):
+                if (
+                    0 <= true_type < self.num_classes
+                    and 0 <= pred_type < self.num_classes
+                ):
+                    paired_confusion[true_type, pred_type] += 1
+            detection_stats_per_image.append(
+                {
+                    "paired_confusion": paired_confusion.tolist(),
+                    "unpaired_true_counts": np.bincount(
+                        true_instance_type[unpaired_true].astype(int),
+                        minlength=self.num_classes,
+                    )[: self.num_classes].tolist(),
+                    "unpaired_pred_counts": np.bincount(
+                        pred_instance_type[unpaired_pred].astype(int),
+                        minlength=self.num_classes,
+                    )[: self.num_classes].tolist(),
+                }
+            )
             true_idx_offset = (
                 true_idx_offset + true_inst_type_all[-1].shape[0] if i != 0 else 0
             )
@@ -1249,6 +1676,7 @@ class InferenceCellViT:
             "paired_image_names_all": paired_image_names_all,
             "true_unpaired_image_names_all": true_unpaired_image_names_all,
             "pred_unpaired_image_names_all": pred_unpaired_image_names_all,
+            "detection_stats_per_image": detection_stats_per_image,
         }
 
         return batch_metrics, scores
@@ -1569,6 +1997,36 @@ class InferenceCellViTParser:
             action="store_true",
             help="Generate inference plots in run_dir",
         )
+        parser.add_argument(
+            "--qc-metric",
+            "--qc_metric",
+            dest="qc_metric",
+            default=None,
+            help="Patch metadata column used for QC filtering, e.g. Jaccard.",
+        )
+        parser.add_argument(
+            "--qc-thresholds",
+            "--qc_thresholds",
+            dest="qc_thresholds",
+            nargs="+",
+            default=None,
+            help="Cumulative QC thresholds. Use 0 or 'all' for all test patches.",
+        )
+        parser.add_argument(
+            "--qc-bins",
+            "--qc_bins",
+            dest="qc_bins",
+            nargs="+",
+            default=None,
+            help="Optional ordered QC bin boundaries.",
+        )
+        parser.add_argument(
+            "--reuse-results",
+            "--reuse_results",
+            dest="reuse_results",
+            action="store_true",
+            help="Build only the QC sweep from an existing inference_results.json.",
+        )
 
         self.parser = parser
 
@@ -1587,7 +2045,13 @@ if __name__ == "__main__":
         gpu=configuration["gpu"],
         magnification=configuration["magnification"],
         cell_tokens=configuration["cell_tokens"],
+        qc_metric=configuration["qc_metric"],
+        qc_thresholds=configuration["qc_thresholds"],
+        qc_bins=configuration["qc_bins"],
     )
+    if configuration["reuse_results"]:
+        inf.run_qc_sweep_from_saved_results()
+        raise SystemExit(0)
     model, dataloader, conf = inf.setup_patch_inference()
 
     inf.run_patch_inference(

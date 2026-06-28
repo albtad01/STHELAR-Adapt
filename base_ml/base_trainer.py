@@ -6,6 +6,7 @@
 # University Medicine Essen
 
 import logging
+import os
 from abc import abstractmethod
 from typing import Tuple, Union
 
@@ -70,6 +71,28 @@ class BaseTrainer:
         self.experiment_config = experiment_config
         self.log_images = log_images
         self.mixed_precision = mixed_precision
+        self.checkpointing_config = experiment_config.get("checkpointing")
+        self.last_validation_metrics = None
+        self.best_validation_metrics = None
+        if self.checkpointing_config is not None:
+            defaults = {
+                "save_best": True,
+                "save_last": True,
+                "keep_last_n": 1,
+                "save_every": 1,
+                "delete_intermediate_checkpoints": True,
+            }
+            defaults.update(self.checkpointing_config)
+            self.checkpointing_config = defaults
+            if int(defaults["save_every"]) < 1:
+                raise ValueError("checkpointing.save_every must be >= 1")
+            if int(defaults["keep_last_n"]) < 0:
+                raise ValueError("checkpointing.keep_last_n must be >= 0")
+            if defaults["save_last"] and int(defaults["keep_last_n"]) < 1:
+                raise ValueError(
+                    "checkpointing.keep_last_n must be >= 1 when save_last=true"
+                )
+            self.logger.info(f"Checkpointing policy: {self.checkpointing_config}")
         if self.mixed_precision:
             self.scaler = torch.cuda.amp.GradScaler(enabled=True)
         else:
@@ -178,6 +201,7 @@ class BaseTrainer:
             wandb.log(metric_init, step=0)
 
         for epoch in range(self.start_epoch, epochs):
+            should_stop = False
             # training epoch
             self.logger.info(f"Epoch: {epoch+1}/{epochs}")
             if self.experiment_config["adapters"].get("adapter_type", None) != "freeze":
@@ -213,13 +237,32 @@ class BaseTrainer:
                 if self.early_stopping is not None:
                     best_model = self.early_stopping(early_stopping_metric, epoch)
                     if best_model:
-                        self.logger.info("New best model - save checkpoint")
-                        self.save_checkpoint(epoch, "model_best.pth")
+                        self.best_validation_metrics = dict(val_scalar_metrics)
+                        if self._checkpoint_option("save_best", True):
+                            self.logger.info("New best model - save checkpoint")
+                            self.save_checkpoint(epoch, "model_best.pth")
+                        else:
+                            self.logger.info(
+                                "New best model - checkpointing.save_best=false, not saved"
+                            )
                     elif self.early_stopping.early_stop:
                         self.logger.info("Performing early stopping!")
-                        break
-            self.save_checkpoint(epoch, f"checkpoint_{epoch+1}.pth")
-            self.logger.info(f"Save checkpoint for epoch {epoch+1}")
+                        should_stop = True
+                self.last_validation_metrics = dict(val_scalar_metrics)
+
+            if self._should_save_epoch_checkpoint(
+                epoch_number=epoch + 1,
+                total_epochs=epochs,
+                early_stopping=should_stop,
+            ):
+                checkpoint_path = self.save_checkpoint(
+                    epoch, f"checkpoint_{epoch+1}.pth"
+                )
+                self.logger.info(f"Saved checkpoint for epoch {epoch+1}: {checkpoint_path}")
+                self._prune_epoch_checkpoints()
+
+            if should_stop:
+                break
 
             # scheduling
             if type(self.scheduler) == torch.optim.lr_scheduler.ReduceLROnPlateau:
@@ -228,6 +271,87 @@ class BaseTrainer:
                 self.scheduler.step()
             new_lr = self.optimizer.param_groups[0]["lr"]
             self.logger.debug(f"Old lr: {curr_lr:.6f} - New lr: {new_lr:.6f}")
+
+        self._deduplicate_best_and_latest()
+        self._log_retained_checkpoints()
+
+    def _checkpoint_option(self, key: str, legacy_default):
+        if self.checkpointing_config is None:
+            return legacy_default
+        return self.checkpointing_config[key]
+
+    def _should_save_epoch_checkpoint(
+        self, epoch_number: int, total_epochs: int, early_stopping: bool
+    ) -> bool:
+        if self.checkpointing_config is None:
+            return True
+        save_every = int(self.checkpointing_config["save_every"])
+        scheduled = epoch_number % save_every == 0
+        final_epoch = epoch_number == total_epochs or early_stopping
+        return scheduled or (
+            bool(self.checkpointing_config["save_last"]) and final_epoch
+        )
+
+    def _epoch_checkpoints(self):
+        checkpoint_dir = self.logdir / "checkpoints"
+        checkpoints = []
+        for path in checkpoint_dir.glob("checkpoint_*.pth"):
+            try:
+                epoch = int(path.stem.split("_")[-1])
+            except ValueError:
+                continue
+            checkpoints.append((epoch, path))
+        return sorted(checkpoints, key=lambda item: item[0])
+
+    def _prune_epoch_checkpoints(self) -> None:
+        if self.checkpointing_config is None:
+            return
+        if not self.checkpointing_config["delete_intermediate_checkpoints"]:
+            return
+        keep_last_n = int(self.checkpointing_config["keep_last_n"])
+        checkpoints = self._epoch_checkpoints()
+        to_delete = checkpoints[:-keep_last_n] if keep_last_n else checkpoints
+        for _, path in to_delete:
+            path.unlink()
+            self.logger.info(f"Deleted intermediate checkpoint: {path}")
+        kept = [str(path) for _, path in self._epoch_checkpoints()]
+        self.logger.info(f"Retained epoch checkpoints: {kept}")
+
+    def _log_retained_checkpoints(self) -> None:
+        checkpoint_dir = self.logdir / "checkpoints"
+        if not checkpoint_dir.exists():
+            return
+        kept = sorted(path.name for path in checkpoint_dir.glob("*.pth"))
+        self.logger.info(f"Final retained checkpoints: {kept}")
+
+    def _deduplicate_best_and_latest(self) -> None:
+        if self.checkpointing_config is None or self.early_stopping is None:
+            return
+        if not self.checkpointing_config["save_best"]:
+            return
+        checkpoints = self._epoch_checkpoints()
+        if not checkpoints or self.early_stopping.best_epoch is None:
+            return
+        latest_epoch, latest_path = checkpoints[-1]
+        if latest_epoch != int(self.early_stopping.best_epoch) + 1:
+            return
+        best_path = self.logdir / "checkpoints" / "model_best.pth"
+        if not best_path.is_file():
+            return
+        temporary = best_path.with_name(".model_best.pth.link-tmp")
+        try:
+            temporary.unlink(missing_ok=True)
+            os.link(latest_path, temporary)
+            os.replace(temporary, best_path)
+            self.logger.info(
+                f"Best and last are epoch {latest_epoch}; hard-linked "
+                f"{best_path.name} to {latest_path.name} to avoid duplicate storage"
+            )
+        except OSError as error:
+            temporary.unlink(missing_ok=True)
+            self.logger.warning(
+                f"Could not hard-link best and last checkpoints; keeping both files: {error}"
+            )
 
     def save_checkpoint(self, epoch: int, checkpoint_name: str):
         if self.early_stopping is None:
@@ -258,8 +382,16 @@ class BaseTrainer:
         checkpoint_dir = self.logdir / "checkpoints"
         checkpoint_dir.mkdir(exist_ok=True, parents=True)
 
-        filename = str(checkpoint_dir / checkpoint_name)
-        torch.save(state, filename)
+        filename = checkpoint_dir / checkpoint_name
+        temporary = checkpoint_dir / f".{checkpoint_name}.tmp-{os.getpid()}"
+        try:
+            torch.save(state, temporary)
+            os.replace(temporary, filename)
+        finally:
+            if temporary.exists():
+                temporary.unlink()
+        self.logger.info(f"Checkpoint safely written: {filename}")
+        return filename
 
     def resume_checkpoint(self, checkpoint):
         self.logger.info(f"Loading checkpoint")

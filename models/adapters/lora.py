@@ -1,6 +1,8 @@
 import torch
 import torch.nn as nn
 
+# Q, V are modified; K remains fixed
+# lora doesn't update original weights of encoder, but trains just some trainable parameters inside the encoder
 class LoRA(nn.Module):
     def __init__(self, linear_layer, rank, alpha):
         super(LoRA, self).__init__()
