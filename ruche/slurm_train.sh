@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=train_sthelar
-#SBATCH --time=12:00:00
-#SBATCH --partition=gpu
+#SBATCH --time=24:00:00
+#SBATCH --partition=gpua100
 #SBATCH --gres=gpu:1
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -14,7 +14,7 @@
 set -euo pipefail
 
 # Launch from repository root
-REPO="${SLURM_SUBMIT_DIR:-$(pwd)}""
+REPO="${SLURM_SUBMIT_DIR:-$(pwd)}"
 
 # Default config if no argument is provided.
 CONFIG="${1:-configs/training_sthelar.yaml}"

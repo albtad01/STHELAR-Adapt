@@ -1,188 +1,227 @@
 #!/usr/bin/env python3
-"""
-Generate the next STHELAR-Adapt LoRA YAML configs.
-
-This script creates:
-  - training_sthelar40x_bps_9class_slide_lora_r4_a4_lr5e-5_e3.yaml
-  - training_sthelar40x_bps_9class_slide_lora_r8_a8_lr5e-5_e3_seed42.yaml
-  - training_sthelar40x_bps_9class_slide_lora_r8_a8_lr2e-5_e3.yaml
-
-Run from the STHELAR-Adapt repository root:
-
-python utils/make_next_lora_yamls.py
-
-Then launch:
-
-for cfg in \
-  configs/examples/training_sthelar40x_bps_9class_slide_lora_r4_a4_lr5e-5_e3.yaml \
-  configs/examples/training_sthelar40x_bps_9class_slide_lora_r8_a8_lr5e-5_e3_seed42.yaml \
-  configs/examples/training_sthelar40x_bps_9class_slide_lora_r8_a8_lr2e-5_e3.yaml
-do
-  sbatch ruche/slurm_train.sh "$cfg"
-done
-"""
 
 from __future__ import annotations
 
+import argparse
+from copy import deepcopy
 from pathlib import Path
-import copy
+
 import yaml
 
 
-OUT_DIR = Path("configs/examples")
-OUT_DIR.mkdir(parents=True, exist_ok=True)
+DATASET_PATH = "/gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_tonsil_9class_slide"
+PROJECT_NAME = "sthelar40x_tonsil_9class_adapters"
 
-BASE_DATASET_PATH = (
-    "/gpfs/workdir/taddeial/workspace/Datasets/"
-    "cellvit_ready/sthelar40x_breast_pancreatic_skin_9class_slide"
-)
 
-BASE = {
-    "adapters": {
-        "adapter_type": "all",
-    },
-    "logging": {
-        "mode": "offline",
-        "project": "sthelar40x_bps_9class_adapters",
-        "notes": "",
-        "log_comment": "",
-        "tags": [
-            "sthelar",
-            "40x",
-            "multi_tissue",
-            "slide_level",
-            "9class",
-            "pretrained",
-        ],
-        "wandb_dir": "",
-        "log_dir": "",
-        "level": "debug",
-        "log_images": False,
-    },
-    "random_seed": 19,
-    "gpu": 0,
-    "data": {
-        "dataset": "STHELAR",
-        "dataset_path": BASE_DATASET_PATH,
-        "train_folds": ["train"],
-        "val_folds": ["valid"],
-        "test_folds": ["test"],
-        "num_nuclei_classes": 10,
-        "num_tissue_classes": 1,
-        "input_shape": 256,
-        "magnification": 40,
-    },
-    "model": {
-        "backbone": "SAM-H",
-        "pretrained_encoder": None,
-        "pretrained": "models/pretrained/CellViT-SAM-H-x40.pth",
-        "embed_dim": 1280,
-        "input_channels": 3,
-        "depth": 32,
-        "num_heads": 16,
-        "extract_layers": 4,
-        "shared_decoders": False,
-    },
-    "training": {
-        "batch_size": 4,
-        "epochs": 3,
-        "unfreeze_epoch": 2,
-        "optimizer": "AdamW",
-        "optimizer_hyperparameter": {
-            "lr": 0.0001,
-            "betas": [0.85, 0.85],
+def load_yaml(path: Path) -> dict:
+    with open(path, "r") as f:
+        return yaml.safe_load(f)
+
+
+def save_yaml(cfg: dict, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w") as f:
+        yaml.safe_dump(cfg, f, sort_keys=False)
+
+
+def common_update(cfg: dict, run_name: str, epochs: int) -> dict:
+    cfg = deepcopy(cfg)
+
+    cfg.setdefault("logging", {})
+    cfg["logging"]["project"] = PROJECT_NAME
+    cfg["logging"]["log_comment"] = run_name
+    cfg["logging"]["wandb_dir"] = f"run/{run_name}/wandb"
+    cfg["logging"]["log_dir"] = f"run/{run_name}/log"
+
+    cfg["logging"]["notes"] = (
+        f"CellViT-SAM-H x40 on STHELAR 40x tonsil 9-class slide-level split. "
+        f"Run: {run_name}."
+    )
+
+    cfg["logging"]["tags"] = [
+        "sthelar",
+        "40x",
+        "tonsil",
+        "single_tissue",
+        "slide_level",
+        "9class",
+        "pretrained",
+        "e5" if epochs == 5 else f"e{epochs}",
+    ]
+
+    cfg.setdefault("data", {})
+    cfg["data"]["dataset"] = "STHELAR"
+    cfg["data"]["dataset_path"] = DATASET_PATH
+    cfg["data"]["train_folds"] = ["train"]
+    cfg["data"]["val_folds"] = ["valid"]
+    cfg["data"]["test_folds"] = ["test"]
+    cfg["data"]["num_nuclei_classes"] = 10
+    cfg["data"]["num_tissue_classes"] = 1
+    cfg["data"]["input_shape"] = 256
+    cfg["data"]["magnification"] = 40
+
+    cfg.setdefault("training", {})
+    cfg["training"]["epochs"] = epochs
+    cfg["training"]["unfreeze_encoder"] = False
+    cfg["training"]["unfreeze_epoch"] = 999
+    cfg["training"]["optimizer"] = "AdamW"
+    cfg["training"].setdefault("optimizer_hyperparameter", {})
+    cfg["training"]["optimizer_hyperparameter"]["lr"] = 5.0e-5
+    cfg["training"]["optimizer_hyperparameter"]["betas"] = [0.85, 0.85]
+
+    cfg["eval_checkpoint"] = "latest_checkpoint.pth"
+
+    return cfg
+
+
+def make_freeze(template: dict, epochs: int) -> tuple[str, dict]:
+    run_name = f"sthelar40x_tonsil_9class_slide_freeze_e{epochs}"
+    cfg = common_update(template, run_name, epochs)
+
+    cfg["adapters"] = {"adapter_type": "freeze"}
+    cfg["logging"]["tags"].append("freeze")
+
+    return run_name, cfg
+
+
+def make_lora_ntonly_r4(template: dict, epochs: int) -> tuple[str, dict]:
+    run_name = f"sthelar40x_tonsil_9class_slide_lora_ntonly_r4_a4_lr5e-5_e{epochs}"
+    cfg = common_update(template, run_name, epochs)
+
+    cfg["adapters"] = {
+        "adapter_type": "lora_ntonly",
+        "lora": {
+            "rank": 4,
+            "alpha": 4,
+            "targets": ["q", "v"],
+            "dropout": 0.0,
         },
-        "early_stopping_patience": 10,
-        "scheduler": {
-            "scheduler_type": "exponential",
-        },
-        "sampling_strategy": "cell",
-        "sampling_gamma": 0.85,
-        "mixed_precision": True,
-        "eval_every": 1,
-    },
-    "transformations": {
-        "randomrotate90": {"p": 0.5},
-        "horizontalflip": {"p": 0.5},
-        "verticalflip": {"p": 0.5},
-        "downscale": {"p": 0.5, "scale": 0.2},
-        "blur": {"p": 0.5, "blur_limit": 10},
-        "gaussnoise": {"p": 0.5, "var_limit": 10},
-        "colorjitter": {"p": 0.5, "scale_setting": 0.25, "scale_color": 0.1},
-        "superpixels": {"p": 0.5},
-        "zoomblur": {"p": 0.5},
-        "randomsizedcrop": {"p": 0.5},
-        "elastictransform": {"p": 0.5},
-        "normalize": {
-            "mean": [0.5, 0.5, 0.5],
-            "std": [0.5, 0.5, 0.5],
-        },
-    },
-    "eval_checkpoint": "latest_checkpoint.pth",
-}
+    }
+
+    cfg["logging"]["tags"] += ["lora_ntonly", "rank4", "alpha4", "lr5e-5"]
+
+    return run_name, cfg
 
 
-RUNS = [
-    {
-        "name": "sthelar40x_bps_9class_slide_lora_r4_a4_lr5e-5_e3",
+def make_lora_r8(template: dict, epochs: int) -> tuple[str, dict]:
+    run_name = f"sthelar40x_tonsil_9class_slide_lora_r8_a8_lr5e-5_e{epochs}"
+    cfg = common_update(template, run_name, epochs)
+
+    cfg["adapters"] = {
         "adapter_type": "lora",
-        "adapter_cfg": {"lora": {"rank": 4, "alpha": 4}},
-        "seed": 19,
-        "lr": 0.00005,
-        "tags": ["lora", "rank4", "alpha4", "lr5e-5", "e3"],
-        "notes": (
-            "CellViT-SAM-H x40 on STHELAR 40x BPS 9-class slide-level split "
-            "with LoRA rank 4 alpha 4 and lower learning rate."
-        ),
-    },
-    {
-        "name": "sthelar40x_bps_9class_slide_lora_r8_a8_lr5e-5_e3_seed42",
-        "adapter_type": "lora",
-        "adapter_cfg": {"lora": {"rank": 8, "alpha": 8}},
-        "seed": 42,
-        "lr": 0.00005,
-        "tags": ["lora", "rank8", "alpha8", "lr5e-5", "e3", "seed42"],
-        "notes": (
-            "Seed-42 repeat of CellViT-SAM-H x40 on STHELAR 40x BPS 9-class "
-            "slide-level split with LoRA rank 8 alpha 8 and lower learning rate."
-        ),
-    },
-    {
-        "name": "sthelar40x_bps_9class_slide_lora_r8_a8_lr2e-5_e3",
-        "adapter_type": "lora",
-        "adapter_cfg": {"lora": {"rank": 8, "alpha": 8}},
-        "seed": 19,
-        "lr": 0.00002,
-        "tags": ["lora", "rank8", "alpha8", "lr2e-5", "e3"],
-        "notes": (
-            "CellViT-SAM-H x40 on STHELAR 40x BPS 9-class slide-level split "
-            "with LoRA rank 8 alpha 8 and an even lower learning rate."
-        ),
-    },
-]
+        "lora": {
+            "rank": 8,
+            "alpha": 8,
+            "targets": ["q", "v"],
+            "dropout": 0.0,
+        },
+    }
+
+    cfg["logging"]["tags"] += ["lora", "rank8", "alpha8", "lr5e-5"]
+
+    return run_name, cfg
+
+
+def make_adaptformer(template: dict, epochs: int) -> tuple[str, dict]:
+    run_name = f"sthelar40x_tonsil_9class_slide_adaptformer_gelu_red16_lr5e-5_e{epochs}"
+    cfg = common_update(template, run_name, epochs)
+
+    cfg["adapters"] = {
+        "adapter_type": "adaptformer",
+        "adaptformer": {
+            "activation": "GELU",
+            "reduction": 16,
+        },
+    }
+
+    cfg["logging"]["tags"] += ["adaptformer", "gelu", "red16", "lr5e-5"]
+
+    return run_name, cfg
 
 
 def main() -> None:
-    for run in RUNS:
-        cfg = copy.deepcopy(BASE)
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--template",
+        type=str,
+        default="configs/examples/training_sthelar40x_bps_9class_slide_lora_r8_a8_lr5e-5_clean_e3.yaml",
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default="configs/examples",
+    )
+    parser.add_argument(
+        "--epochs",
+        type=int,
+        default=5,
+    )
+    parser.add_argument(
+        "--make-debug",
+        action="store_true",
+    )
+    args = parser.parse_args()
 
-        cfg["adapters"] = {"adapter_type": run["adapter_type"]}
-        cfg["adapters"].update(run["adapter_cfg"])
+    template_path = Path(args.template)
+    output_dir = Path(args.output_dir)
 
-        cfg["logging"]["notes"] = run["notes"]
-        cfg["logging"]["log_comment"] = run["name"]
-        cfg["logging"]["tags"] = BASE["logging"]["tags"] + run["tags"]
-        cfg["logging"]["wandb_dir"] = f"run/{run['name']}/wandb"
-        cfg["logging"]["log_dir"] = f"run/{run['name']}/log"
+    template = load_yaml(template_path)
 
-        cfg["random_seed"] = run["seed"]
-        cfg["training"]["optimizer_hyperparameter"]["lr"] = run["lr"]
+    makers = [
+        make_freeze,
+        make_lora_ntonly_r4,
+        make_lora_r8,
+        make_adaptformer,
+    ]
 
-        out_path = OUT_DIR / f"training_{run['name']}.yaml"
-        with out_path.open("w") as f:
-            yaml.safe_dump(cfg, f, sort_keys=False)
+    generated = []
 
-        print(f"Written {out_path}")
+    if args.make_debug:
+        debug_run_name, debug_cfg = make_lora_ntonly_r4(template, epochs=1)
+        debug_run_name = debug_run_name.replace("_e1", "_debug_e1")
+        debug_cfg = common_update(debug_cfg, debug_run_name, epochs=1)
+        debug_cfg["adapters"] = {
+            "adapter_type": "lora_ntonly",
+            "lora": {
+                "rank": 4,
+                "alpha": 4,
+                "targets": ["q", "v"],
+                "dropout": 0.0,
+            },
+        }
+        debug_cfg["logging"]["tags"] += ["debug", "lora_ntonly", "rank4", "alpha4"]
+
+        debug_path = output_dir / f"training_{debug_run_name}.yaml"
+        save_yaml(debug_cfg, debug_path)
+        generated.append(debug_path)
+
+    for maker in makers:
+        run_name, cfg = maker(template, args.epochs)
+        out_path = output_dir / f"training_{run_name}.yaml"
+        save_yaml(cfg, out_path)
+        generated.append(out_path)
+
+    launch_script = output_dir / "launch_tonsil_adapter_runs.sh"
+    with open(launch_script, "w") as f:
+        f.write("#!/bin/bash\n")
+        f.write("set -euo pipefail\n\n")
+        for path in generated:
+            if "debug" in path.name:
+                continue
+            f.write(f'sbatch ruche/slurm_train.sh "{path}"\n')
+
+    print("Generated YAML files:")
+    for path in generated:
+        print(f"  {path}")
+
+    print("\nGenerated launch script:")
+    print(f"  {launch_script}")
+
+    if args.make_debug:
+        debug_files = [p for p in generated if "debug" in p.name]
+        if debug_files:
+            print("\nRecommended first smoke test:")
+            print(f'  sbatch ruche/slurm_train.sh "{debug_files[0]}"')
 
 
 if __name__ == "__main__":
