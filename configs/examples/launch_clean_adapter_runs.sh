@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -e
+
+sbatch ruche/slurm_train.sh "configs/examples/training_sthelar40x_bps_9class_slide_all_clean_unfreeze0_e3_seed42.yaml"
+sbatch ruche/slurm_train.sh "configs/examples/training_sthelar40x_bps_9class_slide_freeze_clean_e3_seed42.yaml"
+sbatch ruche/slurm_train.sh "configs/examples/training_sthelar40x_bps_9class_slide_ntonly_clean_e3_seed42.yaml"
+sbatch ruche/slurm_train.sh "configs/examples/training_sthelar40x_bps_9class_slide_lora_r4_a4_lr5e-5_clean_e3.yaml"
+sbatch ruche/slurm_train.sh "configs/examples/training_sthelar40x_bps_9class_slide_lora_r8_a8_lr5e-5_clean_e3.yaml"
+sbatch ruche/slurm_train.sh "configs/examples/training_sthelar40x_bps_9class_slide_lora_r16_a16_lr5e-5_clean_e3.yaml"
+sbatch ruche/slurm_train.sh "configs/examples/training_sthelar40x_bps_9class_slide_lora_ntonly_r4_a4_lr5e-5_clean_e3.yaml"
+sbatch ruche/slurm_train.sh "configs/examples/training_sthelar40x_bps_9class_slide_lora_ntonly_r8_a8_lr5e-5_clean_e3.yaml"
+sbatch ruche/slurm_train.sh "configs/examples/training_sthelar40x_bps_9class_slide_lora_ntonly_r16_a16_lr5e-5_clean_e3.yaml"
+sbatch ruche/slurm_train.sh "configs/examples/training_sthelar40x_bps_9class_slide_adaptformer_gelu_red16_lr5e-5_clean_e3.yaml"
