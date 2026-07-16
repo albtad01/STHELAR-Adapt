@@ -23,6 +23,8 @@ DECODER_TRAIN_SCOPES = {
     "nt_only",
     "heads_only",
     "last_stage",
+    "nt_header1_np_hv_heads",
+    "nt_header_np_hv_heads",
     "np_hv_heads_nt_all",
     "conv_adapters",
 }
@@ -349,6 +351,21 @@ def apply_peft_trainability(model, decoder_train_scope: str = "all") -> None:
             train = is_final_decoder_head_parameter(name) or is_classifier_parameter(name)
         elif decoder_train_scope == "last_stage":
             train = is_last_stage_decoder_parameter(name) or is_classifier_parameter(name)
+        elif decoder_train_scope == "nt_header1_np_hv_heads":
+            train = (
+                name.startswith("nuclei_type_maps_decoder.decoder0_header.1.")
+                or name.startswith("nuclei_type_maps_decoder.decoder0_header.2.")
+                or name.startswith("nuclei_binary_map_decoder.decoder0_header.2.")
+                or name.startswith("hv_map_decoder.decoder0_header.2.")
+                or is_classifier_parameter(name)
+            )
+        elif decoder_train_scope == "nt_header_np_hv_heads":
+            train = (
+                name.startswith("nuclei_type_maps_decoder.decoder0_header.")
+                or name.startswith("nuclei_binary_map_decoder.decoder0_header.2.")
+                or name.startswith("hv_map_decoder.decoder0_header.2.")
+                or is_classifier_parameter(name)
+            )
         elif decoder_train_scope == "np_hv_heads_nt_all":
             train = (
                 name.startswith("nuclei_type_maps_decoder")

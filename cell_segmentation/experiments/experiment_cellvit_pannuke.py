@@ -81,6 +81,7 @@ from models.adapters.utils import (
     set_lora_ntonly_trainable,
     apply_peft_trainability,
     format_trainable_parameter_groups,
+    is_final_decoder_head_parameter,
     freeze_all,
 )
 
@@ -1215,6 +1216,12 @@ class ExperimentCellVitPanNuke(BaseExperiment):
 
                 for _, param in model.named_parameters():
                     param.requires_grad = False
+
+            elif adapter_type == "final_heads_only":
+                self.logger.info("Training mode: final_heads_only")
+
+                for name, param in model.named_parameters():
+                    param.requires_grad = is_final_decoder_head_parameter(name)
 
 
             else:
