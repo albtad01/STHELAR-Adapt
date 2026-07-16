@@ -1,6 +1,6 @@
 # KLT ablation strategy recommendation
 
-Source metrics: `reports/runs_summary.csv`, using only completed runs with final inference/test metrics (`test_*`). Validation epoch metrics are not mixed into the comparisons below. Job-state context for jobs 1172354 and 1172355 was checked separately with `sacct` because the CSV job-id fields are blank for these rows.
+Source metrics: `reports/runs_summary.csv`, using only completed runs with final inference/test metrics (`test_*`). Validation epoch metrics are not mixed into the comparisons below. Earlier partial/no-test rows are excluded when a later completed final-inference row exists for the same run name.
 
 ## 1. KLT ablation table
 
@@ -15,8 +15,10 @@ Source metrics: `reports/runs_summary.csv`, using only completed runs with final
 | LoRA+AdaptFormer | last_stage | 42 | 1.1674 | 0.7771 | 0.6625 | 0.5064 | 0.2978 | 0.8279 | 0.8849 | 0.7777 | completed_with_test |
 | LoRA+AdaptFormer | last_stage | 43 | 1.1674 | 0.7727 | 0.6581 | 0.4988 | 0.2941 | 0.8240 | 0.8790 | 0.7754 | completed_with_test |
 | VeRA+AdaptFormer | conv_adapters | 42 | 1.0231 | 0.7713 | 0.6547 | 0.4918 | 0.2840 | 0.8328 | 0.8845 | 0.7868 | completed_with_test |
+| VeRA+AdaptFormer | conv_adapters | 43 | 1.0231 | 0.7702 | 0.6539 | 0.4917 | 0.2857 | 0.8247 | 0.8681 | 0.7854 | completed_with_test |
+| VeRA+AdaptFormer | heads_only | 43 | 0.9458 | 0.7671 | 0.6500 | 0.4932 | 0.2870 | 0.8326 | 0.8777 | 0.7920 | completed_with_test |
 
-Pending/non-comparable KLT rows in the CSV are excluded from the metric table because they do not have final inference metrics. In particular, KLT VeRA+AdaptFormer r16 `conv_adapters` seed43 and `heads_only` seed43 currently appear as `partial_or_timeout`/no-test rows in the CSV.
+Earlier partial/no-test attempts for some seed43 VeRA and last_stage runs are excluded where a later completed final-inference row exists for the same run name.
 
 ## 2. KLT mean table by method
 
@@ -26,19 +28,20 @@ Pending/non-comparable KLT rows in the CSV are excluded from the metric table be
 | LoRA+AdaptFormer | conv_adapters | 2 | 0.2884 | 0.0029 | 0.4931 | 0.8293 | 93.3% | 95.8% |
 | LoRA+AdaptFormer | heads_only | 2 | 0.2936 | 0.0047 | 0.5043 | 0.8345 | 95.0% | 98.0% |
 | LoRA+AdaptFormer | last_stage | 2 | 0.2960 | 0.0027 | 0.5026 | 0.8259 | 95.7% | 97.6% |
-| VeRA+AdaptFormer | conv_adapters | 1 | 0.2840 | NA | 0.4918 | 0.8328 | 91.8% | 95.5% |
+| VeRA+AdaptFormer | conv_adapters | 2 | 0.2849 | 0.0013 | 0.4917 | 0.8287 | 92.1% | 95.5% |
+| VeRA+AdaptFormer | heads_only | 1 | 0.2870 | NA | 0.4932 | 0.8326 | 92.8% | 95.8% |
 
 FullFT mean is mPQ 0.3092 and bPQ 0.5147 across seeds 42/43.
 
 ## 3. PEFT ranking
 
-By mean mPQ: LoRA+AdaptFormer last_stage (0.2960) > LoRA+AdaptFormer heads_only (0.2936) > LoRA+AdaptFormer conv_adapters (0.2884) > VeRA+AdaptFormer conv_adapters (0.2840, one seed).
+By mean mPQ: LoRA+AdaptFormer last_stage (0.2960) > LoRA+AdaptFormer heads_only (0.2936) > LoRA+AdaptFormer conv_adapters (0.2884) > VeRA+AdaptFormer heads_only (0.2870, one seed) > VeRA+AdaptFormer conv_adapters (0.2849).
 
-By mean bPQ: LoRA+AdaptFormer heads_only (0.5043) > LoRA+AdaptFormer last_stage (0.5026) > LoRA+AdaptFormer conv_adapters (0.4931) > VeRA+AdaptFormer conv_adapters (0.4918, one seed).
+By mean bPQ: LoRA+AdaptFormer heads_only (0.5043) > LoRA+AdaptFormer last_stage (0.5026) > VeRA+AdaptFormer heads_only (0.4932, one seed) > LoRA+AdaptFormer conv_adapters (0.4931) > VeRA+AdaptFormer conv_adapters (0.4917).
 
 By seed stability in mPQ among two-seed LoRA PEFT runs: last_stage std 0.0027, conv_adapters std 0.0029, heads_only std 0.0047. These are all small relative to the FullFT two-seed std of 0.0048.
 
-By trainable-parameter efficiency: VeRA+AdaptFormer conv_adapters uses the least among completed encoder+decoder PEFT rows (1.0231%) but only has one completed KLT seed; LoRA+AdaptFormer heads_only is the strongest two-seed efficient choice at 1.1176%; last_stage costs slightly more at 1.1674%; conv_adapters costs the most of these LoRA scopes at 1.1947%.
+By trainable-parameter efficiency: VeRA+AdaptFormer heads_only uses the least among completed encoder+decoder PEFT rows (0.9458%) but currently has one completed KLT seed; VeRA+AdaptFormer conv_adapters has two completed seeds at 1.0231%; LoRA+AdaptFormer heads_only is the strongest two-seed efficient LoRA choice at 1.1176%; last_stage costs slightly more at 1.1674%; conv_adapters costs the most of these LoRA scopes at 1.1947%.
 
 ## 4. Interpretation
 
@@ -48,9 +51,9 @@ LoRA+AdaptFormer last_stage does not beat heads_only by a meaningful margin for 
 
 Conv_adapters are worth reporting, but not emphasizing as the main KLT choice. They are stable and biologically/architecturally motivated, but they trail heads_only by 0.0053 mPQ and 0.0112 bPQ while using more trainable parameters.
 
-VeRA+AdaptFormer is competitive enough to present as a compact alternative, not yet as the main recommendation. The completed r16 conv seed42 recovers 91.8% of FullFT mPQ and 95.5% of FullFT bPQ with 1.0231% trainable parameters and strong F1, but KLT seed stability is unresolved.
+VeRA+AdaptFormer is competitive enough to present as a compact alternative, not as the main recommendation. The completed r16 conv two-seed mean recovers 92.1% of FullFT mPQ and 95.5% of FullFT bPQ with 1.0231% trainable parameters; the completed heads_only seed43 row recovers 92.8% mPQ and 95.8% bPQ with 0.9458% trainable parameters. These are useful compact baselines, but they remain below LoRA+AdaptFormer heads_only.
 
-Jobs 1172354 and 1172355 should be allowed to finish before finalizing the VeRA comparison, but they should not block launching tissue-specific LoRA+AdaptFormer heads_only runs. `sacct` reports both jobs as RUNNING at the time of this report: job 1172354 elapsed 12:29:33 and job 1172355 elapsed 10:04:25.
+The completed VeRA rows improve the compact-alternative comparison, but they do not change the tissue-specific Group 1 default: LoRA+AdaptFormer heads_only remains the main PEFT strategy.
 
 ## 5. Fisher diagnostic connection
 
@@ -64,7 +67,7 @@ Main PEFT strategy for tissue-specific Group 1: launch/report LoRA+AdaptFormer w
 
 Secondary ablation to report: LoRA+AdaptFormer `last_stage`, because it has the highest mean mPQ and the lowest two-seed mPQ std among the LoRA scopes, but should be framed as a marginal mPQ-oriented variant rather than a replacement for heads_only. Include conv_adapters as the decoder-capacity/Fisher-motivated ablation, but keep the emphasis lower unless tissue runs show a clearer benefit.
 
-VeRA jobs should be waited on before making a final VeRA claim, especially for seed43 and heads_only. They do not need to be waited on before starting tissue PEFT with the LoRA+AdaptFormer heads_only default, because the LoRA decision is already supported by two completed KLT seeds and by the Fisher diagnostic.
+VeRA should be reported as a compact alternative after checking that the completed seed43 rows remain in the refreshed run table. It should not block tissue PEFT with the LoRA+AdaptFormer heads_only default, because the LoRA decision is supported by two completed KLT seeds and by the Fisher diagnostic.
 
 ## 7. Tissue FullFT summary
 
@@ -78,4 +81,4 @@ Kidney has decent detection F1 (0.8285) but lower mPQ (0.2592), which points to 
 
 ## Compact recommendation paragraph
 
-Across completed KLT test runs, LoRA+AdaptFormer with decoder heads_only is the strongest main PEFT strategy because it gives the best balanced recovery of FullFT performance with only 1.1176% trainable parameters. Last_stage has a slightly higher mean mPQ than heads_only, but the margin is small and is offset by lower bPQ/F1 and a larger parameter budget. Conv_adapters are a useful Fisher-motivated ablation, but the completed KLT metrics do not justify emphasizing them as the default. VeRA+AdaptFormer is promising as a compact alternative, but its KLT conclusion should remain provisional until the running seed43/head-scope jobs finish. For tissue-specific Group 1, proceed with LoRA+AdaptFormer heads_only as the main PEFT and report last_stage as the secondary mPQ-oriented ablation.
+Across completed KLT test runs, LoRA+AdaptFormer with decoder heads_only is the strongest main PEFT strategy because it gives the best balanced recovery of FullFT performance with only 1.1176% trainable parameters. Last_stage has a slightly higher mean mPQ than heads_only, but the margin is small and is offset by lower bPQ/F1 and a larger parameter budget. Conv_adapters are a useful Fisher-motivated ablation, but the completed KLT metrics do not justify emphasizing them as the default. VeRA+AdaptFormer is now a reportable compact alternative, with two completed conv_adapters seeds and one completed heads_only seed, but it remains below LoRA+AdaptFormer heads_only. For tissue-specific Group 1, proceed with LoRA+AdaptFormer heads_only as the main PEFT and report last_stage as the secondary mPQ-oriented ablation.

@@ -1,0 +1,7 @@
+slide_id,axis,boundary_margin,coord_min,coord_max,boundary_train_valid,boundary_valid_test,train_count,valid_count,test_count,expected_train_count,expected_valid_count,expected_test_count,expected_discard_count,discarded_by_margin_count,train_coord_min,train_coord_max,valid_coord_min,valid_coord_max,test_coord_min,test_coord_max,gap_train_valid,gap_valid_test,intervals_disjoint,assignment_mismatch_count,missing_expected_kept_count,unexpected_kept_discard_count,train_margin_violation_count,valid_margin_violation_count,test_margin_violation_count,pass
+kidney_s0,x,128,128.0,10304.0,7251.2,8777.6,5543,778,402,5543,778,402,225,225,128.0,7040.0,7424.0,8576.0,8960.0,10304.0,384.0,384.0,True,0,0,0,0,0,0,True
+kidney_s1,x,128,128.0,8192.0,5772.799999999999,6982.4,3262,650,537,3262,650,537,382,382,128.0,5504.0,6080.0,6848.0,7232.0,8192.0,576.0,384.0,True,0,0,0,0,0,0,True
+liver_s0,x,128,320.0,27776.0,19539.199999999997,23657.6,7078,1902,776,7078,1902,776,244,244,320.0,19328.0,19712.0,23360.0,23936.0,27776.0,384.0,576.0,True,0,0,0,0,0,0,True
+liver_s1,x,128,320.0,14720.0,10400.0,12560.0,6553,1621,992,6553,1621,992,476,476,320.0,10112.0,10688.0,12416.0,12800.0,14720.0,576.0,384.0,True,0,0,0,0,0,0,True
+tonsil_s0,x,128,128.0,30848.0,21632.0,26240.0,7239,1743,874,7239,1743,874,144,144,128.0,21440.0,21824.0,26048.0,26432.0,30848.0,384.0,384.0,True,0,0,0,0,0,0,True
+tonsil_s1,x,128,320.0,45632.0,32038.399999999998,38835.2,7434,1373,1072,7434,1373,1072,121,121,320.0,31808.0,32192.0,38528.0,39104.0,45632.0,384.0,576.0,True,0,0,0,0,0,0,True
