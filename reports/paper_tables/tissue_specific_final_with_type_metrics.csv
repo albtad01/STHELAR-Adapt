@@ -1,4 +1,0 @@
-tissue,FullFT_mPQ,PEFT_mPQ,mPQ_recovery,FullFT_F1_detection,PEFT_F1_detection,FullFT_type_accuracy,PEFT_type_accuracy,FullFT_macro_type_f1_present_classes,PEFT_macro_type_f1_present_classes
-Liver,0.412366,0.392534,0.951908,0.883855,0.891612,0.836346,0.827111,0.666145,0.567338
-Kidney,0.259247,0.230417,0.888793,0.828515,0.827133,0.663585,0.658331,0.52219,0.475251
-Ovary,0.319484,0.29986,0.938576,0.831063,0.841408,0.809333,0.78797,0.645525,0.618222
