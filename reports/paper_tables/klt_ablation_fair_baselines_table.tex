@@ -1,0 +1,16 @@
+\begin{table}
+\caption{KLT baseline clarification. Zero-shot CellViT denotes the released CellViT-SAM-H x40 checkpoint evaluated without STHELAR weight updates, whereas Frozen features freezes the encoder and decoder body and trains only the final NP/HV/NT output heads; LoRA+AF adds encoder LoRA q/v and AdaptFormer adapters while keeping the decoder body frozen.}
+\label{tab:klt-fair-baselines}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llccccc}
+\toprule
+Method & Trainable modules & Seeds & Train. \% & \mPQ{} & \bPQ{} & \Fdet{} \\
+\midrule
+Zero-shot \CellViT{} & none & 42 & 0.00 & 0.003 & 0.447 & 0.817 \\
+Frozen features & NP/HV/NT heads & 42 & $<0.01$ & 0.204 & 0.446 & 0.818 \\
+\LoRA{}+\AF{} & LoRA q/v + AF + NP/HV/NT heads & 42,43 & 1.12 & 0.294 & 0.504 & 0.835 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,26 @@
+\begin{table}
+\caption{Leakage-aware KLT five-class ablation. Values are final test metrics; two-seed entries are averaged. \Ftype{} is present-class macro-F1 over detection-matched nuclei, including \textit{Other} when present and excluding Melanocyte outside Skin. For single-seed rows, $\pm$ is imputed from the median two-seed half-range across KLT runs.}
+\label{tab:klt}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llccccc}
+\toprule
+Encoder & Decoder & Train. \% & \mPQ{} & \bPQ{} & \Fdet{} & \Ftype{} \\
+\midrule
+Full Fine Tuning & all & 100.00 & 0.309{\scriptsize$\pm$0.003} & 0.515{\scriptsize$\pm$0.006} & 0.829{\scriptsize$\pm$0.002} & 0.666{\scriptsize$\pm$0.002} \\
+\midrule
+Frozen & none & 0.00 & 0.003{\scriptsize$\pm$0.002} & 0.447{\scriptsize$\pm$0.004} & 0.817{\scriptsize$\pm$0.002} & 0.012{\scriptsize$\pm$0.003} \\
+Frozen & final heads & $<0.01$ & 0.204{\scriptsize$\pm$0.002} & 0.446{\scriptsize$\pm$0.004} & 0.818{\scriptsize$\pm$0.002} & 0.430{\scriptsize$\pm$0.003} \\
+\LoRA{} & frozen & 0.19 & 0.113{\scriptsize$\pm$0.002} & 0.430{\scriptsize$\pm$0.004} & 0.831{\scriptsize$\pm$0.002} & 0.280{\scriptsize$\pm$0.003} \\
+\AF{} & frozen & 0.93 & 0.119{\scriptsize$\pm$0.002} & 0.418{\scriptsize$\pm$0.004} & 0.806{\scriptsize$\pm$0.002} & 0.297{\scriptsize$\pm$0.003} \\
+\VeRA{} & frozen & 0.01 & 0.065{\scriptsize$\pm$0.002} & 0.457{\scriptsize$\pm$0.004} & 0.827{\scriptsize$\pm$0.002} & 0.181{\scriptsize$\pm$0.003} \\
+Frozen & conv. adapt. & 0.08 & 0.232{\scriptsize$\pm$0.002} & 0.459{\scriptsize$\pm$0.004} & 0.828{\scriptsize$\pm$0.002} & 0.562{\scriptsize$\pm$0.003} \\
+\LoRA{}+\AF{} & heads & 1.12 & \underline{0.294{\scriptsize$\pm$0.003}} & \textbf{0.504{\scriptsize$\pm$0.003}} & \textbf{0.835{\scriptsize$\pm$0.001}} & 0.578{\scriptsize$\pm$0.017} \\
+\LoRA{}+\AF{} & last stage & 1.17 & \textbf{0.296{\scriptsize$\pm$0.002}} & \underline{0.503{\scriptsize$\pm$0.004}} & 0.826{\scriptsize$\pm$0.002} & \textbf{0.654{\scriptsize$\pm$0.003}} \\
+\LoRA{}+\AF{} & conv. adapt. & 1.19 & 0.288{\scriptsize$\pm$0.002} & 0.493{\scriptsize$\pm$0.004} & 0.829{\scriptsize$\pm$0.000} & 0.651{\scriptsize$\pm$0.002} \\
+\VeRA{}+\AF{} & heads & 0.95 & 0.287{\scriptsize$\pm$0.002} & 0.493{\scriptsize$\pm$0.004} & \underline{0.833{\scriptsize$\pm$0.002}} & 0.579{\scriptsize$\pm$0.003} \\
+\VeRA{}+\AF{} & conv. adapt. & 1.02 & 0.285{\scriptsize$\pm$0.001} & 0.492{\scriptsize$\pm$0.000} & 0.829{\scriptsize$\pm$0.004} & \underline{0.652{\scriptsize$\pm$0.009}} \\
+\bottomrule
+\end{tabular}
+\end{table}

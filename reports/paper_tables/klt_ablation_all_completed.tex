@@ -1,0 +1,24 @@
+\begin{table}
+\caption{Leakage-aware kidney--liver--tonsil five-class ablation including completed adapter-only controls. Values are final test metrics; rows with two seeds are averaged across seeds. Type Acc. is computed on matched nuclei using the detection matching pairs.}
+\label{tab:klt-all}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{lllccccc}
+\toprule
+Method & Decoder & Seeds & Train. \% & \mPQ{} & \bPQ{} & \Fdet{} & Type Acc. \\
+\midrule
+Frozen \CellViT{} & none & 42 & 0.00 & \emph{0.003} & 0.447 & 0.817 & \emph{0.022} \\
+\LoRA{} & frozen & 42 & 0.19 & 0.113 & 0.430 & 0.831 & 0.522 \\
+\AF{} & frozen & 42 & 0.93 & 0.119 & 0.418 & 0.806 & 0.549 \\
+\VeRA{} & frozen & 42 & 0.01 & 0.065 & 0.457 & 0.827 & 0.294 \\
+Decoder conv. adapt. & conv. adapt. & 42 & 0.08 & 0.232 & 0.459 & 0.828 & 0.723 \\
+\FullFT{} & all & 42,43 & 100.00 & 0.309 & 0.515 & 0.829 & 0.781 \\
+\LoRA{}+\AF{} & heads & 42,43 & 1.12 & \textbf{0.294} & \textbf{0.504} & \textbf{0.835} & \textbf{0.783} \\
+\LoRA{}+\AF{} & last stage & 42,43 & 1.17 & \textbf{0.296} & 0.503 & 0.826 & 0.777 \\
+\LoRA{}+\AF{} & conv. adapt. & 42,43 & 1.19 & 0.288 & 0.493 & 0.829 & 0.773 \\
+\VeRA{}+\AF{} & heads & 43 & 0.95 & 0.287 & 0.493 & 0.833 & 0.770 \\
+\VeRA{}+\AF{} & conv. adapt. & 42,43 & 1.02 & 0.285 & 0.492 & 0.829 & 0.776 \\
+\bottomrule
+\end{tabular}
+\end{table}

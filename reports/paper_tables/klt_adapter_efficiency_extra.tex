@@ -1,0 +1,25 @@
+\begin{table}
+\caption{Additional KLT PEFT efficiency probes. Values are final test metrics where available; pending rows were launched to test whether AdaptFormer with final-head and limited last-stage decoder tuning improves the deployment/performance trade-off. \Ftype{} is macro-F1 over detection-matched nuclei for the KLT-relevant classes.}
+\label{tab:klt_adapter_efficiency_extra}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{llccccc l}
+\toprule
+Encoder adapter & Decoder scope & Train. \% & \mPQ{} & \bPQ{} & \Fdet{} & \Ftype{} & Comment \\
+\midrule
+\FullFT{} & all & 100.00 & 0.309 & 0.515 & 0.829 & 0.666 & reference \\
+Frozen & none & 0.00 & 0.003 & 0.447 & 0.817 & 0.012 & no ST adaptation \\
+Frozen & final heads & $<0.01$ & 0.204 & 0.446 & 0.818 & 0.430 & final 1x1 heads only \\
+\AF{} & frozen & 0.93 & 0.119 & 0.418 & 0.806 & 0.297 & encoder adapter only \\
+\AF{} & final heads & 0.93 & pending & pending & pending & pending & job 1212870 \\
+\AF{} & final heads + last stage & 0.98 & pending & pending & pending & pending & job 1212868 \\
+\LoRA{}+\AF{} & final heads & 1.12 & 0.294 & 0.504 & 0.835 & 0.578 & deployment-oriented default \\
+\LoRA{}+\AF{} & NT header-1 + final heads & 1.12 & pending & pending & pending & pending & targeted NT pre-final conv probe; job 1214255 \\
+\LoRA{}+\AF{} & final heads + last stage & 1.17 & 0.296 & 0.503 & 0.826 & 0.654 & strongest current PEFT \Ftype{}; seed44 job 1213008 \\
+\LoRA{}+\AF{} & NP/HV heads + NT all & 3.25 & pending & pending & pending & pending & classification-focused probe; job 1213009 \\
+\VeRA{}+\AF{} & final heads & 0.95 & 0.287 & 0.493 & 0.833 & 0.579 & lower-rank alternative \\
+\VeRA{}+\AF{} & conv. adapters & 1.02 & 0.285 & 0.492 & 0.829 & 0.652 & strong \Ftype{}, lower \mPQ{} \\
+\bottomrule
+\end{tabular}
+\end{table}

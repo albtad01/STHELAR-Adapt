@@ -1,0 +1,83 @@
+\subsection{Patch-Quality Sensitivity}
+
+We next evaluate whether performance improves when evaluation is restricted to
+patches with stronger STHELAR quality control. We use the patch-level QC
+Jaccard score as an external quality indicator and recompute metrics on
+cumulative subsets with QC Jaccard above fixed thresholds. This analysis is not
+used for model selection; instead, it quantifies how much of the residual error
+is associated with lower-quality ST-derived supervision.
+
+\begin{table}
+\caption{KLT five-class QC sensitivity. Metrics are recomputed after retaining
+test patches with QC Jaccard above the indicated threshold. Values are averaged
+over seeds 42 and 43. \(\Delta\mPQ{}\) is the absolute gain over the full test
+set for the same method.}
+\label{tab:klt-qc}
+\centering
+{\fontsize{8}{9}\selectfont
+\begin{tabular}{lcccccc}
+\toprule
+Method & QC subset & Retained & \mPQ{} & \(\Delta\mPQ{}\) & \bPQ{} & \Fdet{} \\
+\midrule
+\FullFT{} & All & 4653 (100.0\%) & 0.309 & -- & 0.515 & 0.829 \\
+\FullFT{} & \(J_{\mathrm{QC}}\ge0.50\) & 3644 (78.3\%) & 0.363 & +0.054 & 0.593 & 0.850 \\
+\FullFT{} & \(J_{\mathrm{QC}}\ge0.60\) & 2919 (62.7\%) & 0.386 & +0.077 & 0.626 & 0.857 \\
+\FullFT{} & \(J_{\mathrm{QC}}\ge0.70\) & 1246 (26.8\%) & 0.431 & +0.121 & 0.674 & 0.873 \\
+\midrule
+\LoRA{}+\AF{}+heads & All & 4653 (100.0\%) & 0.294 & -- & 0.504 & 0.835 \\
+\LoRA{}+\AF{}+heads & \(J_{\mathrm{QC}}\ge0.50\) & 3644 (78.3\%) & 0.343 & +0.049 & 0.584 & 0.858 \\
+\LoRA{}+\AF{}+heads & \(J_{\mathrm{QC}}\ge0.60\) & 2919 (62.7\%) & 0.366 & +0.073 & 0.618 & 0.866 \\
+\LoRA{}+\AF{}+heads & \(J_{\mathrm{QC}}\ge0.70\) & 1246 (26.8\%) & 0.410 & +0.117 & 0.667 & 0.883 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+Table~\ref{tab:klt-qc} shows that both \FullFT{} and the selected PEFT adapter
+improve monotonically as the evaluation subset is restricted to higher-QC
+patches. For \LoRA{}+\AF{}+heads, \mPQ{} increases from 0.294 on the full KLT
+test set to 0.343 at \(J_{\mathrm{QC}}\ge0.50\), 0.366 at
+\(J_{\mathrm{QC}}\ge0.60\) and 0.410 at \(J_{\mathrm{QC}}\ge0.70\).
+\bPQ{} and detection F1 increase in parallel,
+indicating that the effect is not limited to type assignment. The similar
+absolute gains for \FullFT{} and PEFT suggest that the QC effect reflects the
+evaluation target rather than a peculiarity of the adapter.
+
+\begin{table}
+\caption{Optional tissue-specific PEFT QC sensitivity. Values use the selected
+\LoRA{}+\AF{}+heads tissue adapters reported in Table~\ref{tab:tissue}.
+Very small high-QC subsets should be interpreted cautiously.}
+\label{tab:tissue-qc}
+\centering
+{\fontsize{8}{9}\selectfont
+\begin{tabular}{lccccc}
+\toprule
+Tissue & \mPQ{} & \multicolumn{2}{c}{\(J_{\mathrm{QC}}\ge0.60\)} &
+\multicolumn{2}{c}{\(J_{\mathrm{QC}}\ge0.70\)} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+ & All & Retained & \mPQ{} & Retained & \mPQ{} \\
+\midrule
+Liver & 0.393 & 1992 (75.5\%) & 0.441 & 1012 (38.3\%) & 0.469 \\
+Kidney & 0.230 & 482 (51.3\%) & 0.292 & 230 (24.5\%) & 0.297 \\
+Ovary & 0.300 & 1703 (71.6\%) & 0.361 & 942 (39.6\%) & 0.396 \\
+Breast & 0.335 & 5577 (59.1\%) & 0.397 & 1721 (18.2\%) & 0.456 \\
+Colon & 0.205 & 834 (25.7\%) & 0.288 & 101 (3.1\%) & 0.360 \\
+Lung & 0.302 & 1195 (48.4\%) & 0.361 & 339 (13.7\%) & 0.385 \\
+Pancreatic & 0.239 & 465 (17.8\%) & 0.362 & 50 (1.9\%) & 0.426 \\
+Skin & 0.224 & 752 (35.3\%) & 0.401 & 449 (21.1\%) & 0.422 \\
+Tonsil & 0.235 & 2468 (57.2\%) & 0.311 & 678 (15.7\%) & 0.351 \\
+\midrule
+Mean & 0.273 & -- & 0.357 & -- & 0.396 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+The same pattern is visible across tissue-specific adapters
+(Table~\ref{tab:tissue-qc}): mean PEFT \mPQ{} increases from 0.273 on all
+patches to 0.357 at \(J_{\mathrm{QC}}\ge0.60\) and 0.396 at
+\(J_{\mathrm{QC}}\ge0.70\). This supports the interpretation that a meaningful
+part of the measured error comes from lower-confidence STHELAR patches. However,
+strict thresholds can leave small subsets for some tissues, especially
+pancreatic and colon, so these tissue-level QC values are best used as a
+sensitivity analysis rather than as primary benchmark numbers.
