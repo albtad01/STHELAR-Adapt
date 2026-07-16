@@ -1,5 +1,4 @@
 **/__pycache__/
-.DS_Store
 1.22,
 
 data
@@ -48,3 +47,17 @@ adapters/SHA256SUMS.local
 # Allow versioned experiment configurations
 !configs/**/*.yaml
 !configs/**/*.yml
+# Internal experiment bookkeeping
+reports/deleted_checkpoints_list.txt
+reports/final_submission_sanity_check.md
+reports/summary_inference_results_before_cleanup.csv
+reports/runs_summary.csv
+reports/sthelar_experiment_catalog_by_dataset.md
+reports/supplementary_material_inventory.md
+
+# Intermediate qualitative outputs; final figures live in figures/
+reports/qualitative/
+reports/qualitative_grid_patch_selection.md
+
+# Manuscript source kept private until camera-ready release
+supplementary/
