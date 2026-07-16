@@ -557,12 +557,22 @@ def estimate_fisher(
     rows = []
     samples = {}
     total_mass = sum(float(value.double().sum()) for value in accumulators.values())
+    total_frobenius_sq = sum(
+        float(value.double().square().sum()) for value in accumulators.values()
+    )
+    total_frobenius_norm = float(np.sqrt(total_frobenius_sq)) if total_frobenius_sq > 0 else 0.0
     for group in groups:
         params = grouped[group]
         param_count = sum(parameter.numel() for _, parameter in params)
         fisher_entries = [(name, accumulators[name]) for name, _ in params if name in accumulators]
         measured = bool(fisher_entries)
         fisher_mass = sum(float(value.double().sum()) for _, value in fisher_entries)
+        fisher_frobenius_sq = sum(
+            float(value.double().square().sum()) for _, value in fisher_entries
+        )
+        fisher_frobenius_norm = (
+            float(np.sqrt(fisher_frobenius_sq)) if fisher_frobenius_sq > 0 else 0.0
+        )
         fisher_max = max((float(value.max()) for _, value in fisher_entries), default=0.0)
         rows.append(
             {
@@ -570,8 +580,24 @@ def estimate_fisher(
                 "param_count": param_count,
                 "fisher_mass": fisher_mass,
                 "fisher_mean": fisher_mass / param_count if param_count and measured else 0.0,
+                "fisher_frobenius_norm": fisher_frobenius_norm,
+                "fisher_rms": (
+                    fisher_frobenius_norm / float(np.sqrt(param_count))
+                    if param_count and measured
+                    else 0.0
+                ),
+                "fisher_mass_over_frobenius": (
+                    fisher_mass / fisher_frobenius_norm
+                    if fisher_frobenius_norm > 0
+                    else 0.0
+                ),
                 "fisher_max": fisher_max,
                 "normalized_fisher_mass": fisher_mass / total_mass if total_mass else 0.0,
+                "normalized_fisher_frobenius_norm": (
+                    fisher_frobenius_norm / total_frobenius_norm
+                    if total_frobenius_norm
+                    else 0.0
+                ),
                 "status": statuses[group],
                 "measured": measured,
             }
@@ -609,6 +635,46 @@ def js_distance(a: torch.Tensor, b: torch.Tensor) -> float:
     kl_a = torch.where(a > 0, a * torch.log(a / midpoint), 0).sum()
     kl_b = torch.where(b > 0, b * torch.log(b / midpoint), 0).sum()
     return float(torch.sqrt(0.5 * (kl_a + kl_b)).clamp_min(0))
+
+
+def frobenius_unit_distance(a: torch.Tensor, b: torch.Tensor) -> float:
+    """Euclidean distance between Frobenius/L2-normalized Fisher vectors.
+
+    This follows the FisherAdapTune-style normalization
+    ``P = F / ||F||_F`` more directly than a probability-simplex JS distance.
+    The score is computed on the same sampled entries used for JS drift.
+    """
+    count = min(a.numel(), b.numel())
+    if count == 0:
+        return 0.0
+    a = a[:count].double().clamp_min(0)
+    b = b[:count].double().clamp_min(0)
+    norm_a = torch.linalg.vector_norm(a)
+    norm_b = torch.linalg.vector_norm(b)
+    if float(norm_a) == 0.0 and float(norm_b) == 0.0:
+        return 0.0
+    if float(norm_a) > 0.0:
+        a = a / norm_a
+    if float(norm_b) > 0.0:
+        b = b / norm_b
+    return float(torch.linalg.vector_norm(a - b))
+
+
+def frobenius_cosine_distance(a: torch.Tensor, b: torch.Tensor) -> float:
+    """Cosine distance between Frobenius/L2-normalized Fisher vectors."""
+    count = min(a.numel(), b.numel())
+    if count == 0:
+        return 0.0
+    a = a[:count].double().clamp_min(0)
+    b = b[:count].double().clamp_min(0)
+    norm_a = torch.linalg.vector_norm(a)
+    norm_b = torch.linalg.vector_norm(b)
+    if float(norm_a) == 0.0 and float(norm_b) == 0.0:
+        return 0.0
+    if float(norm_a) == 0.0 or float(norm_b) == 0.0:
+        return 1.0
+    cosine = torch.dot(a, b) / (norm_a * norm_b)
+    return float((1.0 - cosine.clamp(-1.0, 1.0)).clamp_min(0.0))
 
 
 def write_csv(path: Path, rows: list[dict[str, Any]], fieldnames: list[str]) -> None:
@@ -766,8 +832,12 @@ def main() -> None:
         "param_count",
         "fisher_mass",
         "fisher_mean",
+        "fisher_frobenius_norm",
+        "fisher_rms",
+        "fisher_mass_over_frobenius",
         "fisher_max",
         "normalized_fisher_mass",
+        "normalized_fisher_frobenius_norm",
         "status",
         "measured",
     ]
@@ -778,6 +848,13 @@ def main() -> None:
         rows_a = {row["group"]: row for row in all_rows if row["checkpoint"] == str(checkpoint_paths[index])}
         rows_b = {row["group"]: row for row in all_rows if row["checkpoint"] == str(checkpoint_paths[index + 1])}
         for group in groups:
+            js_value = js_distance(sample_sets[index][group], sample_sets[index + 1][group])
+            fro_l2_value = frobenius_unit_distance(
+                sample_sets[index][group], sample_sets[index + 1][group]
+            )
+            fro_cos_value = frobenius_cosine_distance(
+                sample_sets[index][group], sample_sets[index + 1][group]
+            )
             drift_rows.append(
                 {
                     "checkpoint_a": str(checkpoint_paths[index]),
@@ -786,7 +863,11 @@ def main() -> None:
                     "param_count": min(rows_a[group]["param_count"], rows_b[group]["param_count"]),
                     "fisher_mass_a": rows_a[group]["fisher_mass"],
                     "fisher_mass_b": rows_b[group]["fisher_mass"],
-                    "js_distance": js_distance(sample_sets[index][group], sample_sets[index + 1][group]),
+                    "fisher_frobenius_norm_a": rows_a[group]["fisher_frobenius_norm"],
+                    "fisher_frobenius_norm_b": rows_b[group]["fisher_frobenius_norm"],
+                    "js_distance": js_value,
+                    "frobenius_unit_l2_distance": fro_l2_value,
+                    "frobenius_cosine_distance": fro_cos_value,
                 }
             )
     if drift_rows:
@@ -800,7 +881,11 @@ def main() -> None:
                 "param_count",
                 "fisher_mass_a",
                 "fisher_mass_b",
+                "fisher_frobenius_norm_a",
+                "fisher_frobenius_norm_b",
                 "js_distance",
+                "frobenius_unit_l2_distance",
+                "frobenius_cosine_distance",
             ],
         )
 

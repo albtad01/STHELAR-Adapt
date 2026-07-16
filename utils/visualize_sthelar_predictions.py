@@ -18,6 +18,7 @@ python utils/visualize_sthelar_predictions.py \
     --baseline-config FROZEN/config.yaml \
     --baseline-checkpoint FROZEN/checkpoints/model_best.pth \
     --dataset-split test --patch-ids PATCH_A PATCH_B \
+    --match-aware \
     --output-dir reports/qualitative/frozen_vs_peft
 """
 
@@ -138,7 +139,34 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--alpha", type=float, default=0.52)
     parser.add_argument("--boundary-width", type=int, default=2)
+    parser.add_argument(
+        "--match-aware",
+        action="store_true",
+        help=(
+            "Render prediction panels with instance-level correctness cues: "
+            "predicted class colors plus missed/false-positive/type-mismatch boundaries."
+        ),
+    )
+    parser.add_argument(
+        "--match-iou-threshold",
+        type=float,
+        default=0.30,
+        help="IoU threshold for matching predicted nuclei to ground truth in --match-aware mode.",
+    )
     parser.add_argument("--error-overlay", action="store_true")
+    parser.add_argument(
+        "--hide-he",
+        action="store_true",
+        help="Do not render the raw H&E panel; useful for compact GT/prediction comparisons.",
+    )
+    parser.add_argument(
+        "--type-color-only",
+        action="store_true",
+        help=(
+            "Render nuclei as solid class colors on a neutral background instead of "
+            "overlaying them on the H&E patch."
+        ),
+    )
     parser.add_argument("--dpi", type=int, default=300)
     parser.add_argument(
         "--force-inference", action="store_true", help="Ignore cached prediction NPZ files."
@@ -442,7 +470,7 @@ def _insert_adapters(model: Any, config: dict[str, Any]) -> None:
         insert_bottleneck(
             model, options.get("activation", "GELU"), options.get("reduction", 16)
         )
-    elif kind in (None, "ntonly"):
+    elif kind in (None, "ntonly", "freeze", "frozen", "fullft", "all", "final_heads_only"):
         return
     else:
         raise ValueError(f"Unsupported adapter_type: {kind}")
@@ -622,6 +650,159 @@ def make_overlay(
     return np.clip(rgb, 0, 1)
 
 
+def make_type_color_panel(
+    instance_map: np.ndarray,
+    type_map: np.ndarray,
+    colors: np.ndarray,
+    boundary_width: int,
+) -> np.ndarray:
+    rgb = np.ones((*instance_map.shape, 3), dtype=np.float32) * 0.96
+    foreground = instance_map > 0
+    safe_types = np.clip(type_map, 0, len(colors) - 1)
+    rgb[foreground] = colors[safe_types[foreground]]
+    boundary = instance_boundary(instance_map, boundary_width)
+    rgb[boundary] = 0.20 * colors[safe_types[boundary]]
+    return np.clip(rgb, 0, 1)
+
+
+def _mask_boundary(mask: np.ndarray, width: int) -> np.ndarray:
+    return instance_boundary(mask.astype(np.int16, copy=False), width)
+
+
+def _instance_majority_types(instance_map: np.ndarray, type_map: np.ndarray) -> dict[int, int]:
+    types: dict[int, int] = {}
+    for instance_id in np.unique(instance_map):
+        instance_id = int(instance_id)
+        if instance_id == 0:
+            continue
+        values = type_map[instance_map == instance_id].astype(np.int64, copy=False)
+        foreground_values = values[values != 0]
+        if len(foreground_values):
+            values = foreground_values
+        if len(values) == 0:
+            types[instance_id] = 0
+            continue
+        counts = np.bincount(values)
+        types[instance_id] = int(np.argmax(counts))
+    return types
+
+
+def _greedy_pairing(pairwise_iou: np.ndarray, threshold: float) -> list[tuple[int, int, float]]:
+    candidates = [
+        (true_index, pred_index, float(pairwise_iou[true_index, pred_index]))
+        for true_index, pred_index in zip(*np.nonzero(pairwise_iou >= threshold))
+        if pairwise_iou[true_index, pred_index] > 0
+    ]
+    candidates.sort(key=lambda item: item[2], reverse=True)
+    used_true: set[int] = set()
+    used_pred: set[int] = set()
+    pairs: list[tuple[int, int, float]] = []
+    for true_index, pred_index, iou in candidates:
+        if true_index in used_true or pred_index in used_pred:
+            continue
+        used_true.add(true_index)
+        used_pred.add(pred_index)
+        pairs.append((true_index, pred_index, iou))
+    return pairs
+
+
+def pair_instance_ids(
+    true: np.ndarray, pred: np.ndarray, threshold: float
+) -> tuple[dict[int, tuple[int, float]], set[int], set[int]]:
+    """Pair GT and predicted instance IDs by IoU without assuming contiguous IDs."""
+    true_ids = np.asarray([int(item) for item in np.unique(true) if int(item) != 0])
+    pred_ids = np.asarray([int(item) for item in np.unique(pred) if int(item) != 0])
+    if len(true_ids) == 0 or len(pred_ids) == 0:
+        return {}, set(true_ids.tolist()), set(pred_ids.tolist())
+
+    true_area = dict(zip(*np.unique(true[true > 0], return_counts=True)))
+    pred_area = dict(zip(*np.unique(pred[pred > 0], return_counts=True)))
+    true_index = {instance_id: index for index, instance_id in enumerate(true_ids)}
+    pred_index = {instance_id: index for index, instance_id in enumerate(pred_ids)}
+    pairwise_iou = np.zeros((len(true_ids), len(pred_ids)), dtype=np.float64)
+
+    overlap = (true > 0) & (pred > 0)
+    if np.any(overlap):
+        factor = int(pred_ids.max()) + 1
+        encoded = true[overlap].astype(np.int64) * factor + pred[overlap].astype(np.int64)
+        encoded_pairs, intersections = np.unique(encoded, return_counts=True)
+        for encoded_pair, intersection in zip(encoded_pairs, intersections):
+            true_id = int(encoded_pair // factor)
+            pred_id = int(encoded_pair % factor)
+            union = int(true_area[true_id]) + int(pred_area[pred_id]) - int(intersection)
+            if union <= 0:
+                continue
+            pairwise_iou[true_index[true_id], pred_index[pred_id]] = intersection / union
+
+    threshold = max(0.0, float(threshold))
+    try:
+        from scipy.optimize import linear_sum_assignment
+
+        rows, cols = linear_sum_assignment(-pairwise_iou)
+        pairs = [
+            (int(row), int(col), float(pairwise_iou[row, col]))
+            for row, col in zip(rows, cols)
+            if pairwise_iou[row, col] >= threshold and pairwise_iou[row, col] > 0
+        ]
+    except Exception:
+        pairs = _greedy_pairing(pairwise_iou, threshold)
+
+    pred_to_true: dict[int, tuple[int, float]] = {}
+    paired_true: set[int] = set()
+    paired_pred: set[int] = set()
+    for true_idx, pred_idx, iou in pairs:
+        true_id = int(true_ids[true_idx])
+        pred_id = int(pred_ids[pred_idx])
+        pred_to_true[pred_id] = (true_id, iou)
+        paired_true.add(true_id)
+        paired_pred.add(pred_id)
+    return pred_to_true, set(true_ids.tolist()) - paired_true, set(pred_ids.tolist()) - paired_pred
+
+
+def make_match_aware_overlay(
+    image: np.ndarray,
+    gt: PatchData,
+    pred: Prediction,
+    colors: np.ndarray,
+    alpha: float,
+    boundary_width: int,
+    match_iou_threshold: float,
+    type_color_only: bool = False,
+) -> np.ndarray:
+    if type_color_only:
+        rgb = make_type_color_panel(pred.instance, pred.type_map, colors, boundary_width)
+    else:
+        rgb = make_overlay(image, pred.instance, pred.type_map, colors, alpha, boundary_width)
+    pred_to_true, unpaired_true, unpaired_pred = pair_instance_ids(
+        gt.gt_instance, pred.instance, match_iou_threshold
+    )
+    true_types = _instance_majority_types(gt.gt_instance, gt.gt_type)
+    pred_types = _instance_majority_types(pred.instance, pred.type_map)
+
+    missed_boundary = np.zeros(gt.gt_instance.shape, dtype=bool)
+    for true_id in unpaired_true:
+        missed_boundary |= _mask_boundary(gt.gt_instance == true_id, boundary_width)
+
+    false_positive_boundary = np.zeros(pred.instance.shape, dtype=bool)
+    for pred_id in unpaired_pred:
+        false_positive_boundary |= _mask_boundary(pred.instance == pred_id, boundary_width)
+
+    mismatch_boundary = np.zeros(pred.instance.shape, dtype=bool)
+    for pred_id, (true_id, _) in pred_to_true.items():
+        if pred_types.get(pred_id, 0) != true_types.get(true_id, 0):
+            mismatch_boundary |= _mask_boundary(pred.instance == pred_id, boundary_width)
+
+    error_colors = {
+        "missed": np.array([0.85, 0.10, 0.10]),
+        "false_positive": np.array([0.10, 0.45, 0.95]),
+        "mismatch": np.array([0.95, 0.75, 0.05]),
+    }
+    rgb[missed_boundary] = error_colors["missed"]
+    rgb[false_positive_boundary] = error_colors["false_positive"]
+    rgb[mismatch_boundary] = error_colors["mismatch"]
+    return np.clip(rgb, 0, 1)
+
+
 def make_error_overlay(
     image: np.ndarray, gt: PatchData, pred: Prediction, boundary_width: int
 ) -> np.ndarray:
@@ -648,11 +829,18 @@ def plot_panel(
     output_dir: Path,
     alpha: float,
     boundary_width: int,
+    match_aware: bool,
+    match_iou_threshold: float,
     error_overlay: bool,
+    hide_he: bool,
+    type_color_only: bool,
     dpi: int,
 ) -> None:
     colors = color_table(class_names)
-    columns = ["H&E", "Ground truth"]
+    columns = []
+    if not hide_he:
+        columns.append("H&E")
+    columns.append("Ground truth")
     if baseline is not None:
         columns.append("Frozen CellViT")
     columns.append("PEFT prediction" if baseline is not None else "Prediction")
@@ -668,21 +856,53 @@ def plot_panel(
     )
     for row_index, patch in enumerate(patches):
         prediction = peft[patch.patch_id]
-        panels = [
-            patch.image,
-            make_overlay(
+        panels = []
+        if not hide_he:
+            panels.append(patch.image)
+        gt_panel = (
+            make_type_color_panel(patch.gt_instance, patch.gt_type, colors, boundary_width)
+            if type_color_only
+            else make_overlay(
                 patch.image, patch.gt_instance, patch.gt_type, colors, alpha, boundary_width
-            ),
-        ]
+            )
+        )
+        panels.append(gt_panel)
         if baseline is not None:
             base = baseline[patch.patch_id]
-            panels.append(
-                make_overlay(
+            baseline_panel = (
+                make_match_aware_overlay(
+                    patch.image,
+                    patch,
+                    base,
+                    colors,
+                    alpha,
+                    boundary_width,
+                    match_iou_threshold,
+                    type_color_only,
+                )
+                if match_aware
+                else make_overlay(
                     patch.image, base.instance, base.type_map, colors, alpha, boundary_width
                 )
             )
-        panels.append(
-            make_overlay(
+            if type_color_only and not match_aware:
+                baseline_panel = make_type_color_panel(
+                    base.instance, base.type_map, colors, boundary_width
+                )
+            panels.append(baseline_panel)
+        peft_panel = (
+            make_match_aware_overlay(
+                patch.image,
+                patch,
+                prediction,
+                colors,
+                alpha,
+                boundary_width,
+                match_iou_threshold,
+                type_color_only,
+            )
+            if match_aware
+            else make_overlay(
                 patch.image,
                 prediction.instance,
                 prediction.type_map,
@@ -691,6 +911,11 @@ def plot_panel(
                 boundary_width,
             )
         )
+        if type_color_only and not match_aware:
+            peft_panel = make_type_color_panel(
+                prediction.instance, prediction.type_map, colors, boundary_width
+            )
+        panels.append(peft_panel)
         if error_overlay:
             panels.append(make_error_overlay(patch.image, patch, prediction, boundary_width))
         for column_index, panel in enumerate(panels):
@@ -722,6 +947,15 @@ def plot_panel(
                 ("Type mismatch", "#F2BF0D"),
             )
         )
+    elif match_aware:
+        handles.extend(
+            mpatches.Patch(facecolor=color, label=label)
+            for label, color in (
+                ("Missed GT boundary", "#D91A1A"),
+                ("False positive boundary", "#1A73E8"),
+                ("Type mismatch boundary", "#F2BF0D"),
+            )
+        )
     legend_columns = min(5, len(handles))
     fig.legend(
         handles=handles,
@@ -732,6 +966,8 @@ def plot_panel(
         bbox_to_anchor=(0.5, 0.005),
     )
     bottom = 0.055 + 0.025 * max(0, (len(handles) - 1) // legend_columns)
+    if hide_he or type_color_only:
+        bottom = max(bottom, 0.13)
     fig.subplots_adjust(left=0.015, right=0.995, top=0.96, bottom=bottom, wspace=0.025, hspace=0.12)
     output_dir.mkdir(parents=True, exist_ok=True)
     for suffix in ("png", "pdf"):
@@ -858,7 +1094,11 @@ def main() -> None:
         output_dir,
         args.alpha,
         args.boundary_width,
+        args.match_aware,
+        args.match_iou_threshold,
         args.error_overlay,
+        args.hide_he,
+        args.type_color_only,
         args.dpi,
     )
     metrics = _load_image_metrics(config_path, checkpoint_path)
