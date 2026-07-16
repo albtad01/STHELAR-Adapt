@@ -30,3 +30,21 @@ __pycache__/
 # macOS / external drive metadata
 .DS_Store
 ._*
+
+# Generated prediction arrays and bulk analysis outputs
+reports/**/*.npz
+reports/fisher_drift/
+reports/qualitative_grid_predictions/
+reports/qualitative/**/predictions/
+reports/pooled3/
+reports/type_assignment/*/
+reports/split_checks/*.png
+reports/figures/
+reports/checkpoint_cleanup/
+
+# Local adapter inventories
+adapters/SHA256SUMS.local
+
+# Allow versioned experiment configurations
+!configs/**/*.yaml
+!configs/**/*.yml
