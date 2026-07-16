@@ -1,5 +1,4 @@
 **/__pycache__/
-1.22,
 
 data
 pretrained_models
@@ -44,9 +43,11 @@ reports/checkpoint_cleanup/
 # Local adapter inventories
 adapters/SHA256SUMS.local
 
-# Allow versioned experiment configurations
-!configs/**/*.yaml
-!configs/**/*.yml
+# Allow only curated public configurations
+!configs/release/**/*.yaml
+!configs/release/**/*.yml
+!configs/label_mappings/**/*.yaml
+!configs/label_mappings/**/*.yml
 # Internal experiment bookkeeping
 reports/deleted_checkpoints_list.txt
 reports/final_submission_sanity_check.md
@@ -61,3 +62,6 @@ reports/qualitative_grid_patch_selection.md
 
 # Manuscript source kept private until camera-ready release
 supplementary/
+
+# Generated figure variants; selected figures are already tracked
+figures/*
