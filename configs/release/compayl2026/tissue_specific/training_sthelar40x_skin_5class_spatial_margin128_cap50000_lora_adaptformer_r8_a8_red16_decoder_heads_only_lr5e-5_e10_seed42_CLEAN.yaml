@@ -34,8 +34,8 @@ logging:
   - e10
   - seed42
   - clean
-  wandb_dir: /gpfs/workdir/taddeial/workspace/STHELAR-Adapt/run/sthelar40x_skin_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN/wandb
-  log_dir: /gpfs/workdir/taddeial/workspace/STHELAR-Adapt/run/sthelar40x_skin_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN/log/2026-06-30T092331_sthelar40x_skin_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN
+  wandb_dir: run/sthelar40x_skin_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN/wandb
+  log_dir: run/sthelar40x_skin_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN/log
   level: debug
   log_images: false
   run_id: rhlmsqz4
