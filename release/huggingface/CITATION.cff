@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: >-
+  Cite the final STHELAR-Adapt COMPAYL 2026 paper when its bibliographic record
+  is available, together with the CellViT and STHELAR papers listed in README.md.
+title: STHELAR-Adapt
+type: software
+authors:
+  - family-names: Taddei
+    given-names: Alberto
+  - family-names: Giraud-Sauveur
+    given-names: Felicie
+repository-code: https://github.com/albtad01/STHELAR-Adapt
+abstract: >-
+  Parameter-efficient adaptation of CellViT-SAM-H x40 to STHELAR 40x for H&E
+  nuclei instance segmentation and spatial-transcriptomics-derived cell typing.

@@ -1,0 +1,1608 @@
+{
+  "adapter_id": "tissue_specific/ovary/seed42",
+  "adapter_state_tensor_count": 296,
+  "adapter_type": "lora_adaptformer",
+  "adapter_weight_file": "adapter_model.safetensors",
+  "adaptformer": {
+    "activation": "GELU",
+    "reduction": 16
+  },
+  "base_checkpoint": "models/pretrained/CellViT-SAM-H-x40.pth",
+  "base_checkpoint_resolved": "CellViT-SAM-H-x40.pth",
+  "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+  "base_load_info": {
+    "loaded_tensors": 744,
+    "missing_target_keys": [
+      "classifier_head.weight",
+      "classifier_head.bias"
+    ],
+    "skipped_shape": {
+      "classifier_head.bias": {
+        "checkpoint": [
+          19
+        ],
+        "model": [
+          1
+        ]
+      },
+      "classifier_head.weight": {
+        "checkpoint": [
+          19,
+          256
+        ],
+        "model": [
+          1,
+          256
+        ]
+      }
+    }
+  },
+  "base_model": "CellViT-SAM-H-x40",
+  "checkpoint_variant": "best",
+  "config_path": "config.yaml",
+  "decoder_adapter": {
+    "activation": null,
+    "alpha_init": null,
+    "reduction": null,
+    "train_alpha": null
+  },
+  "decoder_train_scope": "heads_only",
+  "expected_components": [
+    "lora",
+    "adaptformer",
+    "np_head",
+    "hv_head",
+    "nt_head"
+  ],
+  "expected_tensor_shapes": {
+    "adapter_state_dict.classifier_head.bias": [
+      1
+    ],
+    "adapter_state_dict.classifier_head.weight": [
+      1,
+      256
+    ],
+    "adapter_state_dict.encoder.blocks.0.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.0.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.0.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.0.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.0.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.0.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.0.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.0.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.0.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.1.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.1.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.1.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.1.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.1.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.1.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.1.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.1.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.1.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.10.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.10.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.10.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.10.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.10.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.10.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.10.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.10.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.10.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.11.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.11.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.11.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.11.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.11.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.11.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.11.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.11.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.11.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.12.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.12.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.12.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.12.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.12.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.12.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.12.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.12.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.12.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.13.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.13.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.13.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.13.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.13.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.13.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.13.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.13.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.13.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.14.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.14.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.14.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.14.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.14.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.14.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.14.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.14.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.14.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.15.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.15.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.15.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.15.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.15.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.15.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.15.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.15.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.15.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.16.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.16.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.16.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.16.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.16.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.16.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.16.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.16.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.16.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.17.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.17.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.17.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.17.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.17.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.17.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.17.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.17.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.17.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.18.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.18.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.18.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.18.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.18.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.18.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.18.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.18.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.18.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.19.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.19.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.19.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.19.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.19.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.19.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.19.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.19.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.19.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.2.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.2.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.2.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.2.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.2.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.2.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.2.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.2.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.2.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.20.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.20.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.20.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.20.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.20.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.20.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.20.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.20.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.20.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.21.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.21.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.21.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.21.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.21.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.21.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.21.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.21.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.21.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.22.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.22.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.22.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.22.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.22.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.22.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.22.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.22.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.22.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.23.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.23.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.23.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.23.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.23.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.23.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.23.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.23.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.23.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.24.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.24.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.24.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.24.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.24.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.24.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.24.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.24.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.24.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.25.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.25.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.25.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.25.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.25.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.25.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.25.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.25.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.25.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.26.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.26.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.26.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.26.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.26.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.26.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.26.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.26.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.26.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.27.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.27.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.27.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.27.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.27.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.27.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.27.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.27.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.27.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.28.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.28.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.28.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.28.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.28.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.28.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.28.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.28.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.28.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.29.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.29.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.29.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.29.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.29.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.29.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.29.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.29.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.29.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.3.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.3.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.3.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.3.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.3.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.3.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.3.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.3.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.3.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.30.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.30.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.30.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.30.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.30.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.30.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.30.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.30.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.30.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.31.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.31.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.31.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.31.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.31.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.31.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.31.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.31.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.31.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.4.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.4.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.4.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.4.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.4.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.4.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.4.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.4.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.4.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.5.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.5.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.5.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.5.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.5.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.5.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.5.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.5.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.5.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.6.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.6.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.6.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.6.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.6.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.6.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.6.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.6.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.6.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.7.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.7.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.7.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.7.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.7.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.7.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.7.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.7.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.7.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.8.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.8.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.8.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.8.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.8.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.8.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.8.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.8.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.8.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.9.attn.qkv.adapter_q_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.9.attn.qkv.adapter_q_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.9.attn.qkv.adapter_v_down.weight": [
+      8,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.9.attn.qkv.adapter_v_up.weight": [
+      1280,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.9.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.9.mlp.adapter_downsample.bias": [
+      80
+    ],
+    "adapter_state_dict.encoder.blocks.9.mlp.adapter_downsample.weight": [
+      80,
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.9.mlp.adapter_upsample.bias": [
+      1280
+    ],
+    "adapter_state_dict.encoder.blocks.9.mlp.adapter_upsample.weight": [
+      1280,
+      80
+    ],
+    "adapter_state_dict.hv_map_decoder.decoder0_header.2.bias": [
+      2
+    ],
+    "adapter_state_dict.hv_map_decoder.decoder0_header.2.weight": [
+      2,
+      64,
+      1,
+      1
+    ],
+    "adapter_state_dict.nuclei_binary_map_decoder.decoder0_header.2.bias": [
+      2
+    ],
+    "adapter_state_dict.nuclei_binary_map_decoder.decoder0_header.2.weight": [
+      2,
+      64,
+      1,
+      1
+    ],
+    "adapter_state_dict.nuclei_type_maps_decoder.decoder0_header.2.bias": [
+      6
+    ],
+    "adapter_state_dict.nuclei_type_maps_decoder.decoder0_header.2.weight": [
+      6,
+      64,
+      1,
+      1
+    ],
+    "mutable_buffer_state_dict.decoder0.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder0.0.block.1.running_mean": [
+      32
+    ],
+    "mutable_buffer_state_dict.decoder0.0.block.1.running_var": [
+      32
+    ],
+    "mutable_buffer_state_dict.decoder0.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder0.1.block.1.running_mean": [
+      64
+    ],
+    "mutable_buffer_state_dict.decoder0.1.block.1.running_var": [
+      64
+    ],
+    "mutable_buffer_state_dict.decoder1.0.block.2.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder1.0.block.2.running_mean": [
+      512
+    ],
+    "mutable_buffer_state_dict.decoder1.0.block.2.running_var": [
+      512
+    ],
+    "mutable_buffer_state_dict.decoder1.1.block.2.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder1.1.block.2.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.decoder1.1.block.2.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.decoder1.2.block.2.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder1.2.block.2.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.decoder1.2.block.2.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.decoder2.0.block.2.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder2.0.block.2.running_mean": [
+      512
+    ],
+    "mutable_buffer_state_dict.decoder2.0.block.2.running_var": [
+      512
+    ],
+    "mutable_buffer_state_dict.decoder2.1.block.2.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder2.1.block.2.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.decoder2.1.block.2.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.decoder3.0.block.2.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder3.0.block.2.running_mean": [
+      512
+    ],
+    "mutable_buffer_state_dict.decoder3.0.block.2.running_var": [
+      512
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder0_header.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder0_header.0.block.1.running_mean": [
+      64
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder0_header.0.block.1.running_var": [
+      64
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder0_header.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder0_header.1.block.1.running_mean": [
+      64
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder0_header.1.block.1.running_var": [
+      64
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder1_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder1_upsampler.0.block.1.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder1_upsampler.0.block.1.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder1_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder1_upsampler.1.block.1.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder1_upsampler.1.block.1.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder2_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder2_upsampler.0.block.1.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder2_upsampler.0.block.1.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder2_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder2_upsampler.1.block.1.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder2_upsampler.1.block.1.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.0.block.1.running_mean": [
+      512
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.0.block.1.running_var": [
+      512
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.1.block.1.running_mean": [
+      512
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.1.block.1.running_var": [
+      512
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.2.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.2.block.1.running_mean": [
+      512
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.2.block.1.running_var": [
+      512
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder0_header.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder0_header.0.block.1.running_mean": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder0_header.0.block.1.running_var": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder0_header.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder0_header.1.block.1.running_mean": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder0_header.1.block.1.running_var": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.running_mean": [
+      512
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.running_var": [
+      512
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.running_mean": [
+      512
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.running_var": [
+      512
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.running_mean": [
+      512
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.running_var": [
+      512
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder0_header.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder0_header.0.block.1.running_mean": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder0_header.0.block.1.running_var": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder0_header.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder0_header.1.block.1.running_mean": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder0_header.1.block.1.running_var": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.running_mean": [
+      512
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.running_var": [
+      512
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.running_mean": [
+      512
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.running_var": [
+      512
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.running_mean": [
+      512
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.running_var": [
+      512
+    ]
+  },
+  "format": "cellvit_adapter_checkpoint",
+  "format_version": 1,
+  "frozen_parameter_override_count": 0,
+  "git_commit": "9298774a9fbaaa6e62c19426a5ed963e77e80261",
+  "inserted_decoder_conv_adapters": 0,
+  "label_mapping": {
+    "Background": 0,
+    "Epithelial": 3,
+    "Immune": 1,
+    "Melanocyte": 4,
+    "Other": 5,
+    "Stromal": 2
+  },
+  "label_mode": "5class",
+  "load_verification": "exact_state_match",
+  "lora": {
+    "alpha": 8,
+    "dropout": 0.0,
+    "rank": 8,
+    "targets": [
+      "q",
+      "v"
+    ]
+  },
+  "metrics": {
+    "checkpoint": {
+      "best_epoch": 8,
+      "best_metric": 0.5742215776690667,
+      "epoch": 8
+    },
+    "validation": {
+      "Binary-Cell-Dice-Mean/Validation": 0.8325517077300619,
+      "Binary-Cell-Jacard-Mean/Validation": 0.7256372485827199,
+      "Epithelial-PQ/Validation": 0.4774576281029274,
+      "Epithelial-f1_detection/Validation": 0.6988354077674178,
+      "Epithelial-precision_detection/Validation": 0.6814118528812447,
+      "Epithelial-recall_detection/Validation": 0.7171733771569433,
+      "Immune-PQ/Validation": 0.25777635843338753,
+      "Immune-f1_detection/Validation": 0.2846166032953105,
+      "Immune-precision_detection/Validation": 0.38514310215457176,
+      "Immune-recall_detection/Validation": 0.22570513223192412,
+      "Loss/Validation": 3.708249208662245,
+      "Melanocyte-PQ/Validation": null,
+      "Melanocyte-f1_detection/Validation": null,
+      "Melanocyte-precision_detection/Validation": null,
+      "Melanocyte-recall_detection/Validation": null,
+      "Other-PQ/Validation": 0.08194645468018266,
+      "Other-f1_detection/Validation": 0.17631236966967875,
+      "Other-precision_detection/Validation": 0.1288199964670553,
+      "Other-recall_detection/Validation": 0.27927237912876973,
+      "Stromal-PQ/Validation": 0.39917156667595827,
+      "Stromal-f1_detection/Validation": 0.5790419658411142,
+      "Stromal-precision_detection/Validation": 0.6417349377898544,
+      "Stromal-recall_detection/Validation": 0.5275081449635576,
+      "Tissue-Multiclass-Accuracy/Validation": 1.0,
+      "bPQ/Validation": 0.5742215776690667,
+      "f1_detection/Validation": 0.8559990270204528,
+      "hv_map_mse/Validation": 0.026272888247677612,
+      "hv_map_msge/Validation": 0.3242809169349216,
+      "mPQ/Validation": 0.33819578587039345,
+      "nuclei_binary_map_bce/Validation": 0.18627721004424588,
+      "nuclei_binary_map_dice/Validation": 0.22646485302183364,
+      "nuclei_type_map_bce/Validation": 0.48364236292148394,
+      "nuclei_type_map_dice/Validation": 2.4613109864885847,
+      "ovary-Dice/Validation": 0.8325517077300619,
+      "ovary-Jaccard/Validation": 0.7256372485827199,
+      "ovary-bPQ/Validation": 0.5742215776690667,
+      "ovary-mPQ/Validation": 0.33819578587039345,
+      "precision_detection/Validation": 0.8809867786267505,
+      "recall_detection/Validation": 0.832389653524139,
+      "tissue_types_ce/Validation": 0.0
+    }
+  },
+  "mutable_buffer_names": [
+    "decoder0.0.block.1.num_batches_tracked",
+    "decoder0.0.block.1.running_mean",
+    "decoder0.0.block.1.running_var",
+    "decoder0.1.block.1.num_batches_tracked",
+    "decoder0.1.block.1.running_mean",
+    "decoder0.1.block.1.running_var",
+    "decoder1.0.block.2.num_batches_tracked",
+    "decoder1.0.block.2.running_mean",
+    "decoder1.0.block.2.running_var",
+    "decoder1.1.block.2.num_batches_tracked",
+    "decoder1.1.block.2.running_mean",
+    "decoder1.1.block.2.running_var",
+    "decoder1.2.block.2.num_batches_tracked",
+    "decoder1.2.block.2.running_mean",
+    "decoder1.2.block.2.running_var",
+    "decoder2.0.block.2.num_batches_tracked",
+    "decoder2.0.block.2.running_mean",
+    "decoder2.0.block.2.running_var",
+    "decoder2.1.block.2.num_batches_tracked",
+    "decoder2.1.block.2.running_mean",
+    "decoder2.1.block.2.running_var",
+    "decoder3.0.block.2.num_batches_tracked",
+    "decoder3.0.block.2.running_mean",
+    "decoder3.0.block.2.running_var",
+    "hv_map_decoder.decoder0_header.0.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder0_header.0.block.1.running_mean",
+    "hv_map_decoder.decoder0_header.0.block.1.running_var",
+    "hv_map_decoder.decoder0_header.1.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder0_header.1.block.1.running_mean",
+    "hv_map_decoder.decoder0_header.1.block.1.running_var",
+    "hv_map_decoder.decoder1_upsampler.0.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder1_upsampler.0.block.1.running_mean",
+    "hv_map_decoder.decoder1_upsampler.0.block.1.running_var",
+    "hv_map_decoder.decoder1_upsampler.1.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder1_upsampler.1.block.1.running_mean",
+    "hv_map_decoder.decoder1_upsampler.1.block.1.running_var",
+    "hv_map_decoder.decoder2_upsampler.0.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder2_upsampler.0.block.1.running_mean",
+    "hv_map_decoder.decoder2_upsampler.0.block.1.running_var",
+    "hv_map_decoder.decoder2_upsampler.1.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder2_upsampler.1.block.1.running_mean",
+    "hv_map_decoder.decoder2_upsampler.1.block.1.running_var",
+    "hv_map_decoder.decoder3_upsampler.0.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder3_upsampler.0.block.1.running_mean",
+    "hv_map_decoder.decoder3_upsampler.0.block.1.running_var",
+    "hv_map_decoder.decoder3_upsampler.1.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder3_upsampler.1.block.1.running_mean",
+    "hv_map_decoder.decoder3_upsampler.1.block.1.running_var",
+    "hv_map_decoder.decoder3_upsampler.2.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder3_upsampler.2.block.1.running_mean",
+    "hv_map_decoder.decoder3_upsampler.2.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder0_header.0.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder0_header.0.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder0_header.0.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder0_header.1.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder0_header.1.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder0_header.1.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder0_header.0.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder0_header.0.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder0_header.0.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder0_header.1.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder0_header.1.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder0_header.1.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.running_var"
+  ],
+  "mutable_buffer_tensor_count": 105,
+  "nuclei_types": {
+    "Background": 0,
+    "Epithelial": 3,
+    "Immune": 1,
+    "Melanocyte": 4,
+    "Other": 5,
+    "Stromal": 2
+  },
+  "num_nuclei_classes": 6,
+  "num_tissue_classes": 1,
+  "original_config_path": "config.yaml",
+  "original_run_dir": "2026-06-28T203221_sthelar40x_ovary_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN",
+  "original_run_name": "sthelar40x_ovary_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN",
+  "run_name": "sthelar40x_ovary_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN",
+  "section_counts": {
+    "adapter_state_dict": 296,
+    "mutable_buffer_state_dict": 105
+  },
+  "source_checkpoint": "model_best.pth",
+  "source_config_filename": "training_sthelar40x_ovary_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml",
+  "source_config_sha256": "adc6f055eb1938d8797234c388bd7e22f7cf179b1c984843323b1e8f65fbf551",
+  "source_filename": "sthelar40x_ovary_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN_adapter.pth",
+  "split": "spatial",
+  "tissue": "ovary",
+  "tissue_types": {
+    "Ovary": 0
+  },
+  "total_parameter_count": 707644395,
+  "trainable_parameter_count": 7908779,
+  "trainable_params": 7908779,
+  "trainable_ratio": 1.1176205246421826,
+  "trainable_ratio_percent": 1.1176205246421826,
+  "vera": null
+}

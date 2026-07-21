@@ -1,0 +1,14 @@
+{
+  "exported": {
+    "adapter_config.json": "d69daa9d104da1fca2f779f5b4c633d7dcae14e3734acec172e0aea70d61bbf0",
+    "adapter_model.safetensors": "11133a3be26357e6387cfe714164ded302a486c3afbd8a688cda8ac0c93a474f"
+  },
+  "source": {
+    "path": "sthelar40x_ovary_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN_adapter.pth",
+    "sha256": "a00cb91646af00f9259a5a632793a0fe505c6a2c8532d082137cfac767629a66"
+  },
+  "source_config": {
+    "path": "training_sthelar40x_ovary_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml",
+    "sha256": "adc6f055eb1938d8797234c388bd7e22f7cf179b1c984843323b1e8f65fbf551"
+  }
+}

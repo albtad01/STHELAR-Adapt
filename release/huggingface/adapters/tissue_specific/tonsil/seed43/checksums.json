@@ -1,0 +1,14 @@
+{
+  "exported": {
+    "adapter_config.json": "055f28b48de5e8f56f7a99966a6cd7141acacec3b1481b80d9782fab139ec3c0",
+    "adapter_model.safetensors": "6ffecf88503c77444a420fac60be91c9ecfd30c87142df6c59a8d6cf8b06103d"
+  },
+  "source": {
+    "path": "sthelar40x_tonsil_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed43_CLEAN_adapter.pth",
+    "sha256": "a8d8918adebd3fe0f67a3c58c8f0687947dfcba17dc2c155779d129ffdfd29bf"
+  },
+  "source_config": {
+    "path": "training_sthelar40x_tonsil_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed43_CLEAN.yaml",
+    "sha256": "e8817fa5a380226f2e1231e3eb58a4cc1c31e02aa6adf4ee486a4ca042b07369"
+  }
+}

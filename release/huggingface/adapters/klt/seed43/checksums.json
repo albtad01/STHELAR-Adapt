@@ -1,0 +1,14 @@
+{
+  "exported": {
+    "adapter_config.json": "bc77a0d0aa8354b3b8f971d965fbe291ae5b4ab0a09886d6c622c8bfbe645443",
+    "adapter_model.safetensors": "91ae522ab092dd303919db6ddc43a3f3f4e54a73a94e1a40335af5a715215690"
+  },
+  "source": {
+    "path": "sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed43_CLEAN_adapter.pth",
+    "sha256": "123ad536ac9bab1a655bad4de91d044965c3cd9c0d399c1972b246179485fd3f"
+  },
+  "source_config": {
+    "path": "training_sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed43_CLEAN.yaml",
+    "sha256": "101953aa54b543759a056ed0517a8aaa0a61f1d23d79c8b6e53be88be68e2715"
+  }
+}

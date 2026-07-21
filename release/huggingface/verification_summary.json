@@ -1,0 +1,1286 @@
+{
+  "adapter_count": 12,
+  "adapters": [
+    {
+      "adapter_config_sha256": "85d5a9fa38b7b94e390c88ffcdfda7786b27f51bbcaca92e8c8a779c266a8b4b",
+      "adapter_id": "klt/seed42",
+      "adapter_state_key_count": 296,
+      "base_checkpoint": "CellViT-SAM-H-x40.pth",
+      "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+      "components": "LoRA;AdaptFormer;NP head;HV head;NT head",
+      "dtype_distribution": "{\"float32\":366,\"int64\":35}",
+      "forward_smoke_256x256": "pass",
+      "label_mapping": "0:Background;1:Immune;2:Stromal;3:Epithelial;4:Melanocyte;5:Other",
+      "metadata_sanitization": "pass",
+      "method": "lora_adaptformer_r8_a8_red16_heads_only",
+      "missing_adapter_keys": 0,
+      "mutable_buffer_key_count": 105,
+      "output_tensor_shapes": "tissue_types=[1,1];nuclei_binary_map=[1,2,256,256];hv_map=[1,2,256,256];nuclei_type_map=[1,6,256,256]",
+      "release_path": "release/huggingface/adapters/klt/seed42",
+      "round_trip_tensor_equality": "pass",
+      "safetensors_sha256": "46ebbc6c07303feaf33dd58af7a8eebb0f50aed335078ddf84f6bcfa79231d7d",
+      "safetensors_size_bytes": 31812100,
+      "safetensors_tensor_count": 401,
+      "seed": "42",
+      "source_config_path": "configs/release/compayl2026/klt/training_sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml",
+      "source_config_sha256": "8f4c6ccb9d0ab636c7571a5d77e156160ca5201d09ae0dc45cd2b4cef21198d9",
+      "source_path": "adapters/sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN_adapter.pth",
+      "source_sha256": "7b5410fdceb94d541862bb2ebf000a5629c1f5b1efd2f90c953dfb59be39f237",
+      "source_size_bytes": "31956368",
+      "state_dict_loading": "pass",
+      "tissue": "KidneyLiverTonsil",
+      "trainable_parameter_count": 7908779,
+      "unexpected_adapter_keys": 0,
+      "verification_date": "2026-07-20",
+      "verification_details": {
+        "base_load_info": {
+          "loaded_tensors": 744,
+          "missing_target_keys": [
+            "classifier_head.weight",
+            "classifier_head.bias"
+          ],
+          "skipped_shape": {
+            "classifier_head.bias": {
+              "checkpoint": [
+                19
+              ],
+              "model": [
+                1
+              ]
+            },
+            "classifier_head.weight": {
+              "checkpoint": [
+                19,
+                256
+              ],
+              "model": [
+                1,
+                256
+              ]
+            }
+          }
+        },
+        "forward_tested": true,
+        "loaded_state_key_count": 401,
+        "missing_adapter_keys": [],
+        "missing_mutable_buffer_keys": [],
+        "model_load_tested": true,
+        "output_tensor_shapes": {
+          "hv_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_binary_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_type_map": [
+            1,
+            6,
+            256,
+            256
+          ],
+          "tissue_types": [
+            1,
+            1
+          ]
+        },
+        "status": "ok",
+        "tensor_count": 401,
+        "trainable_parameter_count": 7908779,
+        "unexpected_adapter_keys": [],
+        "unexpected_mutable_buffer_keys": []
+      },
+      "verification_status": "pass"
+    },
+    {
+      "adapter_config_sha256": "bc77a0d0aa8354b3b8f971d965fbe291ae5b4ab0a09886d6c622c8bfbe645443",
+      "adapter_id": "klt/seed43",
+      "adapter_state_key_count": 296,
+      "base_checkpoint": "CellViT-SAM-H-x40.pth",
+      "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+      "components": "LoRA;AdaptFormer;NP head;HV head;NT head",
+      "dtype_distribution": "{\"float32\":366,\"int64\":35}",
+      "forward_smoke_256x256": "pass",
+      "label_mapping": "0:Background;1:Immune;2:Stromal;3:Epithelial;4:Melanocyte;5:Other",
+      "metadata_sanitization": "pass",
+      "method": "lora_adaptformer_r8_a8_red16_heads_only",
+      "missing_adapter_keys": 0,
+      "mutable_buffer_key_count": 105,
+      "output_tensor_shapes": "tissue_types=[1,1];nuclei_binary_map=[1,2,256,256];hv_map=[1,2,256,256];nuclei_type_map=[1,6,256,256]",
+      "release_path": "release/huggingface/adapters/klt/seed43",
+      "round_trip_tensor_equality": "pass",
+      "safetensors_sha256": "91ae522ab092dd303919db6ddc43a3f3f4e54a73a94e1a40335af5a715215690",
+      "safetensors_size_bytes": 31812156,
+      "safetensors_tensor_count": 401,
+      "seed": "43",
+      "source_config_path": "configs/release/compayl2026/klt/training_sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed43_CLEAN.yaml",
+      "source_config_sha256": "101953aa54b543759a056ed0517a8aaa0a61f1d23d79c8b6e53be88be68e2715",
+      "source_path": "adapters/sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed43_CLEAN_adapter.pth",
+      "source_sha256": "123ad536ac9bab1a655bad4de91d044965c3cd9c0d399c1972b246179485fd3f",
+      "source_size_bytes": "31956368",
+      "state_dict_loading": "pass",
+      "tissue": "KidneyLiverTonsil",
+      "trainable_parameter_count": 7908779,
+      "unexpected_adapter_keys": 0,
+      "verification_date": "2026-07-20",
+      "verification_details": {
+        "base_load_info": {
+          "loaded_tensors": 744,
+          "missing_target_keys": [
+            "classifier_head.weight",
+            "classifier_head.bias"
+          ],
+          "skipped_shape": {
+            "classifier_head.bias": {
+              "checkpoint": [
+                19
+              ],
+              "model": [
+                1
+              ]
+            },
+            "classifier_head.weight": {
+              "checkpoint": [
+                19,
+                256
+              ],
+              "model": [
+                1,
+                256
+              ]
+            }
+          }
+        },
+        "base_model": "CellViT-SAM-H-x40",
+        "forward_tested": true,
+        "loaded_state_key_count": 401,
+        "missing_adapter_keys": [],
+        "missing_mutable_buffer_keys": [],
+        "model_load_tested": true,
+        "output_tensor_shapes": {
+          "hv_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_binary_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_type_map": [
+            1,
+            6,
+            256,
+            256
+          ],
+          "tissue_types": [
+            1,
+            1
+          ]
+        },
+        "status": "ok",
+        "tensor_count": 401,
+        "trainable_parameter_count": 7908779,
+        "unexpected_adapter_keys": [],
+        "unexpected_mutable_buffer_keys": []
+      },
+      "verification_status": "pass"
+    },
+    {
+      "adapter_config_sha256": "41872431b328a1f203ff6bc3044870eaa45f4cf21f171f64540e43165361806d",
+      "adapter_id": "tissue_specific/breast/seed42",
+      "adapter_state_key_count": 296,
+      "base_checkpoint": "CellViT-SAM-H-x40.pth",
+      "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+      "components": "LoRA;AdaptFormer;NP head;HV head;NT head",
+      "dtype_distribution": "{\"float32\":366,\"int64\":35}",
+      "forward_smoke_256x256": "pass",
+      "label_mapping": "0:Background;1:Immune;2:Stromal;3:Epithelial;4:Melanocyte;5:Other",
+      "metadata_sanitization": "pass",
+      "method": "lora_adaptformer_r8_a8_red16_heads_only",
+      "missing_adapter_keys": 0,
+      "mutable_buffer_key_count": 105,
+      "output_tensor_shapes": "tissue_types=[1,1];nuclei_binary_map=[1,2,256,256];hv_map=[1,2,256,256];nuclei_type_map=[1,6,256,256]",
+      "release_path": "release/huggingface/adapters/tissue_specific/breast/seed42",
+      "round_trip_tensor_equality": "pass",
+      "safetensors_sha256": "df2da19b6e32b15641fde119b3115bd1b31b40009ed958b690833eb9d051f3f5",
+      "safetensors_size_bytes": 31812100,
+      "safetensors_tensor_count": 401,
+      "seed": "42",
+      "source_config_path": "configs/release/compayl2026/tissue_specific/training_sthelar40x_breast_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml",
+      "source_config_sha256": "a0626700023d9148ab5cf5eb4407aec8abec9ee135d3eba7b202ad5a2942f811",
+      "source_path": "adapters/sthelar40x_breast_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN_adapter.pth",
+      "source_sha256": "5c23266a36dfbeb920d817164f3814f3fe08ea9ebebd2673d651d4ec9ed02b31",
+      "source_size_bytes": "31933820",
+      "state_dict_loading": "pass",
+      "tissue": "Breast",
+      "trainable_parameter_count": 7908779,
+      "unexpected_adapter_keys": 0,
+      "verification_date": "2026-07-20",
+      "verification_details": {
+        "base_load_info": {
+          "loaded_tensors": 744,
+          "missing_target_keys": [
+            "classifier_head.weight",
+            "classifier_head.bias"
+          ],
+          "skipped_shape": {
+            "classifier_head.bias": {
+              "checkpoint": [
+                19
+              ],
+              "model": [
+                1
+              ]
+            },
+            "classifier_head.weight": {
+              "checkpoint": [
+                19,
+                256
+              ],
+              "model": [
+                1,
+                256
+              ]
+            }
+          }
+        },
+        "base_model": "CellViT-SAM-H-x40",
+        "forward_tested": true,
+        "loaded_state_key_count": 401,
+        "missing_adapter_keys": [],
+        "missing_mutable_buffer_keys": [],
+        "model_load_tested": true,
+        "output_tensor_shapes": {
+          "hv_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_binary_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_type_map": [
+            1,
+            6,
+            256,
+            256
+          ],
+          "tissue_types": [
+            1,
+            1
+          ]
+        },
+        "status": "ok",
+        "tensor_count": 401,
+        "trainable_parameter_count": 7908779,
+        "unexpected_adapter_keys": [],
+        "unexpected_mutable_buffer_keys": []
+      },
+      "verification_status": "pass"
+    },
+    {
+      "adapter_config_sha256": "27d22f473eb52c27aeab9301308b44203ed59a36df443e3388d5e09b700e6879",
+      "adapter_id": "tissue_specific/colon/seed42",
+      "adapter_state_key_count": 296,
+      "base_checkpoint": "CellViT-SAM-H-x40.pth",
+      "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+      "components": "LoRA;AdaptFormer;NP head;HV head;NT head",
+      "dtype_distribution": "{\"float32\":366,\"int64\":35}",
+      "forward_smoke_256x256": "pass",
+      "label_mapping": "0:Background;1:Immune;2:Stromal;3:Epithelial;4:Melanocyte;5:Other",
+      "metadata_sanitization": "pass",
+      "method": "lora_adaptformer_r8_a8_red16_heads_only",
+      "missing_adapter_keys": 0,
+      "mutable_buffer_key_count": 105,
+      "output_tensor_shapes": "tissue_types=[1,1];nuclei_binary_map=[1,2,256,256];hv_map=[1,2,256,256];nuclei_type_map=[1,6,256,256]",
+      "release_path": "release/huggingface/adapters/tissue_specific/colon/seed42",
+      "round_trip_tensor_equality": "pass",
+      "safetensors_sha256": "57f5c1f483af257421ff17988705b47ae4d7e193ba78721c3545de9091b21c01",
+      "safetensors_size_bytes": 31812028,
+      "safetensors_tensor_count": 401,
+      "seed": "42",
+      "source_config_path": "configs/release/compayl2026/tissue_specific/training_sthelar40x_colon_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml",
+      "source_config_sha256": "dc89c8bd6cc4b446287cd9ffae356b4d04103d9c7cb75b88901b56d6345e4909",
+      "source_path": "adapters/sthelar40x_colon_5class_spatial_margin128_lora_adaptformer_heads_only_seed42/sthelar40x_colon_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN_adapter.pth",
+      "source_sha256": "929b20ba7edef3faea19594a184b96238dda0c67e8e00bbe3fe00c682de8624c",
+      "source_size_bytes": "31932839",
+      "state_dict_loading": "pass",
+      "tissue": "Colon",
+      "trainable_parameter_count": 7908779,
+      "unexpected_adapter_keys": 0,
+      "verification_date": "2026-07-20",
+      "verification_details": {
+        "base_load_info": {
+          "loaded_tensors": 744,
+          "missing_target_keys": [
+            "classifier_head.weight",
+            "classifier_head.bias"
+          ],
+          "skipped_shape": {
+            "classifier_head.bias": {
+              "checkpoint": [
+                19
+              ],
+              "model": [
+                1
+              ]
+            },
+            "classifier_head.weight": {
+              "checkpoint": [
+                19,
+                256
+              ],
+              "model": [
+                1,
+                256
+              ]
+            }
+          }
+        },
+        "base_model": "CellViT-SAM-H-x40",
+        "forward_tested": true,
+        "loaded_state_key_count": 401,
+        "missing_adapter_keys": [],
+        "missing_mutable_buffer_keys": [],
+        "model_load_tested": true,
+        "output_tensor_shapes": {
+          "hv_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_binary_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_type_map": [
+            1,
+            6,
+            256,
+            256
+          ],
+          "tissue_types": [
+            1,
+            1
+          ]
+        },
+        "status": "ok",
+        "tensor_count": 401,
+        "trainable_parameter_count": 7908779,
+        "unexpected_adapter_keys": [],
+        "unexpected_mutable_buffer_keys": []
+      },
+      "verification_status": "pass"
+    },
+    {
+      "adapter_config_sha256": "f7139f247b4c8d5bb7ec4b02f8229dd5830a96ac39ff713e1377944aaad33db8",
+      "adapter_id": "tissue_specific/kidney/seed42",
+      "adapter_state_key_count": 296,
+      "base_checkpoint": "CellViT-SAM-H-x40.pth",
+      "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+      "components": "LoRA;AdaptFormer;NP head;HV head;NT head",
+      "dtype_distribution": "{\"float32\":366,\"int64\":35}",
+      "forward_smoke_256x256": "pass",
+      "label_mapping": "0:Background;1:Immune;2:Stromal;3:Epithelial;4:Melanocyte;5:Other",
+      "metadata_sanitization": "pass",
+      "method": "lora_adaptformer_r8_a8_red16_heads_only",
+      "missing_adapter_keys": 0,
+      "mutable_buffer_key_count": 105,
+      "output_tensor_shapes": "tissue_types=[1,1];nuclei_binary_map=[1,2,256,256];hv_map=[1,2,256,256];nuclei_type_map=[1,6,256,256]",
+      "release_path": "release/huggingface/adapters/tissue_specific/kidney/seed42",
+      "round_trip_tensor_equality": "pass",
+      "safetensors_sha256": "07b90305180138e35916cd5f0046028a3452a48fe07483f19e7f35180580fd48",
+      "safetensors_size_bytes": 31812004,
+      "safetensors_tensor_count": 401,
+      "seed": "42",
+      "source_config_path": "configs/release/compayl2026/tissue_specific/training_sthelar40x_kidney_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml",
+      "source_config_sha256": "7e36c95954e74129c06c660f00e05a1169d705d1f3c047ec5608ce39daa959fc",
+      "source_path": "adapters/sthelar40x_kidney_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN_adapter.pth",
+      "source_sha256": "c1a6d7745382eb82d7f0c827940fd127f6aa1c11efe44f6ef9eebe5024901e9b",
+      "source_size_bytes": "31925695",
+      "state_dict_loading": "pass",
+      "tissue": "Kidney",
+      "trainable_parameter_count": 7908779,
+      "unexpected_adapter_keys": 0,
+      "verification_date": "2026-07-20",
+      "verification_details": {
+        "base_load_info": {
+          "loaded_tensors": 744,
+          "missing_target_keys": [
+            "classifier_head.weight",
+            "classifier_head.bias"
+          ],
+          "skipped_shape": {
+            "classifier_head.bias": {
+              "checkpoint": [
+                19
+              ],
+              "model": [
+                1
+              ]
+            },
+            "classifier_head.weight": {
+              "checkpoint": [
+                19,
+                256
+              ],
+              "model": [
+                1,
+                256
+              ]
+            }
+          }
+        },
+        "base_model": "CellViT-SAM-H-x40",
+        "forward_tested": true,
+        "loaded_state_key_count": 401,
+        "missing_adapter_keys": [],
+        "missing_mutable_buffer_keys": [],
+        "model_load_tested": true,
+        "output_tensor_shapes": {
+          "hv_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_binary_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_type_map": [
+            1,
+            6,
+            256,
+            256
+          ],
+          "tissue_types": [
+            1,
+            1
+          ]
+        },
+        "status": "ok",
+        "tensor_count": 401,
+        "trainable_parameter_count": 7908779,
+        "unexpected_adapter_keys": [],
+        "unexpected_mutable_buffer_keys": []
+      },
+      "verification_status": "pass"
+    },
+    {
+      "adapter_config_sha256": "a21c18e9e60209454580aac33d8c173c624cee934539a5a0177008c403a0f1a9",
+      "adapter_id": "tissue_specific/kidney/seed43",
+      "adapter_state_key_count": 296,
+      "base_checkpoint": "CellViT-SAM-H-x40.pth",
+      "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+      "components": "LoRA;AdaptFormer;NP head;HV head;NT head",
+      "dtype_distribution": "{\"float32\":366,\"int64\":35}",
+      "forward_smoke_256x256": "pass",
+      "label_mapping": "0:Background;1:Immune;2:Stromal;3:Epithelial;4:Melanocyte;5:Other",
+      "metadata_sanitization": "pass",
+      "method": "lora_adaptformer_r8_a8_red16_heads_only",
+      "missing_adapter_keys": 0,
+      "mutable_buffer_key_count": 105,
+      "output_tensor_shapes": "tissue_types=[1,1];nuclei_binary_map=[1,2,256,256];hv_map=[1,2,256,256];nuclei_type_map=[1,6,256,256]",
+      "release_path": "release/huggingface/adapters/tissue_specific/kidney/seed43",
+      "round_trip_tensor_equality": "pass",
+      "safetensors_sha256": "0af3083727fa184a52db8b9383c072a9eed33129f85976afa15018a04a3e3fd5",
+      "safetensors_size_bytes": 31812060,
+      "safetensors_tensor_count": 401,
+      "seed": "43",
+      "source_config_path": "configs/release/compayl2026/tissue_specific/training_sthelar40x_kidney_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed43_CLEAN.yaml",
+      "source_config_sha256": "a03148518b312ac0f554bfcde6d7fc7e40d80ca3257617237084f5925e9c969f",
+      "source_path": "adapters/sthelar40x_kidney_5class_spatial_margin128_lora_adaptformer_heads_only_seed43/sthelar40x_kidney_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed43_CLEAN_adapter.pth",
+      "source_sha256": "acf9e40f6b133e2073ef8dd219240a24028117aea04e110f66b9db19c327d36f",
+      "source_size_bytes": "31925695",
+      "state_dict_loading": "pass",
+      "tissue": "Kidney",
+      "trainable_parameter_count": 7908779,
+      "unexpected_adapter_keys": 0,
+      "verification_date": "2026-07-20",
+      "verification_details": {
+        "base_load_info": {
+          "loaded_tensors": 744,
+          "missing_target_keys": [
+            "classifier_head.weight",
+            "classifier_head.bias"
+          ],
+          "skipped_shape": {
+            "classifier_head.bias": {
+              "checkpoint": [
+                19
+              ],
+              "model": [
+                1
+              ]
+            },
+            "classifier_head.weight": {
+              "checkpoint": [
+                19,
+                256
+              ],
+              "model": [
+                1,
+                256
+              ]
+            }
+          }
+        },
+        "base_model": "CellViT-SAM-H-x40",
+        "forward_tested": true,
+        "loaded_state_key_count": 401,
+        "missing_adapter_keys": [],
+        "missing_mutable_buffer_keys": [],
+        "model_load_tested": true,
+        "output_tensor_shapes": {
+          "hv_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_binary_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_type_map": [
+            1,
+            6,
+            256,
+            256
+          ],
+          "tissue_types": [
+            1,
+            1
+          ]
+        },
+        "status": "ok",
+        "tensor_count": 401,
+        "trainable_parameter_count": 7908779,
+        "unexpected_adapter_keys": [],
+        "unexpected_mutable_buffer_keys": []
+      },
+      "verification_status": "pass"
+    },
+    {
+      "adapter_config_sha256": "892b058d292e097aea11a815e082d3a2cf82059d61b53a13355cc02a10b1a42d",
+      "adapter_id": "tissue_specific/liver/seed42",
+      "adapter_state_key_count": 296,
+      "base_checkpoint": "CellViT-SAM-H-x40.pth",
+      "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+      "components": "LoRA;AdaptFormer;NP head;HV head;NT head",
+      "dtype_distribution": "{\"float32\":366,\"int64\":35}",
+      "forward_smoke_256x256": "pass",
+      "label_mapping": "0:Background;1:Immune;2:Stromal;3:Epithelial;4:Melanocyte;5:Other",
+      "metadata_sanitization": "pass",
+      "method": "lora_adaptformer_r8_a8_red16_heads_only",
+      "missing_adapter_keys": 0,
+      "mutable_buffer_key_count": 105,
+      "output_tensor_shapes": "tissue_types=[1,1];nuclei_binary_map=[1,2,256,256];hv_map=[1,2,256,256];nuclei_type_map=[1,6,256,256]",
+      "release_path": "release/huggingface/adapters/tissue_specific/liver/seed42",
+      "round_trip_tensor_equality": "pass",
+      "safetensors_sha256": "86c3a97052847fa1d1b991a3c915a89654d94a7acda1ed9fa3c00de4110c3cff",
+      "safetensors_size_bytes": 31811988,
+      "safetensors_tensor_count": 401,
+      "seed": "42",
+      "source_config_path": "configs/release/compayl2026/tissue_specific/training_sthelar40x_liver_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml",
+      "source_config_sha256": "dbf520027118e50391dda70c9b41ed95b057890f8311c47224229ff5a2a049e0",
+      "source_path": "adapters/sthelar40x_liver_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN_adapter.pth",
+      "source_sha256": "2ef8ee2925dc14969ace204897acaeafeffef0608f24fbb6cc4ca335b32dd3a9",
+      "source_size_bytes": "31925226",
+      "state_dict_loading": "pass",
+      "tissue": "Liver",
+      "trainable_parameter_count": 7908779,
+      "unexpected_adapter_keys": 0,
+      "verification_date": "2026-07-20",
+      "verification_details": {
+        "base_load_info": {
+          "loaded_tensors": 744,
+          "missing_target_keys": [
+            "classifier_head.weight",
+            "classifier_head.bias"
+          ],
+          "skipped_shape": {
+            "classifier_head.bias": {
+              "checkpoint": [
+                19
+              ],
+              "model": [
+                1
+              ]
+            },
+            "classifier_head.weight": {
+              "checkpoint": [
+                19,
+                256
+              ],
+              "model": [
+                1,
+                256
+              ]
+            }
+          }
+        },
+        "base_model": "CellViT-SAM-H-x40",
+        "forward_tested": true,
+        "loaded_state_key_count": 401,
+        "missing_adapter_keys": [],
+        "missing_mutable_buffer_keys": [],
+        "model_load_tested": true,
+        "output_tensor_shapes": {
+          "hv_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_binary_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_type_map": [
+            1,
+            6,
+            256,
+            256
+          ],
+          "tissue_types": [
+            1,
+            1
+          ]
+        },
+        "status": "ok",
+        "tensor_count": 401,
+        "trainable_parameter_count": 7908779,
+        "unexpected_adapter_keys": [],
+        "unexpected_mutable_buffer_keys": []
+      },
+      "verification_status": "pass"
+    },
+    {
+      "adapter_config_sha256": "75b486fb0e8e7166cb535f30d39f9bfc69c176d44e43b17cdfda68e8983410ea",
+      "adapter_id": "tissue_specific/lung/seed42",
+      "adapter_state_key_count": 296,
+      "base_checkpoint": "CellViT-SAM-H-x40.pth",
+      "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+      "components": "LoRA;AdaptFormer;NP head;HV head;NT head",
+      "dtype_distribution": "{\"float32\":366,\"int64\":35}",
+      "forward_smoke_256x256": "pass",
+      "label_mapping": "0:Background;1:Immune;2:Stromal;3:Epithelial;4:Melanocyte;5:Other",
+      "metadata_sanitization": "pass",
+      "method": "lora_adaptformer_r8_a8_red16_heads_only",
+      "missing_adapter_keys": 0,
+      "mutable_buffer_key_count": 105,
+      "output_tensor_shapes": "tissue_types=[1,1];nuclei_binary_map=[1,2,256,256];hv_map=[1,2,256,256];nuclei_type_map=[1,6,256,256]",
+      "release_path": "release/huggingface/adapters/tissue_specific/lung/seed42",
+      "round_trip_tensor_equality": "pass",
+      "safetensors_sha256": "77cda0133fa06351da106a728237d4dc79e9eed246975d617cf692b583f417e2",
+      "safetensors_size_bytes": 31812068,
+      "safetensors_tensor_count": 401,
+      "seed": "42",
+      "source_config_path": "configs/release/compayl2026/tissue_specific/training_sthelar40x_lung_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml",
+      "source_config_sha256": "927f91669490dbfd2bc9675480b5dfcd760e0b6c9b3f6dcf740d33adeed76c57",
+      "source_path": "adapters/sthelar40x_lung_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN_adapter.pth",
+      "source_sha256": "2281149c47ac023d17ad2b8a2910a7c25a609b31326c05c0497d8657aa2dab7a",
+      "source_size_bytes": "31930898",
+      "state_dict_loading": "pass",
+      "tissue": "Lung",
+      "trainable_parameter_count": 7908779,
+      "unexpected_adapter_keys": 0,
+      "verification_date": "2026-07-20",
+      "verification_details": {
+        "base_load_info": {
+          "loaded_tensors": 744,
+          "missing_target_keys": [
+            "classifier_head.weight",
+            "classifier_head.bias"
+          ],
+          "skipped_shape": {
+            "classifier_head.bias": {
+              "checkpoint": [
+                19
+              ],
+              "model": [
+                1
+              ]
+            },
+            "classifier_head.weight": {
+              "checkpoint": [
+                19,
+                256
+              ],
+              "model": [
+                1,
+                256
+              ]
+            }
+          }
+        },
+        "base_model": "CellViT-SAM-H-x40",
+        "forward_tested": true,
+        "loaded_state_key_count": 401,
+        "missing_adapter_keys": [],
+        "missing_mutable_buffer_keys": [],
+        "model_load_tested": true,
+        "output_tensor_shapes": {
+          "hv_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_binary_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_type_map": [
+            1,
+            6,
+            256,
+            256
+          ],
+          "tissue_types": [
+            1,
+            1
+          ]
+        },
+        "status": "ok",
+        "tensor_count": 401,
+        "trainable_parameter_count": 7908779,
+        "unexpected_adapter_keys": [],
+        "unexpected_mutable_buffer_keys": []
+      },
+      "verification_status": "pass"
+    },
+    {
+      "adapter_config_sha256": "d69daa9d104da1fca2f779f5b4c633d7dcae14e3734acec172e0aea70d61bbf0",
+      "adapter_id": "tissue_specific/ovary/seed42",
+      "adapter_state_key_count": 296,
+      "base_checkpoint": "CellViT-SAM-H-x40.pth",
+      "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+      "components": "LoRA;AdaptFormer;NP head;HV head;NT head",
+      "dtype_distribution": "{\"float32\":366,\"int64\":35}",
+      "forward_smoke_256x256": "pass",
+      "label_mapping": "0:Background;1:Immune;2:Stromal;3:Epithelial;4:Melanocyte;5:Other",
+      "metadata_sanitization": "pass",
+      "method": "lora_adaptformer_r8_a8_red16_heads_only",
+      "missing_adapter_keys": 0,
+      "mutable_buffer_key_count": 105,
+      "output_tensor_shapes": "tissue_types=[1,1];nuclei_binary_map=[1,2,256,256];hv_map=[1,2,256,256];nuclei_type_map=[1,6,256,256]",
+      "release_path": "release/huggingface/adapters/tissue_specific/ovary/seed42",
+      "round_trip_tensor_equality": "pass",
+      "safetensors_sha256": "11133a3be26357e6387cfe714164ded302a486c3afbd8a688cda8ac0c93a474f",
+      "safetensors_size_bytes": 31812052,
+      "safetensors_tensor_count": 401,
+      "seed": "42",
+      "source_config_path": "configs/release/compayl2026/tissue_specific/training_sthelar40x_ovary_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml",
+      "source_config_sha256": "adc6f055eb1938d8797234c388bd7e22f7cf179b1c984843323b1e8f65fbf551",
+      "source_path": "adapters/sthelar40x_ovary_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN_adapter.pth",
+      "source_sha256": "a00cb91646af00f9259a5a632793a0fe505c6a2c8532d082137cfac767629a66",
+      "source_size_bytes": "31925226",
+      "state_dict_loading": "pass",
+      "tissue": "Ovary",
+      "trainable_parameter_count": 7908779,
+      "unexpected_adapter_keys": 0,
+      "verification_date": "2026-07-20",
+      "verification_details": {
+        "base_load_info": {
+          "loaded_tensors": 744,
+          "missing_target_keys": [
+            "classifier_head.weight",
+            "classifier_head.bias"
+          ],
+          "skipped_shape": {
+            "classifier_head.bias": {
+              "checkpoint": [
+                19
+              ],
+              "model": [
+                1
+              ]
+            },
+            "classifier_head.weight": {
+              "checkpoint": [
+                19,
+                256
+              ],
+              "model": [
+                1,
+                256
+              ]
+            }
+          }
+        },
+        "base_model": "CellViT-SAM-H-x40",
+        "forward_tested": true,
+        "loaded_state_key_count": 401,
+        "missing_adapter_keys": [],
+        "missing_mutable_buffer_keys": [],
+        "model_load_tested": true,
+        "output_tensor_shapes": {
+          "hv_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_binary_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_type_map": [
+            1,
+            6,
+            256,
+            256
+          ],
+          "tissue_types": [
+            1,
+            1
+          ]
+        },
+        "status": "ok",
+        "tensor_count": 401,
+        "trainable_parameter_count": 7908779,
+        "unexpected_adapter_keys": [],
+        "unexpected_mutable_buffer_keys": []
+      },
+      "verification_status": "pass"
+    },
+    {
+      "adapter_config_sha256": "10101cf61c113e3ccdf649495758fa0119f5b17e5683139684da2f50a0c75c17",
+      "adapter_id": "tissue_specific/pancreatic/seed43",
+      "adapter_state_key_count": 296,
+      "base_checkpoint": "CellViT-SAM-H-x40.pth",
+      "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+      "components": "LoRA;AdaptFormer;NP head;HV head;NT head",
+      "dtype_distribution": "{\"float32\":366,\"int64\":35}",
+      "forward_smoke_256x256": "pass",
+      "label_mapping": "0:Background;1:Immune;2:Stromal;3:Epithelial;4:Melanocyte;5:Other",
+      "metadata_sanitization": "pass",
+      "method": "lora_adaptformer_r8_a8_red16_heads_only",
+      "missing_adapter_keys": 0,
+      "mutable_buffer_key_count": 105,
+      "output_tensor_shapes": "tissue_types=[1,1];nuclei_binary_map=[1,2,256,256];hv_map=[1,2,256,256];nuclei_type_map=[1,6,256,256]",
+      "release_path": "release/huggingface/adapters/tissue_specific/pancreatic/seed43",
+      "round_trip_tensor_equality": "pass",
+      "safetensors_sha256": "cfa072affb2108b0a5f7cfe54a0f535f6849e2ee72773fdaef13bb3119dc3b59",
+      "safetensors_size_bytes": 31812148,
+      "safetensors_tensor_count": 401,
+      "seed": "43",
+      "source_config_path": "configs/release/compayl2026/tissue_specific/training_sthelar40x_pancreatic_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed43_CLEAN.yaml",
+      "source_config_sha256": "ea13c37fd01e814c792a973a1a70bb18db5b4f8af32e389c07b9c6e431953efa",
+      "source_path": "adapters/sthelar40x_pancreatic_5class_spatial_margin128_cap50000_lora_adaptformer_heads_only_seed43/sthelar40x_pancreatic_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed43_CLEAN_adapter.pth",
+      "source_sha256": "e3b2886f1c58e389cebff0c406bac22a373fddaef170922f6f0011bb9002f056",
+      "source_size_bytes": "31956368",
+      "state_dict_loading": "pass",
+      "tissue": "Pancreatic",
+      "trainable_parameter_count": 7908779,
+      "unexpected_adapter_keys": 0,
+      "verification_date": "2026-07-20",
+      "verification_details": {
+        "base_load_info": {
+          "loaded_tensors": 744,
+          "missing_target_keys": [
+            "classifier_head.weight",
+            "classifier_head.bias"
+          ],
+          "skipped_shape": {
+            "classifier_head.bias": {
+              "checkpoint": [
+                19
+              ],
+              "model": [
+                1
+              ]
+            },
+            "classifier_head.weight": {
+              "checkpoint": [
+                19,
+                256
+              ],
+              "model": [
+                1,
+                256
+              ]
+            }
+          }
+        },
+        "base_model": "CellViT-SAM-H-x40",
+        "forward_tested": true,
+        "loaded_state_key_count": 401,
+        "missing_adapter_keys": [],
+        "missing_mutable_buffer_keys": [],
+        "model_load_tested": true,
+        "output_tensor_shapes": {
+          "hv_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_binary_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_type_map": [
+            1,
+            6,
+            256,
+            256
+          ],
+          "tissue_types": [
+            1,
+            1
+          ]
+        },
+        "status": "ok",
+        "tensor_count": 401,
+        "trainable_parameter_count": 7908779,
+        "unexpected_adapter_keys": [],
+        "unexpected_mutable_buffer_keys": []
+      },
+      "verification_status": "pass"
+    },
+    {
+      "adapter_config_sha256": "233918730801dbf825139df63e1ed037349d980ee1579ee9be87df9c8b9d2718",
+      "adapter_id": "tissue_specific/skin/seed42",
+      "adapter_state_key_count": 296,
+      "base_checkpoint": "CellViT-SAM-H-x40.pth",
+      "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+      "components": "LoRA;AdaptFormer;NP head;HV head;NT head",
+      "dtype_distribution": "{\"float32\":366,\"int64\":35}",
+      "forward_smoke_256x256": "pass",
+      "label_mapping": "0:Background;1:Immune;2:Stromal;3:Epithelial;4:Melanocyte;5:Other",
+      "metadata_sanitization": "pass",
+      "method": "lora_adaptformer_r8_a8_red16_heads_only",
+      "missing_adapter_keys": 0,
+      "mutable_buffer_key_count": 105,
+      "output_tensor_shapes": "tissue_types=[1,1];nuclei_binary_map=[1,2,256,256];hv_map=[1,2,256,256];nuclei_type_map=[1,6,256,256]",
+      "release_path": "release/huggingface/adapters/tissue_specific/skin/seed42",
+      "round_trip_tensor_equality": "pass",
+      "safetensors_sha256": "8de0d4d635d315af1cf954143808ff6652a2f8b161aabd5e21196ee3e2125f78",
+      "safetensors_size_bytes": 31812140,
+      "safetensors_tensor_count": 401,
+      "seed": "42",
+      "source_config_path": "configs/release/compayl2026/tissue_specific/training_sthelar40x_skin_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml",
+      "source_config_sha256": "79f821c83ca153a91f226081ab7d83fb14fc03b0661273ed47477dbe8e5e9195",
+      "source_path": "adapters/sthelar40x_skin_5class_spatial_margin128_lora_adaptformer_heads_only_seed42/sthelar40x_skin_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN_adapter.pth",
+      "source_sha256": "48b0f204b036ed236f7189ff30b81f3a466ab909a2edf7cdd5adac43491c263e",
+      "source_size_bytes": "31930962",
+      "state_dict_loading": "pass",
+      "tissue": "Skin",
+      "trainable_parameter_count": 7908779,
+      "unexpected_adapter_keys": 0,
+      "verification_date": "2026-07-20",
+      "verification_details": {
+        "base_load_info": {
+          "loaded_tensors": 744,
+          "missing_target_keys": [
+            "classifier_head.weight",
+            "classifier_head.bias"
+          ],
+          "skipped_shape": {
+            "classifier_head.bias": {
+              "checkpoint": [
+                19
+              ],
+              "model": [
+                1
+              ]
+            },
+            "classifier_head.weight": {
+              "checkpoint": [
+                19,
+                256
+              ],
+              "model": [
+                1,
+                256
+              ]
+            }
+          }
+        },
+        "base_model": "CellViT-SAM-H-x40",
+        "forward_tested": true,
+        "loaded_state_key_count": 401,
+        "missing_adapter_keys": [],
+        "missing_mutable_buffer_keys": [],
+        "model_load_tested": true,
+        "output_tensor_shapes": {
+          "hv_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_binary_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_type_map": [
+            1,
+            6,
+            256,
+            256
+          ],
+          "tissue_types": [
+            1,
+            1
+          ]
+        },
+        "status": "ok",
+        "tensor_count": 401,
+        "trainable_parameter_count": 7908779,
+        "unexpected_adapter_keys": [],
+        "unexpected_mutable_buffer_keys": []
+      },
+      "verification_status": "pass"
+    },
+    {
+      "adapter_config_sha256": "055f28b48de5e8f56f7a99966a6cd7141acacec3b1481b80d9782fab139ec3c0",
+      "adapter_id": "tissue_specific/tonsil/seed43",
+      "adapter_state_key_count": 296,
+      "base_checkpoint": "CellViT-SAM-H-x40.pth",
+      "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+      "components": "LoRA;AdaptFormer;NP head;HV head;NT head",
+      "dtype_distribution": "{\"float32\":366,\"int64\":35}",
+      "forward_smoke_256x256": "pass",
+      "label_mapping": "0:Background;1:Immune;2:Stromal;3:Epithelial;4:Melanocyte;5:Other",
+      "metadata_sanitization": "pass",
+      "method": "lora_adaptformer_r8_a8_red16_heads_only",
+      "missing_adapter_keys": 0,
+      "mutable_buffer_key_count": 105,
+      "output_tensor_shapes": "tissue_types=[1,1];nuclei_binary_map=[1,2,256,256];hv_map=[1,2,256,256];nuclei_type_map=[1,6,256,256]",
+      "release_path": "release/huggingface/adapters/tissue_specific/tonsil/seed43",
+      "round_trip_tensor_equality": "pass",
+      "safetensors_sha256": "6ffecf88503c77444a420fac60be91c9ecfd30c87142df6c59a8d6cf8b06103d",
+      "safetensors_size_bytes": 31812092,
+      "safetensors_tensor_count": 401,
+      "seed": "43",
+      "source_config_path": "configs/release/compayl2026/tissue_specific/training_sthelar40x_tonsil_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed43_CLEAN.yaml",
+      "source_config_sha256": "e8817fa5a380226f2e1231e3eb58a4cc1c31e02aa6adf4ee486a4ca042b07369",
+      "source_path": "adapters/sthelar40x_tonsil_5class_spatial_margin128_cap50000_lora_adaptformer_heads_only_seed43/sthelar40x_tonsil_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed43_CLEAN_adapter.pth",
+      "source_sha256": "a8d8918adebd3fe0f67a3c58c8f0687947dfcba17dc2c155779d129ffdfd29bf",
+      "source_size_bytes": "31933820",
+      "state_dict_loading": "pass",
+      "tissue": "Tonsil",
+      "trainable_parameter_count": 7908779,
+      "unexpected_adapter_keys": 0,
+      "verification_date": "2026-07-20",
+      "verification_details": {
+        "base_load_info": {
+          "loaded_tensors": 744,
+          "missing_target_keys": [
+            "classifier_head.weight",
+            "classifier_head.bias"
+          ],
+          "skipped_shape": {
+            "classifier_head.bias": {
+              "checkpoint": [
+                19
+              ],
+              "model": [
+                1
+              ]
+            },
+            "classifier_head.weight": {
+              "checkpoint": [
+                19,
+                256
+              ],
+              "model": [
+                1,
+                256
+              ]
+            }
+          }
+        },
+        "base_model": "CellViT-SAM-H-x40",
+        "forward_tested": true,
+        "loaded_state_key_count": 401,
+        "missing_adapter_keys": [],
+        "missing_mutable_buffer_keys": [],
+        "model_load_tested": true,
+        "output_tensor_shapes": {
+          "hv_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_binary_map": [
+            1,
+            2,
+            256,
+            256
+          ],
+          "nuclei_type_map": [
+            1,
+            6,
+            256,
+            256
+          ],
+          "tissue_types": [
+            1,
+            1
+          ]
+        },
+        "status": "ok",
+        "tensor_count": 401,
+        "trainable_parameter_count": 7908779,
+        "unexpected_adapter_keys": [],
+        "unexpected_mutable_buffer_keys": []
+      },
+      "verification_status": "pass"
+    }
+  ],
+  "base_checkpoint": {
+    "filename": "CellViT-SAM-H-x40.pth",
+    "redistributed": false,
+    "sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+    "size_bytes": 2799315941,
+    "transfer_load_note": "The upstream 19-class tissue classifier is intentionally reinitialized to one output; 744 compatible base tensors load, with classifier_head.weight/bias skipped only for this declared shape mismatch."
+  },
+  "common_expectations": {
+    "adapter_state_key_count": 296,
+    "components": [
+      "LoRA",
+      "AdaptFormer",
+      "NP head",
+      "HV head",
+      "NT head"
+    ],
+    "label_mapping": {
+      "Background": 0,
+      "Epithelial": 3,
+      "Immune": 1,
+      "Melanocyte": 4,
+      "Other": 5,
+      "Stromal": 2
+    },
+    "mutable_buffer_key_count": 105,
+    "output_tensor_shapes": {
+      "hv_map": [
+        1,
+        2,
+        256,
+        256
+      ],
+      "nuclei_binary_map": [
+        1,
+        2,
+        256,
+        256
+      ],
+      "nuclei_type_map": [
+        1,
+        6,
+        256,
+        256
+      ],
+      "tissue_types": [
+        1,
+        1
+      ]
+    },
+    "tensor_count": 401,
+    "trainable_parameter_count": 7908779
+  },
+  "environment": {
+    "cuda_available": false,
+    "environment_yml_name": "cellvit",
+    "python": "3.9.25",
+    "local_environment_name": "cellvit39",
+    "python_executable": "python3.9",
+    "pytorch": "2.5.1+cu121",
+    "pyyaml": "6.0",
+    "safetensors": "0.7.0"
+  },
+  "linear_probe_config_comparison": {
+    "inferred_fields": [],
+    "intentional_changes": [
+      "data.dataset_path parameterized",
+      "logging.log_dir sanitized",
+      "logging.wandb_dir sanitized"
+    ],
+    "missing_scientific_fields": [],
+    "original": "run/sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_klt_final_heads_only_frozen_encoder_decoder_e10_seed42/log/2026-07-02T153245_sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_klt_final_heads_only_frozen_encoder_decoder_e10_seed42/config.yaml",
+    "original_sha256": "4831771b975aadbcc8be0a4ed89d52c21e7c41c78633da6316ad8f2c3b6ce58c",
+    "release": "configs/release/compayl2026/klt/training_sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_klt_final_heads_only_frozen_encoder_decoder_e10_seed42.yaml",
+    "release_sha256": "7c9cdb184bc3a3e13735b507777ec568d70a761fcbe9c8cbb06c12f6b30191ff",
+    "removed_runtime_fields": [
+      "agent",
+      "dataset_config",
+      "logging.run_id",
+      "logging.wandb_file",
+      "run_sweep"
+    ],
+    "scientific_training_fields_equal": true
+  },
+  "release_candidate_status": "verified_technical_checks_passed_license_review_pending",
+  "verified_manifest_sha256": "3dff12b9d7c6f79ed99603b529b13d1cbb0e0172fc8b7b54bc61a56cf5b7ef2f",
+  "tests": {
+    "failed": [],
+    "passed": [
+      "12/12 source PTH schema and weights-only CPU loads",
+      "12/12 PTH-to-safetensors exports",
+      "12/12 exact tensor round trips",
+      "12/12 source/config/adapter-config/safetensors hashes",
+      "12/12 required component checks",
+      "12/12 tensor-key and tensor-shape checks",
+      "12/12 trainable parameter count checks",
+      "12/12 label mapping/order checks",
+      "12/12 sanitized metadata checks",
+      "12/12 safetensors header scans with zero private-path marker matches",
+      "12/12 base reconstruction and exact adapter-state loading",
+      "12/12 256x256 CPU forward smoke tests",
+      "public adapter-hub package resolution and metadata loading",
+      "root and Hugging Face README local-link resolution",
+      "root and Hugging Face release-config tree equality"
+    ],
+    "skipped": [
+      "training",
+      "dataset-scale inference",
+      "dataset-dependent evaluation",
+      "GPU smoke tests",
+      "GitHub upload",
+      "Hugging Face upload"
+    ],
+    "transient_failures_resolved": [
+      "Initial environment probe found safetensors missing; installed declared dependency 0.7.0 and reran successfully.",
+      "Initial KLT seed42 full verifier run reached the forward pass but failed during JSON reporting because load_info had been discarded; fixed the verifier and reran successfully."
+    ]
+  },
+  "verification_date": "2026-07-20"
+}

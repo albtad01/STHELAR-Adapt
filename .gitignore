@@ -65,3 +65,13 @@ supplementary/
 
 # Generated figure variants; selected figures are already tracked
 figures/*
+!figures/paper_figures
+
+# Local Hugging Face draft contains curated public metadata, configs, and figures.
+!release/huggingface/configs/**/*.yaml
+
+# Binary model-release artifacts stay local / belong in the eventual HF LFS upload.
+release/huggingface/adapters/**/*.safetensors
+release/huggingface/adapters/**/*.pth
+release/huggingface/.cache/
+release/huggingface/cache/
