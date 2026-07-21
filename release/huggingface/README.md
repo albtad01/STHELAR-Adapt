@@ -15,19 +15,17 @@ datasets:
   - FelicieGS/STHELAR_40x
 ---
 
-# STHELAR-Adapt: Parameter-Efficient CellViT Adaptation to STHELAR
+# STHELAR-Adapt: Tissue-Specific Adaptation for Spatial Transcriptomics-Informed Cell Segmentation and Classification
 
-> **Verified adapter release.** The twelve canonical packages have passed exact round-trip, metadata, checksum, strict state-dict loading, and forward verification. The CellViT-SAM-H x40 base checkpoint is required but not redistributed.
-
-STHELAR-Adapt addresses joint nuclei instance segmentation and five-class cell typing in STHELAR 40x H&E images, whose paired cell annotations are derived from Xenium spatial transcriptomics. The release contains two KLT adapters covering kidney, liver, and tonsil seeds 42/43, plus ten tissue-specific packages spanning Breast, Colon, Kidney, Liver, Lung, Ovary, Pancreatic, Skin, and Tonsil.
-
-This is an adapter-only release: it provides LoRA Q/V, AdaptFormer, final NP/HV/NT head state, and required mutable buffers, but no CellViT/SAM-H base weights. All twelve packages passed PTH-to-safetensors tensor equality, sanitized-metadata validation, source/config/export checksum validation, strict loading with zero missing or unexpected adapter and mutable-buffer keys, and 256×256 forward verification against the declared base architecture.
+STHELAR-Adapt is an adapter-only release for spatial transcriptomics-informed adaptation of CellViT-SAM-H x40 to nuclei instance segmentation and five-class nuclei typing across nine STHELAR tissues.
 
 ![STHELAR-Adapt architecture: pretrained encoder base weights frozen, trainable LoRA and AdaptFormer modules, frozen decoder body, and trainable final heads](figures/architecture.png)
 
-## Model summary
+The release contains two packages for the Kidney–Liver–Tonsil (KLT) multi-tissue setting and ten tissue-specific packages spanning Breast, Colon, Kidney, Liver, Lung, Ovary, Pancreatic, Skin, and Tonsil. Combine the official base checkpoint with one compatible adapter package to reconstruct an adapted CellViT model.
 
-STHELAR-Adapt provides adapter-only weights for adapting CellViT-SAM-H x40 to STHELAR 40x H&E nuclei instance segmentation and five-class cell-type classification. It is not a standalone model and does not include the frozen CellViT/SAM-H base checkpoint.
+All twelve packages passed exact tensor round-trip, sanitized-metadata and checksum validation, strict loading with zero missing or unexpected adapter and mutable-buffer keys, and 256×256 forward verification. Training, preprocessing, evaluation, and release-engineering details are available in the [GitHub repository](https://github.com/albtad01/STHELAR-Adapt).
+
+## Adapter method
 
 The selected method freezes the CellViT-SAM-H x40 encoder base weights and decoder body while training:
 
@@ -35,7 +33,7 @@ The selected method freezes the CellViT-SAM-H x40 encoder base weights and decod
 - AdaptFormer bottlenecks with reduction 16 and GELU in encoder MLP blocks;
 - final NP (nuclei probability), HV (horizontal/vertical), and NT (nuclei type) output heads.
 
-The selected configuration has 7,908,779 trainable parameters, approximately 1.1176% of the full model. Mutable BatchNorm buffers needed for exact reconstruction are packaged separately from trainable state keys inside each safetensors file.
+The selected configuration has 7,908,779 trainable parameters, approximately 1.1176% of the full model. Mutable BatchNorm buffers needed for exact reconstruction are packaged separately from trainable state keys inside each safetensors file; the frozen base weights are not included.
 
 ## Exact base requirement
 
@@ -90,37 +88,40 @@ The task has five foreground classes plus background:
 
 ## Training configuration
 
-Selected PEFT runs use AdamW, learning rate `5e-5`, betas `[0.85, 0.85]`, batch size 4, 10 epochs, mixed precision, cell-aware sampling with gamma 0.85, and the augmentations recorded in `configs/release/compayl2026/`. KLT results are reported as the mean over seeds 42 and 43. Tissue results use seed 42 except Pancreatic and Tonsil (seed 43); Kidney PEFT averages seeds 42 and 43.
-
-The selected checkpoint in each source adapter metadata is `model_best.pth`; the stored metadata records the validation selection state. Final reported numbers below are test metrics and were not used as the selection criterion.
+Selected PEFT runs use AdamW, learning rate `5e-5`, batch size 4, 10 epochs, mixed precision, and the augmentations recorded in `configs/release/compayl2026/`. Exact configs are included in this repository; see [GitHub](https://github.com/albtad01/STHELAR-Adapt) for preprocessing and training workflows.
 
 ## Results
 
-### KLT headline
+### Kidney–Liver–Tonsil (KLT) multi-tissue setting
 
-| Method | Trainable | mPQ | bPQ | F1 detection | F1 type (present classes) |
-|---|---:|---:|---:|---:|---:|
-| FullFT | 100% | 0.3092 | 0.5147 | 0.8286 | 0.6661 |
-| Selected LoRA+AF + heads | 1.1176% | 0.2936 | 0.5043 | 0.8345 | 0.5783 |
+KLT values are test-set means over seeds 42 and 43.
 
-The selected PEFT method recovers 94.96% of FullFT KLT mPQ. `results/klt_ablation_final_with_type_metrics.csv` contains the full ablation table and definitions.
+| KLT method | Trainable modules | Trainable | mPQ | bPQ | F1 detection | F1 type |
+|---|---|---:|---:|---:|---:|---:|
+| Full fine-tuning | All weights | 100% | 0.309 | 0.515 | 0.829 | 0.666 |
+| Selected PEFT | LoRA Q/V + AdaptFormer + NP/HV/NT heads | 1.12% | 0.294 | 0.504 | 0.835 | 0.578 |
+| Final-head linear probe | NP/HV/NT heads | <0.01% | 0.204 | 0.446 | 0.818 | 0.430 |
 
-### Tissue-specific results
+Selected PEFT recovers 94.96% of FullFT KLT mPQ. [`results/klt_ablation_final_with_type_metrics.csv`](results/klt_ablation_final_with_type_metrics.csv) contains the complete values and ablations.
 
-| Tissue | FullFT mPQ | PEFT mPQ | PEFT F1 detection | PEFT F1 type | Adapter seed(s) |
-|---|---:|---:|---:|---:|---|
-| Liver | 0.4124 | 0.3925 | 0.8916 | 0.5673 | 42 |
-| Kidney | 0.2592 | 0.2484 | 0.8332 | 0.5013 | 42, 43 mean |
-| Ovary | 0.3195 | 0.2999 | 0.8414 | 0.6182 | 42 |
-| Breast | 0.3481 | 0.3348 | 0.8424 | 0.5873 | 42 |
-| Colon | 0.2057 | 0.2047 | 0.7904 | 0.6076 | 42 |
-| Lung | 0.3225 | 0.3015 | 0.8637 | 0.6271 | 42 |
-| Pancreatic | 0.2118 | 0.2389 | 0.7383 | 0.6682 | 43 |
-| Skin | 0.2107 | 0.2239 | 0.7250 | 0.6778 | 42 |
-| Tonsil | 0.2498 | 0.2346 | 0.8226 | 0.5955 | 43 |
-| Mean | 0.2822 | 0.2755 | 0.8165 | 0.6056 | across tissues |
+### Tissue-specific selected PEFT
 
-See `results/tissue_specific_compayl2026_final.csv` for unrounded values and aggregation policy.
+These within-dataset results do not represent cross-patient or cross-site evaluation.
+
+| Tissue | Adapter seed(s) | mPQ | F1 detection | F1 type |
+|---|---:|---:|---:|---:|
+| Liver | 42 | 0.3925 | 0.8916 | 0.5673 |
+| Kidney | 42, 43 mean | 0.2484 | 0.8332 | 0.5013 |
+| Ovary | 42 | 0.2999 | 0.8414 | 0.6182 |
+| Breast | 42 | 0.3348 | 0.8424 | 0.5873 |
+| Colon | 42 | 0.2047 | 0.7904 | 0.6076 |
+| Lung | 42 | 0.3015 | 0.8637 | 0.6271 |
+| Pancreatic | 43 | 0.2389 | 0.7383 | 0.6682 |
+| Skin | 42 | 0.2239 | 0.7250 | 0.6778 |
+| Tonsil | 43 | 0.2346 | 0.8226 | 0.5955 |
+| **Mean** | — | **0.2755** | **0.8165** | **0.6056** |
+
+See [`results/tissue_specific_compayl2026_final.csv`](results/tissue_specific_compayl2026_final.csv) for unrounded values and aggregation policy.
 
 ## Verified adapter inventory
 
@@ -128,59 +129,62 @@ This release contains 12 adapter-only files: KLT seeds 42/43; Breast 42; Colon 4
 
 No ablation, failed, retest, duplicate-named alternate run, or full base checkpoint belongs in the canonical set.
 
-## Download and load
+## Quick start: CellViT-SAM-H x40 + Lung adapter
 
-This repository distributes safetensors adapter packages. Normal users download a package; they do not convert the original `.pth` training checkpoints. From a clone of the STHELAR-Adapt code repository, download one adapter and its matching config:
+Clone the code repository and create its public environment:
 
-```python
-from huggingface_hub import snapshot_download
-
-release_root = snapshot_download(
-    repo_id="albtad01/STHELAR-Adapt-CellViT-SAM-H-x40",
-    local_dir="sthelar-adapt-release",
-    allow_patterns=[
-        "adapters/klt/seed42/*",
-        "configs/release/compayl2026/klt/"
-        "training_sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_"
-        "lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml",
-        "scripts/verify_released_adapter.py",
-    ],
-)
+```bash
+git clone https://github.com/albtad01/STHELAR-Adapt.git
+cd STHELAR-Adapt
+conda env create -f environment.yml
+conda activate sthelar-adapt
+python -m pip install torch
+python -m pip install -r requirements.txt
 ```
 
-First verify the downloaded adapter package without a base checkpoint:
+Place the [official base checkpoint](https://drive.usercontent.google.com/download?id=1MvRKNzDW2eHbQb5rAgTEp6s2zAXHixRV&export=download&authuser=0) at `models/pretrained/CellViT-SAM-H-x40.pth`, verify the SHA256 shown above, then download the Lung seed-42 package. This repeated-`--include` command was dry-run validated with `huggingface-hub` 1.8.0:
+
+```bash
+hf download \
+  albtad01/STHELAR-Adapt-CellViT-SAM-H-x40 \
+  --include "adapters/tissue_specific/lung/seed42/*" \
+  --include "configs/release/compayl2026/tissue_specific/training_sthelar40x_lung_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml" \
+  --include "scripts/verify_released_adapter.py" \
+  --local-dir sthelar-adapt-release
+```
+
+Verify the downloaded adapter against the local base:
 
 ```bash
 python sthelar-adapt-release/scripts/verify_released_adapter.py \
-  sthelar-adapt-release/adapters/klt/seed42
+  sthelar-adapt-release/adapters/tissue_specific/lung/seed42 \
+  --base-checkpoint models/pretrained/CellViT-SAM-H-x40.pth
 ```
 
-Then use the STHELAR-Adapt repository to reconstruct the base and load one adapter:
+Reconstruct CellViT and load the adapter:
 
 ```python
 from utils.cellvit_adapter_hub import load_cellvit_base, load_sthelar_adapter
 
-release_root = "sthelar-adapt-release"
+base_checkpoint = "models/pretrained/CellViT-SAM-H-x40.pth"
+config_path = (
+    "sthelar-adapt-release/configs/release/compayl2026/tissue_specific/"
+    "training_sthelar40x_lung_5class_spatial_margin128_cap50000_"
+    "lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml"
+)
+adapter_path = "sthelar-adapt-release/adapters/tissue_specific/lung/seed42"
+
 model = load_cellvit_base(
     model_name="cellvit-sam-h-x40",
-    base_checkpoint="/path/to/CellViT-SAM-H-x40.pth",
-    config_path=f"{release_root}/configs/release/compayl2026/klt/"
-                "training_sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_"
-                "lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml",
+    base_checkpoint=base_checkpoint,
+    config_path=config_path,
     device="cpu",
 )
-load_sthelar_adapter(model, f"{release_root}/adapters/klt/seed42")
+load_sthelar_adapter(model, adapter_path)
+model.eval()
 ```
 
-To validate compatibility and run a lightweight CPU forward pass, explicitly provide the local base:
-
-```bash
-python sthelar-adapt-release/scripts/verify_released_adapter.py \
-  sthelar-adapt-release/adapters/klt/seed42 \
-  --base-checkpoint /path/to/CellViT-SAM-H-x40.pth
-```
-
-Only one adapter should be loaded at a time. Reconstruct the base when changing architecture, decoder scope, or label mapping.
+This reconstructs the released Lung-adapted CellViT model. Its released test values are mPQ 0.3015, F1 detection 0.8637, and F1 type 0.6271; they do not guarantee improvement on arbitrary external lung images. Use the [GitHub inference and evaluation workflow](https://github.com/albtad01/STHELAR-Adapt#training-and-evaluation) for datasets.
 
 ## Limitations
 

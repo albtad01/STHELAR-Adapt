@@ -26,7 +26,7 @@ The frozen per-file hashes and results are in `release/huggingface/adapter_manif
 
 ## Environment and base checkpoint
 
-The existing local Python 3.9 project environment was used. Its local environment directory is named `cellvit39`; the public `environment.yml` declares `name: cellvit`, so the documented activation command remains `conda activate cellvit` and matches that file.
+The existing local Python 3.9 project environment was used. Its local environment directory is named `cellvit39`; the public `environment.yml` now declares `name: sthelar-adapt`, so the documented activation command is `conda activate sthelar-adapt`.
 
 | Component | Verified value |
 |---|---|
@@ -105,7 +105,7 @@ The complete intentional difference set is:
 ## Documentation and assets
 
 - All references now use `configs/release/compayl2026/`.
-- The root installation instructions use `conda activate cellvit`, matching `environment.yml`.
+- The root installation instructions use `conda activate sthelar-adapt`, matching `environment.yml`.
 - The redundant standalone safetensors installation was removed.
 - F1 type was added to the root KLT headline table: 0.430 final-head LP, 0.666 FullFT, and 0.578 selected PEFT.
 - Both qualitative captions use: “Examples were selected for qualitative illustration and are not intended to constitute a statistically representative sample.”
@@ -155,7 +155,7 @@ For a new user, the portable setup and verification sequence is:
 
 ```bash
 conda env create -f environment.yml
-conda activate cellvit
+conda activate sthelar-adapt
 python -m pip install torch
 python -m pip install -r requirements.txt
 

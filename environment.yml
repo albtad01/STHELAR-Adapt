@@ -1,4 +1,4 @@
-name: cellvit
+name: sthelar-adapt
 channels:
   - conda-forge
   - defaults
