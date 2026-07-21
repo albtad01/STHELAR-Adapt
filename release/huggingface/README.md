@@ -1,7 +1,7 @@
 ---
 library_name: pytorch
 license: other
-license_name: Apache License 2.0 with Commons Clause
+license_name: apache-2.0-with-commons-clause
 tags:
   - cellvit
   - segment-anything
