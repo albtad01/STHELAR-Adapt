@@ -2,6 +2,7 @@
 library_name: pytorch
 license: other
 license_name: apache-2.0-with-commons-clause
+license_link: LICENSE
 tags:
   - cellvit
   - segment-anything
@@ -17,15 +18,13 @@ datasets:
 
 # STHELAR-Adapt: Tissue-Specific Adaptation for Spatial Transcriptomics-Informed Cell Segmentation and Classification
 
-STHELAR-Adapt is an adapter-only release for spatial transcriptomics-informed adaptation of CellViT-SAM-H x40 to nuclei instance segmentation and five-class nuclei typing across nine STHELAR tissues.
+STHELAR-Adapt is an adapter-only release for spatial transcriptomics-informed nuclei segmentation and five-class cell typing with CellViT-SAM-H x40. It provides twelve verified KLT and tissue-specific LoRA + AdaptFormer packages across nine STHELAR tissues.
+
+[GitHub repository](https://github.com/albtad01/STHELAR-Adapt)
 
 ![STHELAR-Adapt architecture: pretrained encoder base weights frozen, trainable LoRA and AdaptFormer modules, frozen decoder body, and trainable final heads](figures/architecture.png)
 
-The release contains two packages for the Kidney–Liver–Tonsil (KLT) multi-tissue setting and ten tissue-specific packages spanning Breast, Colon, Kidney, Liver, Lung, Ovary, Pancreatic, Skin, and Tonsil. Combine the official base checkpoint with one compatible adapter package to reconstruct an adapted CellViT model.
-
-All twelve packages passed exact tensor round-trip, sanitized-metadata and checksum validation, strict loading with zero missing or unexpected adapter and mutable-buffer keys, and 256×256 forward verification. Training, preprocessing, evaluation, and release-engineering details are available in the [GitHub repository](https://github.com/albtad01/STHELAR-Adapt).
-
-## Adapter method
+## Model summary
 
 The selected method freezes the CellViT-SAM-H x40 encoder base weights and decoder body while training:
 
@@ -99,8 +98,8 @@ KLT values are test-set means over seeds 42 and 43.
 | KLT method | Trainable modules | Trainable | mPQ | bPQ | F1 detection | F1 type |
 |---|---|---:|---:|---:|---:|---:|
 | Full fine-tuning | All weights | 100% | 0.309 | 0.515 | 0.829 | 0.666 |
-| Final-head linear probe | NP/HV/NT heads | <0.01% | 0.204 | 0.446 | 0.818 | 0.430 |
 | Selected PEFT | LoRA Q/V + AdaptFormer + NP/HV/NT heads | 1.12% | 0.294 | 0.504 | 0.835 | 0.578 |
+| Final-head linear probe | NP/HV/NT heads | <0.01% | 0.204 | 0.446 | 0.818 | 0.430 |
 
 Selected PEFT recovers 94.96% of FullFT KLT mPQ. [`results/klt_ablation_final_with_type_metrics.csv`](results/klt_ablation_final_with_type_metrics.csv) contains the complete values and ablations.
 
