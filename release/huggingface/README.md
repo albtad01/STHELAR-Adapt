@@ -1,7 +1,7 @@
 ---
 library_name: pytorch
 license: other
-license_name: license pending rights-holder approval
+license_name: Apache License 2.0 with Commons Clause
 tags:
   - cellvit
   - segment-anything
@@ -17,7 +17,7 @@ datasets:
 
 # STHELAR-Adapt — draft model card
 
-> **Local release candidate: not uploaded and not release-approved.** All 12 canonical adapters have passed conversion, exact round-trip equality, model loading, forward smoke, and metadata checks. Publication remains blocked on the licensing and rights-holder review below.
+> **Verified release candidate.** All 12 canonical adapters have passed conversion, exact round-trip equality, model loading, forward smoke, and metadata checks. The CellViT-SAM-H x40 base checkpoint is not redistributed.
 
 ![STHELAR-Adapt architecture: pretrained encoder base weights frozen, trainable LoRA and AdaptFormer modules, frozen decoder body, and trainable final heads](figures/architecture.png)
 
@@ -125,7 +125,7 @@ This repository distributes safetensors adapter packages. Normal users download 
 from huggingface_hub import snapshot_download
 
 release_root = snapshot_download(
-    repo_id="<namespace>/<repository>",
+    repo_id="albtad01/STHELAR-Adapt-CellViT-SAM-H-x40",
     local_dir="sthelar-adapt-release",
     allow_patterns=[
         "adapters/klt/seed42/*",
@@ -199,6 +199,16 @@ Please cite the final STHELAR-Adapt COMPAYL 2026 paper once its bibliographic re
 - Giraud-Sauveur et al., “STHELAR, a Multi-Tissue Dataset Linking Spatial Transcriptomics and Histology for Cell Type Annotation,” *Scientific Data* (2026). DOI: 10.1038/s41597-026-06937-6.
 - Kirillov et al., “Segment Anything,” ICCV 2023.
 
-## License warning
+## License
 
-The included `LICENSE` is copied unchanged from the inherited CellViT repository (Apache 2.0 with Commons Clause). Its applicability to new STHELAR-Adapt code and adapter weights, and the interaction with CellViT checkpoint terms, SAM terms, and STHELAR data terms, require manual legal/rights-holder review. **Do not label these adapters CC BY 4.0 merely because STHELAR data uses CC BY 4.0.** Do not upload weights until the release owner selects and documents a legally supported license and all required notices.
+This release is distributed under the terms in [`LICENSE`](LICENSE):
+**Apache License 2.0 with the Commons Clause**. This preserves the
+restrictive upstream terms applied to the original CellViT code.
+
+The CellViT-SAM-H x40 base checkpoint is not included and must be obtained
+separately under its applicable terms.
+
+STHELAR source data and source imagery remain licensed under CC BY 4.0.
+The qualitative figures contain STHELAR-derived imagery with ground-truth
+and model-prediction overlays added for this work. Please cite CellViT,
+STHELAR, Segment Anything, and STHELAR-Adapt as described above.
