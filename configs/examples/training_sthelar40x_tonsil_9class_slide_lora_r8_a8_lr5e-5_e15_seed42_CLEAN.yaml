@@ -38,7 +38,7 @@ gpu: 0
 
 data:
   dataset: STHELAR
-  dataset_path: /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_tonsil_9class_slide
+  dataset_path: ${DATA_ROOT}/sthelar40x_tonsil_9class_slide
   train_folds:
     - train
   val_folds:

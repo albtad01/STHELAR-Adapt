@@ -26,7 +26,7 @@ gpu: 0
 
 data:
   dataset: STHELAR
-  dataset_path: DATA_ROOT/sthelar40x_breast_5class_spatial_margin128_cap50000
+  dataset_path: ${DATA_ROOT}/sthelar40x_breast_5class_spatial_margin128_cap50000
   label_mode: 5class
   split: spatial
   train_folds: [train]

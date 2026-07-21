@@ -7,6 +7,7 @@
 
 import argparse
 import logging
+import os
 from abc import ABC, abstractmethod
 from typing import Tuple, Union
 
@@ -87,7 +88,7 @@ class ExperimentBaseParser:
         opt = self.parser.parse_args()
         with open(opt.config, "r") as config_file:
             yaml_config = yaml.safe_load(config_file)
-            yaml_config_dict = dict(yaml_config)
+            yaml_config_dict = self._expand_environment(dict(yaml_config))
 
         opt_dict = vars(opt)
         # check for gpu to overwrite with cli argument
@@ -118,3 +119,23 @@ class ExperimentBaseParser:
         self.config = yaml_config_dict
 
         return self.config
+
+    @classmethod
+    def _expand_environment(cls, value):
+        """Expand ``${VARNAME}`` placeholders in nested YAML values.
+
+        Bare placeholders are intentionally unsupported: `${DATA_ROOT}` is
+        unambiguous, whereas `DATA_ROOT/...` silently becomes a relative path.
+        """
+        if isinstance(value, dict):
+            return {key: cls._expand_environment(item) for key, item in value.items()}
+        if isinstance(value, list):
+            return [cls._expand_environment(item) for item in value]
+        if isinstance(value, str):
+            expanded = os.path.expandvars(value)
+            if "${" in expanded:
+                raise ValueError(
+                    "Unresolved environment variable in configuration: {}".format(value)
+                )
+            return expanded
+        return value

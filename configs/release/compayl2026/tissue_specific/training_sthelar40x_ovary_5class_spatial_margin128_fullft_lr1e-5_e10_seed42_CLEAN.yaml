@@ -17,7 +17,7 @@ gpu: 0
 
 data:
   dataset: STHELAR
-  dataset_path: DATA_ROOT/sthelar40x_ovary_5class_spatial_margin128
+  dataset_path: ${DATA_ROOT}/sthelar40x_ovary_5class_spatial_margin128
   label_mode: 5class
   split: spatial
   train_folds: [train]

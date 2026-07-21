@@ -1,5 +1,5 @@
-sthelar_root: STHELAR_ROOT
-output_root: DATA_ROOT/sthelar40x_skin_5class_spatial_margin128_cap50000
+sthelar_root: ${STHELAR_ROOT}
+output_root: ${DATA_ROOT}/sthelar40x_skin_5class_spatial_margin128_cap50000
 tissue_name: Skin
 tissue: skin
 slide_ids:

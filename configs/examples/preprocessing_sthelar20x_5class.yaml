@@ -1,5 +1,5 @@
-sthelar_root: /gpfs/workdir/taddeial/workspace/Datasets/STHELAR_20x
-output_root: /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar20x_multitissue_scan_5class
+sthelar_root: ${STHELAR_ROOT}
+output_root: ${DATA_ROOT}/sthelar20x_multitissue_scan_5class
 
 tissue_name: MultiTissue
 

@@ -1,5 +1,5 @@
-sthelar_root: STHELAR_ROOT
-output_root: DATA_ROOT/sthelar40x_tonsil_5class_spatial_margin128_cap50000
+sthelar_root: ${STHELAR_ROOT}
+output_root: ${DATA_ROOT}/sthelar40x_tonsil_5class_spatial_margin128_cap50000
 tissue_name: Tonsil
 tissue: tonsil
 slide_ids:

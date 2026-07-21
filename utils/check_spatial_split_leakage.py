@@ -353,10 +353,8 @@ def main() -> int:
     parser.add_argument(
         "--dataset",
         type=Path,
-        default=Path(
-            "/gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/"
-            "sthelar40x_kidney_liver_tonsil_5class_spatial_margin128"
-        ),
+        required=True,
+        help="CellViT-ready dataset directory containing split_manifest.yaml.",
     )
     parser.add_argument(
         "--output-dir",

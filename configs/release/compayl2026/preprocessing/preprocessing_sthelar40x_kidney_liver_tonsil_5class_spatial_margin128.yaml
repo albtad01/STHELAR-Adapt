@@ -1,5 +1,5 @@
-sthelar_root: STHELAR_ROOT
-output_root: DATA_ROOT/sthelar40x_kidney_liver_tonsil_5class_spatial_margin128
+sthelar_root: ${STHELAR_ROOT}
+output_root: ${DATA_ROOT}/sthelar40x_kidney_liver_tonsil_5class_spatial_margin128
 
 tissue_name: KidneyLiverTonsil
 tissue: null

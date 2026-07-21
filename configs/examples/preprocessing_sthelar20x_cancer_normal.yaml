@@ -1,5 +1,5 @@
-sthelar_root: /gpfs/workdir/taddeial/workspace/Datasets/STHELAR_20x
-output_root: /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar20x_cancer_scan_cells_label3_2cl
+sthelar_root: ${STHELAR_ROOT}
+output_root: ${DATA_ROOT}/sthelar20x_cancer_scan_cells_label3_2cl
 
 tissue_name: CancerNormal2
 

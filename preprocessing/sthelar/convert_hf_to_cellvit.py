@@ -53,6 +53,7 @@ from __future__ import annotations
 
 import argparse
 import io
+import os
 import re
 import shutil
 import zipfile
@@ -113,7 +114,21 @@ def load_yaml_config(path: Optional[str]) -> dict[str, Any]:
     if not isinstance(config, dict):
         raise ValueError(f"Config YAML must contain a mapping/dictionary: {config_path}")
 
-    return config
+    def expand_environment(value: Any) -> Any:
+        if isinstance(value, dict):
+            return {key: expand_environment(item) for key, item in value.items()}
+        if isinstance(value, list):
+            return [expand_environment(item) for item in value]
+        if isinstance(value, str):
+            expanded = os.path.expandvars(value)
+            if "${" in expanded:
+                raise ValueError(
+                    f"Unresolved environment variable in configuration: {value}"
+                )
+            return expanded
+        return value
+
+    return expand_environment(config)
 
 def normalize_nuclei_types(nuclei_types: Optional[dict[str, Any]]) -> dict[str, int]:
     """

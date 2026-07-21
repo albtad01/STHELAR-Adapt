@@ -102,9 +102,14 @@ def _load_adapter_payload(path):
 
 def _adapter_weight_from_package(package_dir):
     package_dir = _resolve(package_dir)
-    adapter_config_path = package_dir / "adapter_config.yaml"
-    if adapter_config_path.is_file():
-        adapter_config = load_yaml(adapter_config_path)
+    adapter_config_path = package_dir / "adapter_config.json"
+    legacy_config_path = package_dir / "adapter_config.yaml"
+    if adapter_config_path.is_file() or legacy_config_path.is_file():
+        if adapter_config_path.is_file():
+            adapter_config = json.loads(adapter_config_path.read_text())
+        else:
+            adapter_config_path = legacy_config_path
+            adapter_config = load_yaml(adapter_config_path)
         weight_name = adapter_config.get("adapter_weight_file", "adapter_model.pth")
         weight_path = Path(weight_name)
         if not weight_path.is_absolute():
@@ -130,7 +135,8 @@ def _adapter_weight_from_package(package_dir):
         return existing[0].resolve()
     if not existing:
         raise FileNotFoundError(
-            f"No adapter weights found in {package_dir}; expected adapter_config.yaml, "
+            f"No adapter weights found in {package_dir}; expected adapter_config.json, "
+            "legacy adapter_config.yaml, "
             "adapter_model.safetensors, adapter_model.pth, or *_adapter.pth"
         )
     raise FileNotFoundError(

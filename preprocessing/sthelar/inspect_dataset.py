@@ -491,7 +491,7 @@ def parse_args() -> argparse.Namespace:
         "--sthelar-root",
         type=str,
         required=True,
-        help="Path to raw STHELAR Hugging Face dataset root, e.g. /Volumes/T9/Datasets/STHELAR_20x.",
+        help="Path to the raw STHELAR Hugging Face dataset root.",
     )
     parser.add_argument(
         "--magnification",

@@ -27,7 +27,7 @@ gpu: 0
 
 data:
   dataset: "PanNuke"
-  dataset_path: "/gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar20x_cancer_scan_cells_label3_2cl"
+  dataset_path: "${DATA_ROOT}/sthelar20x_cancer_scan_cells_label3_2cl"
   train_folds: ["train"]
   val_folds: ["valid"]
   test_folds: ["test"]
