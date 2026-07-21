@@ -21,8 +21,8 @@ KLT values are test-set means over seeds 42 and 43.
 | KLT method | Trainable modules | Trainable | mPQ | bPQ | F1 detection | F1 type |
 |---|---|---:|---:|---:|---:|---:|
 | Full fine-tuning | All weights | 100% | 0.309 | 0.515 | 0.829 | 0.666 |
-| Selected PEFT | LoRA Q/V + AdaptFormer + NP/HV/NT heads | 1.12% | 0.294 | 0.504 | 0.835 | 0.578 |
 | Final-head linear probe | NP/HV/NT heads | <0.01% | 0.204 | 0.446 | 0.818 | 0.430 |
+| Selected PEFT | LoRA Q/V + AdaptFormer + NP/HV/NT heads | 1.12% | 0.294 | 0.504 | 0.835 | 0.578 |
 
 ### Tissue-specific selected PEFT
 
