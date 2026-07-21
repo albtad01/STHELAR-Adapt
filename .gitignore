@@ -63,11 +63,12 @@ reports/qualitative_grid_patch_selection.md
 # Manuscript source kept private until camera-ready release
 supplementary/
 
-# Generated figure variants; selected figures are already tracked
+# Generated figure variants; track only the publication architecture source
 figures/*
-!figures/paper_figures
+!figures/paper_figures/
+!figures/paper_figures/architecture.png
 
-# Local Hugging Face draft contains curated public metadata, configs, and figures.
+# Hugging Face release metadata includes curated configs and figures.
 !release/huggingface/configs/**/*.yaml
 
 # Binary model-release artifacts stay local / belong in the eventual HF LFS upload.

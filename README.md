@@ -1,14 +1,24 @@
 # STHELAR-Adapt
 
-Parameter-efficient adaptation of frozen CellViT-SAM-H x40 base weights to STHELAR 40x H&E nuclei instance segmentation and five-class cell typing.
+Parameter-efficient adaptation of CellViT-SAM-H x40 to STHELAR 40x H&E nuclei instance segmentation and five-class cell typing.
 
-[COMPAYL 2026 paper (link pending)](#citation) · [STHELAR paper](https://doi.org/10.1038/s41597-026-06937-6) · [STHELAR 40x data](https://huggingface.co/datasets/FelicieGS/STHELAR_40x) · [CellViT](https://github.com/TIO-IKIM/CellViT)
+[COMPAYL 2026 paper (link pending)](#citation) · [Hugging Face adapters](https://huggingface.co/albtad01/STHELAR-Adapt-CellViT-SAM-H-x40) · [STHELAR paper](https://doi.org/10.1038/s41597-026-06937-6) · [STHELAR 40x data](https://huggingface.co/datasets/FelicieGS/STHELAR_40x) · [CellViT](https://github.com/TIO-IKIM/CellViT)
+
+STHELAR pairs H&E tissue morphology with Xenium-derived cell annotations, enabling joint nuclei instance segmentation and five-class cell typing across nine tissues. Tissue-specific differences in morphology and label composition create domain shift, motivating adaptation beyond a fixed pretrained model.
+
+STHELAR-Adapt tests whether CellViT-SAM-H x40 can be adapted to this setting without full fine-tuning. The selected strategy freezes the pretrained encoder base weights and decoder body while training LoRA rank-8 Q/V projections, AdaptFormer bottlenecks, and the final NP, HV, and NT heads. It updates approximately 1.12% of model parameters and recovers 94.96% of FullFT KLT mPQ. This repository provides preprocessing, leakage-safe spatial splitting, experiment configs, evaluation utilities, release tools, and verified Hugging Face adapter packages.
+
+## Highlights
+
+- Joint nuclei instance segmentation and five-class cell typing across nine STHELAR tissues.
+- Selected LoRA Q/V + AdaptFormer + NP/HV/NT adaptation with frozen encoder base weights and decoder body.
+- Approximately 1.12% trainable parameters while recovering 94.96% of FullFT KLT mPQ.
+- Reproducible preprocessing, spatial splits, configs, evaluation, and adapter release tooling.
+- Twelve verified KLT and tissue-specific safetensors adapter packages on Hugging Face.
 
 <p align="center">
-  <img src="docs/figures/architecture.png" alt="STHELAR-Adapt architecture: pretrained encoder base weights frozen, trainable LoRA and AdaptFormer modules, frozen decoder body, and trainable final heads" width="900">
+  <img src="figures/paper_figures/architecture.png" alt="STHELAR-Adapt architecture: pretrained encoder base weights frozen, trainable LoRA and AdaptFormer modules, frozen decoder body, and trainable final heads" width="900">
 </p>
-
-The selected adapter uses LoRA rank 8/alpha 8 on encoder-attention Q and V projections, AdaptFormer bottlenecks in encoder MLP blocks, and trainable final NP, HV, and NT heads. The pretrained encoder base weights and decoder body remain frozen; about 1.12% of all parameters are trainable.
 
 ## Key results
 
@@ -42,16 +52,16 @@ The normal user workflow uses released safetensors packages; it does not require
    python -m pip install -r requirements.txt
    ```
 
-2. Obtain `CellViT-SAM-H-x40.pth` independently and verify its SHA256:
+2. Download the [official CellViT-SAM-H x40 checkpoint](https://drive.usercontent.google.com/download?id=1MvRKNzDW2eHbQb5rAgTEp6s2zAXHixRV&export=download&authuser=0) and verify its SHA256:
 
    ```bash
    sha256sum /path/to/CellViT-SAM-H-x40.pth
    # b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf
    ```
 
-   The base checkpoint is not redistributed here.
+   The base checkpoint is required for reconstruction but is not redistributed here. Users must comply with its applicable terms.
 
-3. After publication, download one adapter package and its matching config from the Hugging Face model repository:
+3. Download one adapter package and its matching config from the Hugging Face model repository:
 
    ```python
    from huggingface_hub import snapshot_download
@@ -94,7 +104,7 @@ python -m pip install torch
 python -m pip install -r requirements.txt
 ```
 
-The full `CellViT-SAM-H-x40.pth` checkpoint is required for training and model reconstruction but is not included or redistributed here. The locally verified file has SHA256 `b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf`. Place an independently obtained, license-compatible copy at `models/pretrained/CellViT-SAM-H-x40.pth`, or pass its path to the adapter loader. The authoritative checkpoint source, release identity, and terms still require confirmation.
+The [official `CellViT-SAM-H-x40.pth` checkpoint](https://drive.usercontent.google.com/download?id=1MvRKNzDW2eHbQb5rAgTEp6s2zAXHixRV&export=download&authuser=0) is required for training and model reconstruction but is not included or redistributed here. The verified file has SHA256 `b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf`. Place a terms-compliant copy at `models/pretrained/CellViT-SAM-H-x40.pth`, or pass its path to the adapter loader. Users are responsible for complying with the base checkpoint's applicable terms.
 
 ## Dataset preparation and leakage-safe splitting
 
@@ -200,9 +210,9 @@ python tools/export_adapter_safetensors.py /path/to/approved_adapter.pth \
   --base-checkpoint-sha256 b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf
 ```
 
-## Verified release-candidate inventory
+## Verified adapter inventory
 
-All 12 release candidates passed conversion, exact tensor round-trip, metadata, base-loading, and 256×256 CPU forward checks. Exact source/config/export hashes are frozen in [the verified release manifest](release/huggingface/adapter_manifest_verified.csv); the broader 51-checkpoint audit remains in [the audit manifest](release/adapter_manifest.csv). No full CellViT base weights belong in the adapter release.
+All 12 adapter packages passed conversion, exact tensor round-trip, metadata, base-loading, and 256×256 CPU forward checks. Exact source/config/export hashes are frozen in [the verified release manifest](release/huggingface/adapter_manifest_verified.csv); the broader 51-checkpoint audit remains in [the audit manifest](release/adapter_manifest.csv). No full CellViT base weights belong in the adapter release.
 
 | Public adapter ID | Tissue(s) | Seed |
 |---|---|---:|
@@ -228,9 +238,9 @@ All 12 release candidates passed conversion, exact tensor round-trip, metadata, 
 | `configs/release/compayl2026/` | curated preprocessing and training configurations |
 | `utils/` | evaluation, analysis, checkpoint, and adapter utilities |
 | `tools/` | public adapter audit, conversion, and verification tools |
-| `reports/`, `docs/figures/` | selected metrics, audits, and canonical publication figures |
+| `reports/`, `figures/paper_figures/`, `docs/figures/` | selected metrics, audits, the publication architecture source, and synchronized figures |
 | `ruche/`, `jeanzay/` | optional, cluster-specific SLURM examples; not required locally |
-| `release/huggingface/` | local, non-uploaded Hugging Face release draft |
+| `release/huggingface/` | Hugging Face adapter-release metadata, configs, scripts, results, and synchronized figures |
 
 ## Limitations
 
@@ -238,7 +248,7 @@ All 12 release candidates passed conversion, exact tensor round-trip, metadata, 
 - STHELAR cell labels are derived from spatial transcriptomics and retain assignment uncertainty.
 - Selected PEFT nearly recovers FullFT mPQ but retains a gap in cell-type F1.
 - The work is for research use only and is not validated for clinical diagnosis or treatment.
-- Exact base-checkpoint identity, weight redistribution rights, and combined code/adapter/base-model licensing require manual confirmation before release.
+- The base checkpoint is required but not redistributed; users must comply with its applicable terms and the repository license notices.
 
 ## Citation
 

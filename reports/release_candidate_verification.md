@@ -109,7 +109,7 @@ The complete intentional difference set is:
 - The redundant standalone safetensors installation was removed.
 - F1 type was added to the root KLT headline table: 0.430 final-head LP, 0.666 FullFT, and 0.578 selected PEFT.
 - Both qualitative captions use: “Examples were selected for qualitative illustration and are not intended to constitute a statistically representative sample.”
-- GitHub's canonical assets are `docs/figures/architecture.png` and `docs/figures/qualitative.png`; synchronized standalone-model-repository copies live under `release/huggingface/figures/`. The architecture heading reads “Pretrained encoder — base weights frozen”. Older unused architecture copies were not deleted.
+- The publication architecture source is `figures/paper_figures/architecture.png`; byte-identical destinations live at `docs/figures/architecture.png` and `release/huggingface/figures/architecture.png`. The qualitative figure remains synchronized between `docs/figures/qualitative.png` and `release/huggingface/figures/qualitative.png`.
 - All filesystem-relative links in the root README and standalone model card passed local-link validation.
 
 ## Existing diff and recommended commit split

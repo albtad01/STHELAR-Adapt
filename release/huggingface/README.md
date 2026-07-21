@@ -15,9 +15,13 @@ datasets:
   - FelicieGS/STHELAR_40x
 ---
 
-# STHELAR-Adapt — draft model card
+# STHELAR-Adapt: Parameter-Efficient CellViT Adaptation to STHELAR
 
-> **Verified release candidate.** All 12 canonical adapters have passed conversion, exact round-trip equality, model loading, forward smoke, and metadata checks. The CellViT-SAM-H x40 base checkpoint is not redistributed.
+> **Verified adapter release.** The twelve canonical packages have passed exact round-trip, metadata, checksum, strict state-dict loading, and forward verification. The CellViT-SAM-H x40 base checkpoint is required but not redistributed.
+
+STHELAR-Adapt addresses joint nuclei instance segmentation and five-class cell typing in STHELAR 40x H&E images, whose paired cell annotations are derived from Xenium spatial transcriptomics. The release contains two KLT adapters covering kidney, liver, and tonsil seeds 42/43, plus ten tissue-specific packages spanning Breast, Colon, Kidney, Liver, Lung, Ovary, Pancreatic, Skin, and Tonsil.
+
+This is an adapter-only release: it provides LoRA Q/V, AdaptFormer, final NP/HV/NT head state, and required mutable buffers, but no CellViT/SAM-H base weights. All twelve packages passed PTH-to-safetensors tensor equality, sanitized-metadata validation, source/config/export checksum validation, strict loading with zero missing or unexpected adapter and mutable-buffer keys, and 256×256 forward verification against the declared base architecture.
 
 ![STHELAR-Adapt architecture: pretrained encoder base weights frozen, trainable LoRA and AdaptFormer modules, frozen decoder body, and trainable final heads](figures/architecture.png)
 
@@ -40,7 +44,14 @@ The selected configuration has 7,908,779 trainable parameters, approximately 1.1
 - Backbone: SAM-H, 32 blocks, embedding dimension 1280, 16 attention heads
 - Input: normalized RGB 256×256 STHELAR 40x patches
 
-The base checkpoint is **not included or redistributed**. The locally verified checkpoint SHA256 is `b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf`. The authoritative download location, license terms, and release identifier still require manual verification; a filename match alone is insufficient for compatibility.
+Download the [official CellViT-SAM-H x40 checkpoint](https://drive.usercontent.google.com/download?id=1MvRKNzDW2eHbQb5rAgTEp6s2zAXHixRV&export=download&authuser=0). The base checkpoint is **required but not included or redistributed**. Verify the file before loading an adapter:
+
+```bash
+sha256sum /path/to/CellViT-SAM-H-x40.pth
+# b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf
+```
+
+Users must comply with the base checkpoint's applicable terms. A filename match alone is insufficient for compatibility.
 
 ## Intended uses
 
@@ -60,7 +71,7 @@ The base checkpoint is **not included or redistributed**. The locally verified c
 
 Adapters were trained on the public [STHELAR 40x Hugging Face dataset](https://huggingface.co/datasets/FelicieGS/STHELAR_40x), derived from Xenium spatial transcriptomics paired with H&E imagery. Experiments cover kidney, liver, tonsil, ovary, breast, colon, lung, pancreatic, and skin tissues. KLT combines kidney, liver, and tonsil.
 
-The release configs use within-slide spatial train/validation/test regions with a 128-coordinate-unit boundary exclusion band. Some tissue configs cap each slide at 50,000 patches before splitting. The exact dataset revision and file hashes must be added before upload.
+The release configs use within-slide spatial train/validation/test regions with a 128-coordinate-unit boundary exclusion band. Some tissue configs cap each slide at 50,000 patches before splitting. The exact source Parquet revision and file-level hashes used during the original experiments were not pinned. Users reproducing the experiments should record the STHELAR dataset revision and input checksums they use.
 
 ### Label mapping
 
@@ -111,9 +122,9 @@ The selected PEFT method recovers 94.96% of FullFT KLT mPQ. `results/klt_ablatio
 
 See `results/tissue_specific_compayl2026_final.csv` for unrounded values and aggregation policy.
 
-## Adapter inventory
+## Verified adapter inventory
 
-The release candidate contains 12 adapter-only files: KLT seeds 42/43; Breast 42; Colon 42; Kidney 42/43; Liver 42; Lung 42; Ovary 42; Pancreatic 43; Skin 42; and Tonsil 43. [`adapter_manifest_verified.csv`](adapter_manifest_verified.csv) freezes stable public IDs, exact source/config/export SHA256 values, tensor structure, and verification status; [`verification_summary.json`](verification_summary.json) records the environment and full test outcomes.
+This release contains 12 adapter-only files: KLT seeds 42/43; Breast 42; Colon 42; Kidney 42/43; Liver 42; Lung 42; Ovary 42; Pancreatic 43; Skin 42; and Tonsil 43. [`adapter_manifest_verified.csv`](adapter_manifest_verified.csv) freezes stable public IDs, exact source/config/export SHA256 values, tensor structure, and verification status; [`verification_summary.json`](verification_summary.json) records the environment and full test outcomes.
 
 No ablation, failed, retest, duplicate-named alternate run, or full base checkpoint belongs in the canonical set.
 
