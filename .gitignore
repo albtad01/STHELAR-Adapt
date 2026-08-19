@@ -48,6 +48,8 @@ adapters/SHA256SUMS.local
 !configs/release/**/*.yml
 !configs/label_mappings/**/*.yaml
 !configs/label_mappings/**/*.yml
+!configs/slide_exp/**/*.yaml
+!configs/slide_exp/**/*.yml
 # Internal experiment bookkeeping
 reports/deleted_checkpoints_list.txt
 reports/final_submission_sanity_check.md

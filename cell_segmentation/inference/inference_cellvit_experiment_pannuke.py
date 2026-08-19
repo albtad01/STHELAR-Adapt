@@ -76,6 +76,7 @@ from models.segmentation.cell_segmentation.cellvit_shared import (
     CellViTShared,
 )
 from utils.logger import Logger
+from utils.efficiency_metrics import EfficiencyRecorder
 
 from models.adapters.utils import (
     insert_lora,
@@ -105,6 +106,7 @@ class InferenceCellViT:
         qc_metric: str = None,
         qc_thresholds: list = None,
         qc_bins: list = None,
+        class_agnostic_only: bool = False,
     ) -> None:
         """Inference for HoverNet
 
@@ -115,8 +117,10 @@ class InferenceCellViT:
             checkpoint_name (str, optional): Select name of the model to load. Defaults to model_best.pth
         """
         self.run_dir = Path(run_dir)
-        if gpu=="mps":
+        if gpu == "mps":
             self.device = "mps"
+        elif gpu == "cpu":
+            self.device = "cpu"
         else:
             self.device = f"cuda:{int(gpu)}"
         self.run_conf: dict = None
@@ -127,6 +131,7 @@ class InferenceCellViT:
         self.qc_metric_override = qc_metric
         self.qc_thresholds_override = qc_thresholds
         self.qc_bins_override = qc_bins
+        self.class_agnostic_only = bool(class_agnostic_only)
         self.all_cell_tokens = {}
 
         self.__load_run_conf()
@@ -202,7 +207,10 @@ class InferenceCellViT:
 
     def __setup_amp(self) -> None:
         """Setup automated mixed precision (amp) for inference."""
-        self.mixed_precision = self.run_conf["training"].get("mixed_precision", False)
+        self.mixed_precision = bool(
+            self.run_conf["training"].get("mixed_precision", False)
+            and self.device.startswith("cuda")
+        )
 
 
     def get_model(
@@ -510,8 +518,10 @@ class InferenceCellViT:
 
         inference_dataloader = DataLoader(
             inference_dataset,
-            batch_size=16,
-            num_workers=12,
+            batch_size=int(self.run_conf.get("inference", {}).get("batch_size", 16)),
+            num_workers=int(
+                self.run_conf.get("inference", {}).get("num_workers", 12)
+            ),
             pin_memory=False,
             shuffle=False,
         )
@@ -549,6 +559,19 @@ class InferenceCellViT:
         # put model in eval mode
         model.to(device=self.device)
         model.eval()
+
+        efficiency_recorder = None
+        if bool(self.run_conf.get("efficiency", {}).get("enabled", False)):
+            efficiency_recorder = EfficiencyRecorder(
+                output_path=self.run_dir / "inference_efficiency_metrics.json",
+                mode="inference",
+                experiment_config=self.run_conf,
+                model=model,
+                device=self.device,
+                batch_size=inference_dataloader.batch_size,
+                patch_count=len(inference_dataloader.dataset),
+            )
+            efficiency_recorder.start()
 
         # setup score tracker
         image_names = []  # image names as str
@@ -706,6 +729,22 @@ class InferenceCellViT:
             "precision_detection": float(prec_d),
             "recall_detection": float(rec_d),
         }
+        if self.class_agnostic_only:
+            valid_keys = {
+                "Binary-Cell-Dice-Mean",
+                "Binary-Cell-Jacard-Mean",
+                "bPQ",
+                "bDQ",
+                "bSQ",
+                "f1_detection",
+                "precision_detection",
+                "recall_detection",
+            }
+            reported_dataset_metrics = {
+                key: value for key, value in dataset_metrics.items() if key in valid_keys
+            }
+        else:
+            reported_dataset_metrics = dataset_metrics
 
         # calculate tissue metrics
         tissue_types = dataset_config["tissue_types"]
@@ -772,11 +811,24 @@ class InferenceCellViT:
         # print final results
         # binary
         self.logger.info(f"{20*'*'} Binary Dataset metrics {20*'*'}")
-        [self.logger.info(f"{f'{k}:': <25} {v}") for k, v in dataset_metrics.items()]
+        [
+            self.logger.info(f"{f'{k}:': <25} {v}")
+            for k, v in reported_dataset_metrics.items()
+        ]
         # tissue -> the PQ values are bPQ values -> what about mBQ?
         self.logger.info(f"{20*'*'} Tissue metrics {20*'*'}")
         flattened_tissue = []
         for key in tissue_metrics:
+            if self.class_agnostic_only:
+                flattened_tissue.append(
+                    [
+                        key,
+                        tissue_metrics[key]["Dice"],
+                        tissue_metrics[key]["Jaccard"],
+                        tissue_metrics[key]["bPQ"],
+                    ]
+                )
+                continue
             flattened_tissue.append(
                 [
                     key,
@@ -786,13 +838,15 @@ class InferenceCellViT:
                     tissue_metrics[key]["bPQ"],
                 ]
             )
-        self.logger.info(
-            tabulate(
-                flattened_tissue, headers=["Tissue", "Dice", "Jaccard", "mPQ", "bPQ"]
-            )
+        tissue_headers = (
+            ["Tissue", "Dice", "Jaccard", "bPQ"]
+            if self.class_agnostic_only
+            else ["Tissue", "Dice", "Jaccard", "mPQ", "bPQ"]
         )
+        self.logger.info(tabulate(flattened_tissue, headers=tissue_headers))
         # nuclei types
-        self.logger.info(f"{20*'*'} Nuclei Type Metrics {20*'*'}")
+        if not self.class_agnostic_only:
+            self.logger.info(f"{20*'*'} Nuclei Type Metrics {20*'*'}")
         flattened_nuclei_type = []
         for key in nuclei_metrics_pq:
             flattened_nuclei_type.append(
@@ -803,11 +857,16 @@ class InferenceCellViT:
                     nuclei_metrics_pq[key],
                 ]
             )
-        self.logger.info(
-            tabulate(flattened_nuclei_type, headers=["Nuclei Type", "DQ", "SQ", "PQ"])
-        )
+        if not self.class_agnostic_only:
+            self.logger.info(
+                tabulate(
+                    flattened_nuclei_type,
+                    headers=["Nuclei Type", "DQ", "SQ", "PQ"],
+                )
+            )
         # nuclei detection metrics
-        self.logger.info(f"{20*'*'} Nuclei Detection Metrics {20*'*'}")
+        if not self.class_agnostic_only:
+            self.logger.info(f"{20*'*'} Nuclei Detection Metrics {20*'*'}")
         flattened_detection = []
         for key in nuclei_metrics_d:
             flattened_detection.append(
@@ -818,14 +877,16 @@ class InferenceCellViT:
                     nuclei_metrics_d[key]["f1_cell"],
                 ]
             )
-        self.logger.info(
-            tabulate(
-                flattened_detection,
-                headers=["Nuclei Type", "Precision", "Recall", "F1"],
+        if not self.class_agnostic_only:
+            self.logger.info(
+                tabulate(
+                    flattened_detection,
+                    headers=["Nuclei Type", "Precision", "Recall", "F1"],
+                )
             )
-        )
         # confusion matrix for nuclei types
-        log_confusion_matrix(self.logger, cm, cm_normalized, class_names)
+        if not self.class_agnostic_only:
+            log_confusion_matrix(self.logger, cm, cm_normalized, class_names)
 
         # ### CHOOSE OR NOT : Computing F1 score for each nuclei type for each slide separately and adding to the logger ###
         # slide_metrics = compute_f1_per_slide(
@@ -862,33 +923,69 @@ class InferenceCellViT:
                 "Dice": float(binary_dice_scores[idx]),
                 "Jaccard": float(binary_jaccard_scores[idx]),
                 "bPQ": float(pq_scores[idx]),
-                "mPQ": float(np.nanmean(cell_type_pq_scores[idx])),
                 "bDQ": float(dq_scores[idx]),
                 "bSQ": float(sq_scores[idx]),
-                "mDQ": float(np.nanmean(cell_type_dq_scores[idx])),
-                "mSQ": float(np.nanmean(cell_type_sq_scores[idx])),
-                "per_class": per_class,
                 "detection_stats": detection_stats_per_image[idx],
-                "type_proba_per_nuclei": type_proba_per_nuclei[idx],
             }
+            if not self.class_agnostic_only:
+                image_metrics[image_name].update(
+                    {
+                        "mPQ": float(np.nanmean(cell_type_pq_scores[idx])),
+                        "mDQ": float(np.nanmean(cell_type_dq_scores[idx])),
+                        "mSQ": float(np.nanmean(cell_type_sq_scores[idx])),
+                        "per_class": per_class,
+                        "type_proba_per_nuclei": type_proba_per_nuclei[idx],
+                    }
+                )
         qc_filtered_metrics = self.compute_qc_filtered_image_metrics(image_metrics)
         qc_sweep_metrics = self.compute_and_save_qc_sweep(
             image_metrics=image_metrics,
             dataset_config=dataset_config,
         )
+        reported_tissue_metrics = tissue_metrics
+        if self.class_agnostic_only:
+            reported_tissue_metrics = {
+                tissue: {
+                    key: values[key]
+                    for key in ["Dice", "Jaccard", "bPQ"]
+                    if key in values
+                }
+                for tissue, values in tissue_metrics.items()
+            }
         all_metrics = {
-            "dataset": dataset_metrics,
-            "tissue_metrics": tissue_metrics,
+            "metric_scope": (
+                "class_agnostic_only" if self.class_agnostic_only else "class_aware"
+            ),
+            "taxonomy_mapping": None if self.class_agnostic_only else "dataset_config",
+            "dataset": reported_dataset_metrics,
+            "tissue_metrics": reported_tissue_metrics,
             "image_metrics": image_metrics,
             "qc_filtered_metrics": qc_filtered_metrics,
             "qc_sweep_metrics": qc_sweep_metrics,
-            "nuclei_metrics_pq": nuclei_metrics_pq,
-            "nuclei_metrics_d": nuclei_metrics_d,
         }
+        if not self.class_agnostic_only:
+            all_metrics["nuclei_metrics_pq"] = nuclei_metrics_pq
+            all_metrics["nuclei_metrics_d"] = nuclei_metrics_d
+        else:
+            all_metrics["omitted_metrics"] = [
+                "STHELAR F1 type",
+                "class-aware mPQ/mDQ/mSQ",
+                "per-class PQ/DQ/SQ",
+                "type confusion matrix",
+                "tissue classifier accuracy",
+            ]
 
         # saving
-        with open(str(self.run_dir / "inference_results.json"), "w") as outfile:
+        results_name = (
+            "frozen_class_agnostic_results.json"
+            if self.class_agnostic_only
+            else "inference_results.json"
+        )
+        with open(str(self.run_dir / results_name), "w") as outfile:
             json.dump(all_metrics, outfile, indent=2)
+
+        if efficiency_recorder is not None:
+            efficiency_recorder.finalize_inference()
 
         # save cell tokens
         if self.cell_tokens != "no":
@@ -2027,6 +2124,15 @@ class InferenceCellViTParser:
             action="store_true",
             help="Build only the QC sweep from an existing inference_results.json.",
         )
+        parser.add_argument(
+            "--class-agnostic-only",
+            dest="class_agnostic_only",
+            action="store_true",
+            help=(
+                "Write only detection/binary segmentation metrics. Required for "
+                "untouched pretrained checkpoints with an unmatched label taxonomy."
+            ),
+        )
 
         self.parser = parser
 
@@ -2048,6 +2154,7 @@ if __name__ == "__main__":
         qc_metric=configuration["qc_metric"],
         qc_thresholds=configuration["qc_thresholds"],
         qc_bins=configuration["qc_bins"],
+        class_agnostic_only=configuration["class_agnostic_only"],
     )
     if configuration["reuse_results"]:
         inf.run_qc_sweep_from_saved_results()

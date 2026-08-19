@@ -1,0 +1,31 @@
+fold: A
+strategy: slide
+reuse_packed_data: true
+source_dataset_root: /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_kidney_liver_tonsil_5class_spatial_margin128
+output_root: /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_klt_5class_slideind_foldA_margin128
+
+slide_ids:
+  - kidney_s0
+  - kidney_s1
+  - liver_s0
+  - liver_s1
+  - tonsil_s0
+  - tonsil_s1
+train_slides:
+  - kidney_s0
+  - liver_s0
+  - tonsil_s0
+valid_slides: []
+test_slides:
+  - kidney_s1
+  - liver_s1
+  - tonsil_s1
+
+split_axis: x
+boundary_margin: 128
+train_frac: 0.70
+valid_frac: 0.15
+test_frac: 0.15
+train_frac_inside_train_slide: 0.85
+valid_frac_inside_train_slide: 0.15
+random_seed: 42

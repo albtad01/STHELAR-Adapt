@@ -20,6 +20,7 @@ from torch.nn.modules.loss import _Loss
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import _LRScheduler
 from torch.utils.data import DataLoader
+from utils.efficiency_metrics import EfficiencyRecorder
 from utils.tools import flatten_dict
 
 
@@ -74,6 +75,7 @@ class BaseTrainer:
         self.checkpointing_config = experiment_config.get("checkpointing")
         self.last_validation_metrics = None
         self.best_validation_metrics = None
+        self.efficiency_recorder = None
         if self.checkpointing_config is not None:
             defaults = {
                 "save_best": True,
@@ -200,8 +202,24 @@ class BaseTrainer:
         if metric_init is not None and self.start_epoch == 0:
             wandb.log(metric_init, step=0)
 
+        efficiency_config = self.experiment_config.get("efficiency", {})
+        if bool(efficiency_config.get("enabled", False)):
+            self.efficiency_recorder = EfficiencyRecorder(
+                output_path=self.logdir / "efficiency_metrics.json",
+                mode="training",
+                experiment_config=self.experiment_config,
+                model=self.model,
+                device=self.device,
+                batch_size=train_dataloader.batch_size,
+            )
+            # Model/device, optimizer, scheduler, datasets and loaders are initialized.
+            # Start the measured interval immediately before the first epoch.
+            self.efficiency_recorder.start()
+
         for epoch in range(self.start_epoch, epochs):
             should_stop = False
+            if self.efficiency_recorder is not None:
+                self.efficiency_recorder.start_epoch()
             # training epoch
             self.logger.info(f"Epoch: {epoch+1}/{epochs}")
             if self.experiment_config["adapters"].get("adapter_type", None) != "freeze":
@@ -262,6 +280,8 @@ class BaseTrainer:
                 self._prune_epoch_checkpoints()
 
             if should_stop:
+                if self.efficiency_recorder is not None:
+                    self.efficiency_recorder.finish_epoch()
                 break
 
             # scheduling
@@ -271,9 +291,20 @@ class BaseTrainer:
                 self.scheduler.step()
             new_lr = self.optimizer.param_groups[0]["lr"]
             self.logger.debug(f"Old lr: {curr_lr:.6f} - New lr: {new_lr:.6f}")
+            if self.efficiency_recorder is not None:
+                self.efficiency_recorder.finish_epoch()
 
         self._deduplicate_best_and_latest()
         self._log_retained_checkpoints()
+        if self.efficiency_recorder is not None:
+            self.efficiency_recorder.finish_interval(
+                status="training_finished_pending_checkpoint"
+            )
+
+    def finalize_efficiency(self, checkpoint_path: Path = None) -> None:
+        """Mark an instrumented run complete after its final checkpoint exists."""
+        if self.efficiency_recorder is not None:
+            self.efficiency_recorder.finalize_training(checkpoint_path)
 
     def _checkpoint_option(self, key: str, legacy_default):
         if self.checkpointing_config is None:

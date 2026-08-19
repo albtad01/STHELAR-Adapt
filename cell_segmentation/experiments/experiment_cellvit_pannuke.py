@@ -319,6 +319,11 @@ class ExperimentCellVitPanNuke(BaseExperiment):
             latest_checkpoint=latest_checkpoint,
         )
 
+        final_efficiency_checkpoint = (
+            best_checkpoint if best_checkpoint.is_file() else latest_checkpoint
+        )
+        trainer.finalize_efficiency(final_efficiency_checkpoint)
+
         # At the end close logger
         self.logger.info(f"Finished run {run.id}")
         close_logger(self.logger)
