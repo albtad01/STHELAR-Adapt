@@ -40,6 +40,12 @@ reports/split_checks/*.png
 reports/figures/
 reports/checkpoint_cleanup/
 
+# Generated from the committed confusion-matrix CSVs.
+reports/neurips2026_paper_results/confusion_matrices/**/*.png
+
+# Old-cluster storage-operation journals are retained locally, not published.
+reports/storage_cleanup_*.md
+
 # Local adapter inventories
 adapters/SHA256SUMS.local
 
@@ -50,6 +56,8 @@ adapters/SHA256SUMS.local
 !configs/label_mappings/**/*.yml
 !configs/slide_exp/**/*.yaml
 !configs/slide_exp/**/*.yml
+!manifests/**/*.yaml
+!manifests/**/*.yml
 # Internal experiment bookkeeping
 reports/deleted_checkpoints_list.txt
 reports/final_submission_sanity_check.md
