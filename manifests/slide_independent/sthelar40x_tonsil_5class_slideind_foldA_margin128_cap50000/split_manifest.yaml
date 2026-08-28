@@ -1,0 +1,60 @@
+created_at_utc: '2026-08-25T09:56:39.881047+00:00'
+fold: A
+source_dataset_root: ${DATA_ROOT}/sthelar40x_tonsil_5class_spatial_margin128_cap50000
+output_root: ${DATA_ROOT}/sthelar40x_tonsil_5class_slideind_foldA_margin128_cap50000
+split_strategy: slide
+split_axis: x
+spatial_margin: 128
+train_fraction_inside_training_slides: 0.85
+validation_fraction_inside_training_slides: 0.15
+train_slide_ids:
+- tonsil_s0
+validation_source_slide_ids:
+- tonsil_s0
+test_slide_ids:
+- tonsil_s1
+patch_counts:
+  train: 21001
+  valid: 2066
+  test: 21083
+counts_per_slide:
+  train:
+    tonsil_s0: 21001
+  valid:
+    tonsil_s0: 2066
+  test:
+    tonsil_s1: 21083
+class_counts_per_split:
+  train:
+    Immune: 1705169
+    Stromal: 408278
+    Epithelial: 303671
+    Melanocyte: 0
+    Other: 25111
+  valid:
+    Immune: 178844
+    Stromal: 44368
+    Epithelial: 36111
+    Melanocyte: 0
+    Other: 1985
+  test:
+    Immune: 1131567
+    Stromal: 346263
+    Epithelial: 179772
+    Melanocyte: 0
+    Other: 84362
+reused_packed_payload: true
+reused_files:
+- images.zip
+- labels.zip
+- types.csv
+- dataset_config.yaml
+helper_manifest:
+  train_slides:
+  - tonsil_s0
+  valid_slides: []
+  test_slides:
+  - tonsil_s1
+  uses_spatial_valid_inside_train_slide: true
+  train_frac_inside_train_slide: 0.85
+  valid_frac_inside_train_slide: 0.15

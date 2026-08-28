@@ -1,0 +1,76 @@
+created_at_utc: '2026-08-19T08:18:21.200425+00:00'
+fold: A
+source_dataset_root: ${DATA_ROOT}/sthelar40x_kidney_liver_tonsil_5class_spatial_margin128
+output_root: ${DATA_ROOT}/sthelar40x_klt_5class_slideind_foldA_margin128
+split_strategy: slide
+split_axis: x
+spatial_margin: 128
+train_fraction_inside_training_slides: 0.85
+validation_fraction_inside_training_slides: 0.15
+train_slide_ids:
+- kidney_s0
+- liver_s0
+- tonsil_s0
+validation_source_slide_ids:
+- kidney_s0
+- liver_s0
+- tonsil_s0
+test_slide_ids:
+- kidney_s1
+- liver_s1
+- tonsil_s1
+patch_counts:
+  train: 24283
+  valid: 2052
+  test: 23494
+counts_per_slide:
+  train:
+    kidney_s0: 6321
+    liver_s0: 8980
+    tonsil_s0: 8982
+  valid:
+    kidney_s0: 402
+    liver_s0: 776
+    tonsil_s0: 874
+  test:
+    kidney_s1: 4449
+    liver_s1: 9166
+    tonsil_s1: 9879
+class_counts_per_split:
+  train:
+    Immune: 798175
+    Stromal: 270672
+    Epithelial: 356338
+    Melanocyte: 0
+    Other: 22934
+  valid:
+    Immune: 80971
+    Stromal: 26407
+    Epithelial: 26653
+    Melanocyte: 0
+    Other: 1039
+  test:
+    Immune: 654213
+    Stromal: 264177
+    Epithelial: 280954
+    Melanocyte: 0
+    Other: 42365
+reused_packed_payload: true
+reused_files:
+- images.zip
+- labels.zip
+- types.csv
+- dataset_config.yaml
+helper_manifest:
+  train_slides:
+  - kidney_s0
+  - liver_s0
+  - tonsil_s0
+  valid_slides: []
+  test_slides:
+  - kidney_s1
+  - liver_s1
+  - tonsil_s1
+  uses_spatial_valid_inside_train_slide: true
+  train_frac_inside_train_slide: 0.85
+  valid_frac_inside_train_slide: 0.15

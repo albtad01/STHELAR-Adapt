@@ -1,0 +1,17 @@
+fold: B
+strategy: slide
+reuse_packed_data: true
+source_dataset_root: ${DATA_ROOT}/sthelar40x_liver_5class_spatial_margin128
+output_root: ${DATA_ROOT}/sthelar40x_liver_5class_slideind_foldB_margin128
+slide_ids: [liver_s0, liver_s1]
+train_slides: [liver_s1]
+valid_slides: []
+test_slides: [liver_s0]
+split_axis: x
+boundary_margin: 128
+train_frac: 0.70
+valid_frac: 0.15
+test_frac: 0.15
+train_frac_inside_train_slide: 0.85
+valid_frac_inside_train_slide: 0.15
+random_seed: 42

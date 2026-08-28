@@ -1,0 +1,17 @@
+fold: B
+strategy: slide
+reuse_packed_data: true
+source_dataset_root: ${DATA_ROOT}/sthelar40x_skin_5class_spatial_margin128_cap50000
+output_root: ${DATA_ROOT}/sthelar40x_skin_5class_slideind_foldB_margin128_cap50000
+slide_ids: [skin_s1, skin_s2]
+train_slides: [skin_s2]
+valid_slides: []
+test_slides: [skin_s1]
+split_axis: x
+boundary_margin: 128
+train_frac: 0.70
+valid_frac: 0.15
+test_frac: 0.15
+train_frac_inside_train_slide: 0.85
+valid_frac_inside_train_slide: 0.15
+random_seed: 42

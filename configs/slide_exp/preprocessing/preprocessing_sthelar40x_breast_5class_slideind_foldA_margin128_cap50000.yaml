@@ -1,0 +1,17 @@
+fold: A
+strategy: slide
+reuse_packed_data: true
+source_dataset_root: ${DATA_ROOT}/sthelar40x_breast_5class_spatial_margin128_cap50000
+output_root: ${DATA_ROOT}/sthelar40x_breast_5class_slideind_foldA_margin128_cap50000
+slide_ids: [breast_s0, breast_s1]
+train_slides: [breast_s0]
+valid_slides: []
+test_slides: [breast_s1]
+split_axis: x
+boundary_margin: 128
+train_frac: 0.70
+valid_frac: 0.15
+test_frac: 0.15
+train_frac_inside_train_slide: 0.85
+valid_frac_inside_train_slide: 0.15
+random_seed: 42

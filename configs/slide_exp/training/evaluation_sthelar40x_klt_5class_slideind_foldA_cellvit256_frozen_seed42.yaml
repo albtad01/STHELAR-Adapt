@@ -1,0 +1,17 @@
+condition: Frozen
+fold: A
+seed: 42
+run_name: sthelar40x_klt_5class_slideind_foldA_cellvit256_frozen_seed42
+checkpoint_path: ${PROJECT_ROOT}/models/pretrained/CellViT-256-x40.pth
+expected_checkpoint_sha256: ee3986922fc500353db3d7692c566e19e1c694c8f10e47cf49dfd90160fc3b2b
+expected_arch: CellViT256
+expected_backbone: ViT256
+backbone_identity: CellViT-256 x40
+dataset_path: "${DATA_ROOT}/sthelar40x_klt_5class_slideind_foldA_margin128"
+output_dir: ${PROJECT_ROOT}/run/sthelar40x_klt_5class_slideind_foldA_cellvit256_frozen_seed42/eval
+gpu: 0
+batch_size: 16
+num_workers: 12
+mixed_precision: true
+metric_scope: class_agnostic_only
+taxonomy_mapping: null

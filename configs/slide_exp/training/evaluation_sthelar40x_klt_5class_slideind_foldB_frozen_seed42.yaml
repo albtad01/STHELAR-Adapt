@@ -2,10 +2,10 @@ condition: Frozen
 fold: B
 seed: 42
 run_name: sthelar40x_klt_5class_slideind_foldB_frozen_seed42
-checkpoint_path: /gpfs/workdir/taddeial/workspace/CellViT_for_STHELAR/models/pretrained/CellViT-SAM-H-x40.pth
+checkpoint_path: ${PROJECT_ROOT}/models/pretrained/CellViT-SAM-H-x40.pth
 expected_checkpoint_sha256: b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf
-dataset_path: /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_klt_5class_slideind_foldB_margin128
-output_dir: /gpfs/workdir/taddeial/workspace/STHELAR-Adapt/run/sthelar40x_klt_5class_slideind_foldB_frozen_seed42/eval
+dataset_path: "${DATA_ROOT}/sthelar40x_klt_5class_slideind_foldB_margin128"
+output_dir: ${PROJECT_ROOT}/run/sthelar40x_klt_5class_slideind_foldB_frozen_seed42/eval
 gpu: 0
 batch_size: 16
 num_workers: 12

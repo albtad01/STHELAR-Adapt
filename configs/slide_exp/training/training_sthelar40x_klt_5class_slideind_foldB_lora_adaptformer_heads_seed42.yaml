@@ -17,7 +17,7 @@ random_seed: 42
 gpu: 0
 data:
   dataset: STHELAR
-  dataset_path: /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_klt_5class_slideind_foldB_margin128
+  dataset_path: "${DATA_ROOT}/sthelar40x_klt_5class_slideind_foldB_margin128"
   label_mode: 5class
   split: slide_independent
   train_folds: [train]

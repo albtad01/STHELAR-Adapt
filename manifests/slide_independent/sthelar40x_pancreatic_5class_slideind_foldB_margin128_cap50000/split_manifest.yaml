@@ -1,0 +1,60 @@
+created_at_utc: '2026-08-26T20:52:10.739530+00:00'
+fold: B
+source_dataset_root: ${DATA_ROOT}/sthelar40x_pancreatic_5class_spatial_margin128_cap50000
+output_root: ${DATA_ROOT}/sthelar40x_pancreatic_5class_slideind_foldB_margin128_cap50000
+split_strategy: slide
+split_axis: x
+spatial_margin: 128
+train_fraction_inside_training_slides: 0.85
+validation_fraction_inside_training_slides: 0.15
+train_slide_ids:
+- pancreatic_s1
+validation_source_slide_ids:
+- pancreatic_s1
+test_slide_ids:
+- pancreatic_s0
+patch_counts:
+  train: 12348
+  valid: 299
+  test: 25526
+counts_per_slide:
+  train:
+    pancreatic_s1: 12348
+  valid:
+    pancreatic_s1: 299
+  test:
+    pancreatic_s0: 25526
+class_counts_per_split:
+  train:
+    Immune: 153346
+    Stromal: 83628
+    Epithelial: 119550
+    Melanocyte: 0
+    Other: 112942
+  valid:
+    Immune: 5038
+    Stromal: 7
+    Epithelial: 4
+    Melanocyte: 0
+    Other: 2038
+  test:
+    Immune: 140789
+    Stromal: 74528
+    Epithelial: 201973
+    Melanocyte: 0
+    Other: 28776
+reused_packed_payload: true
+reused_files:
+- images.zip
+- labels.zip
+- types.csv
+- dataset_config.yaml
+helper_manifest:
+  train_slides:
+  - pancreatic_s1
+  valid_slides: []
+  test_slides:
+  - pancreatic_s0
+  uses_spatial_valid_inside_train_slide: true
+  train_frac_inside_train_slide: 0.85
+  valid_frac_inside_train_slide: 0.15
