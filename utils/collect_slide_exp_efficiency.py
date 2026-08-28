@@ -12,11 +12,14 @@ from typing import Any, Dict, Tuple
 
 FIELDS = [
     "fold",
+    "tissue",
+    "backbone",
     "method",
     "seed",
     "training_completed",
     "inference_completed",
     "gpu_model",
+    "partition",
     "pytorch_version",
     "cuda_version",
     "amp_mixed_precision",
@@ -50,12 +53,29 @@ FIELDS = [
 ]
 
 
-def _key(data: Dict[str, Any]) -> Tuple[str, str, str]:
-    return (str(data.get("fold")), str(data.get("method")), str(data.get("seed")))
+def _backbone(data: Dict[str, Any], path: Path) -> str:
+    if data.get("backbone"):
+        return str(data["backbone"])
+    # Schema-v1 slide-independent records created before backbone identity was
+    # added are from the original SAM-H campaign. Keep this compatibility
+    # branch path-scoped so CellViT-256 records can never be silently merged.
+    if "cellvit256" not in str(path).lower():
+        return "CellViT-SAM-H x40"
+    return "CellViT-256 x40"
+
+
+def _key(data: Dict[str, Any], path: Path) -> Tuple[str, str, str, str, str]:
+    return (
+        str(data.get("fold")),
+        str(data.get("tissue")),
+        _backbone(data, path),
+        str(data.get("method")),
+        str(data.get("seed")),
+    )
 
 
 def collect(run_root: Path) -> list:
-    groups: Dict[Tuple[str, str, str], Dict[str, list]] = defaultdict(
+    groups: Dict[Tuple[str, str, str, str, str], Dict[str, list]] = defaultdict(
         lambda: {"training": [], "inference": []}
     )
     for path in sorted(run_root.glob("*slideind*/**/*efficiency_metrics.json")):
@@ -63,7 +83,7 @@ def collect(run_root: Path) -> list:
         mode = data.get("mode")
         if mode not in {"training", "inference"}:
             continue
-        groups[_key(data)][mode].append((path, data))
+        groups[_key(data, path)][mode].append((path, data))
 
     rows = []
     for key, modes in sorted(groups.items()):
@@ -87,11 +107,14 @@ def collect(run_root: Path) -> list:
         common = training or inference
         row = {
             "fold": key[0],
-            "method": key[1],
-            "seed": key[2],
+            "tissue": key[1],
+            "backbone": key[2],
+            "method": key[3],
+            "seed": key[4],
             "training_completed": training.get("completed") if training else None,
             "inference_completed": inference.get("completed") if inference else None,
             "gpu_model": common.get("gpu_model"),
+            "partition": common.get("partition"),
             "pytorch_version": common.get("pytorch_version"),
             "cuda_version": common.get("cuda_version"),
             "amp_mixed_precision": common.get("amp_mixed_precision"),

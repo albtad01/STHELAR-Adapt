@@ -44,6 +44,22 @@ def parameter_counts(model: torch.nn.Module) -> Dict[str, float]:
     }
 
 
+def backbone_identity(experiment_config: Dict[str, Any]) -> Optional[str]:
+    """Return a stable, magnification-explicit backbone label for aggregation."""
+    efficiency = experiment_config.get("efficiency", {})
+    explicit = efficiency.get("backbone")
+    if explicit:
+        return str(explicit)
+    backbone = str(experiment_config.get("model", {}).get("backbone", "")).lower()
+    magnification = experiment_config.get("data", {}).get("magnification")
+    suffix = " x{}".format(magnification) if magnification is not None else ""
+    if backbone == "sam-h":
+        return "CellViT-SAM-H{}".format(suffix)
+    if backbone == "vit256":
+        return "CellViT-256{}".format(suffix)
+    return backbone or None
+
+
 class EfficiencyRecorder:
     """Write crash-distinguishable JSON with atomic replacement semantics."""
 
@@ -74,7 +90,10 @@ class EfficiencyRecorder:
             "completed": False,
             "status": "initialized",
             "fold": efficiency.get("fold"),
+            "tissue": efficiency.get("tissue"),
             "method": efficiency.get("method"),
+            "backbone": backbone_identity(experiment_config),
+            "partition": os.environ.get("SLURM_JOB_PARTITION"),
             "seed": experiment_config.get("random_seed"),
             "batch_size": int(batch_size),
             "amp_mixed_precision": bool(
@@ -93,6 +112,15 @@ class EfficiencyRecorder:
             "error": None,
         }
         self.data.update(parameter_counts(model))
+        if self.mode == "training":
+            trainable_names = [
+                name for name, parameter in model.named_parameters()
+                if parameter.requires_grad
+            ]
+            self.data["trainable_parameter_names"] = trainable_names
+            self.data["trainable_module_names"] = sorted(
+                {name.rsplit(".", 1)[0] for name in trainable_names}
+            )
         self.data.update(dataset_patch_counts(experiment_config))
         if patch_count is not None:
             self.data["inference_patch_count"] = int(patch_count)

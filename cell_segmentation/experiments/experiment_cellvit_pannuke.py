@@ -814,6 +814,17 @@ class ExperimentCellVitPanNuke(BaseExperiment):
                     isinstance(cellvit_pretrained, dict)
                     and "model_state_dict" in cellvit_pretrained
                 ):
+                    strict_compatibility = bool(
+                        self.run_conf["model"].get(
+                            "strict_pretrained_compatibility", False
+                        )
+                    )
+                    if strict_compatibility and cellvit_pretrained.get("arch") != "CellViT256":
+                        raise RuntimeError(
+                            "Strict CellViT-256 loading requires arch=CellViT256; got {}".format(
+                                cellvit_pretrained.get("arch")
+                            )
+                        )
                     self.logger.info(
                         f"Just have a look to the config of the pretrained CellViT model: {cellvit_pretrained.get('config')}"
                     )
@@ -846,10 +857,93 @@ class ExperimentCellVitPanNuke(BaseExperiment):
                         self.logger.debug(
                             f"Skipped {len(skipped_missing)} pretrained tensors not present in current model."
                         )
-                    self.logger.info(model.load_state_dict(pretrained_dict_filtered, strict=False))
+                    load_result = model.load_state_dict(
+                        pretrained_dict_filtered, strict=False
+                    )
+                    if strict_compatibility:
+                        allowed_mismatches = set(
+                            self.run_conf["model"].get(
+                                "allowed_pretrained_shape_mismatches",
+                                ["encoder.head.weight", "encoder.head.bias"],
+                            )
+                        )
+                        observed_mismatches = {item[0] for item in skipped_shape}
+                        if skipped_missing or observed_mismatches != allowed_mismatches:
+                            raise RuntimeError(
+                                "Strict CellViT-256 compatibility failed: missing={} "
+                                "shape_mismatches={} allowed={}".format(
+                                    skipped_missing,
+                                    sorted(observed_mismatches),
+                                    sorted(allowed_mismatches),
+                                )
+                            )
+                        if set(load_result.missing_keys) != allowed_mismatches or load_result.unexpected_keys:
+                            raise RuntimeError(
+                                "Strict CellViT-256 compatibility produced unexpected load result: {}".format(
+                                    load_result
+                                )
+                            )
+                        self.logger.info(
+                            "Strict CellViT-256 base compatibility passed; only the "
+                            "declared STHELAR tissue classifier replacement was omitted."
+                        )
+                    self.logger.info(load_result)
                 else:
                     self.logger.info(model.load_state_dict(cellvit_pretrained, strict=True))
             model.freeze_encoder()
+            # The legacy adapter/trainability dispatch below is nested inside
+            # the SAM branch. Apply the two scientifically requested ViT256
+            # modes explicitly so LP cannot silently leave whole decoders
+            # trainable and FullFT cannot silently retain a frozen encoder.
+            vit256_mode = self.run_conf.get("adapters", {}).get("adapter_type")
+            if vit256_mode == "final_heads_only":
+                self.logger.info("CellViT256 training mode: final_heads_only")
+                for name, param in model.named_parameters():
+                    param.requires_grad = is_final_decoder_head_parameter(name)
+            elif vit256_mode == "lora_adaptformer":
+                adapter_conf = self.run_conf.get("adapters", {})
+                decoder_train_scope = str(
+                    adapter_conf.get("decoder_train_scope", "")
+                ).lower()
+                if decoder_train_scope != "heads_only":
+                    raise NotImplementedError(
+                        "Strict CellViT256 lora_adaptformer support is limited to "
+                        "decoder_train_scope='heads_only'; got {!r}".format(
+                            decoder_train_scope
+                        )
+                    )
+
+                self.logger.info(
+                    "CellViT256 training mode: selected LoRA Q/V + AdaptFormer "
+                    "+ final NP/HV/NT heads"
+                )
+                insert_lora2(
+                    model,
+                    rank=adapter_conf["lora"]["rank"],
+                    alpha=adapter_conf["lora"]["alpha"],
+                    targets=adapter_conf["lora"].get("targets", ["q", "v"]),
+                    dropout=adapter_conf["lora"].get("dropout", 0.0),
+                )
+                insert_adaptformer(
+                    model,
+                    adapter_conf["adaptformer"]["activation"],
+                    adapter_conf["adaptformer"]["reduction"],
+                )
+                apply_peft_trainability(
+                    model, decoder_train_scope=decoder_train_scope
+                )
+            elif vit256_mode in {"fullft", "full_finetuning"}:
+                self.logger.info("CellViT256 training mode: full fine-tuning")
+                for _, param in model.named_parameters():
+                    param.requires_grad = True
+            elif bool(
+                self.run_conf["model"].get("strict_pretrained_compatibility", False)
+            ):
+                raise NotImplementedError(
+                    "Strict CellViT256 campaign supports only final_heads_only, "
+                    "lora_adaptformer heads_only, or fullft; "
+                    "got {!r}".format(vit256_mode)
+                )
             self.logger.info("Loaded CellVit256 model")
         
         

@@ -20,8 +20,11 @@ from models.adapters.utils import (
     insert_vera,
     set_ntonly_trainable,
 )
-from models.segmentation.cell_segmentation.cellvit import CellViTSAM
-from models.segmentation.cell_segmentation.cellvit_shared import CellViTSAMShared
+from models.segmentation.cell_segmentation.cellvit import CellViT256, CellViTSAM
+from models.segmentation.cell_segmentation.cellvit_shared import (
+    CellViT256Shared,
+    CellViTSAMShared,
+)
 from models.segmentation.cell_segmentation.utils import Conv2DBlock
 
 
@@ -87,9 +90,24 @@ def checkpoint_state_dict(payload):
 
 def instantiate_model(config):
     backbone = str(config["model"]["backbone"]).upper()
+    if backbone == "VIT256":
+        model_class = (
+            CellViT256Shared
+            if config["model"].get("shared_decoders", False)
+            else CellViT256
+        )
+        return model_class(
+            model256_path=config["model"].get("pretrained_encoder"),
+            num_nuclei_classes=config["data"]["num_nuclei_classes"],
+            num_tissue_classes=config["data"]["num_tissue_classes"],
+            drop_rate=config["training"].get("drop_rate", 0),
+            attn_drop_rate=config["training"].get("attn_drop_rate", 0),
+            drop_path_rate=config["training"].get("drop_path_rate", 0),
+            regression_loss=config["training"].get("regression_loss", False),
+        )
     if backbone not in {"SAM-B", "SAM-L", "SAM-H"}:
         raise NotImplementedError(
-            "Adapter-only export currently supports SAM CellViT backbones; "
+            "Adapter-only export currently supports ViT256 and SAM CellViT backbones; "
             f"received {backbone}"
         )
     model_class = (
@@ -253,7 +271,17 @@ def insert_adapters_from_config(model, config):
 def build_model(config, base_checkpoint):
     seed_everything(config.get("random_seed", 42))
     model = instantiate_model(config)
-    load_info = load_base_checkpoint(model, base_checkpoint)
+    # The SAM transfer path deliberately reinitializes the NT/tissue transfer
+    # heads when a base tensor has an incompatible shape.  The strict ViT256
+    # campaign does not; it preserves the constructor initialization for the
+    # one-way tissue head.  Mirror those two training paths exactly so frozen
+    # parameters can be checked rather than silently included in an adapter.
+    reproduce_training_init = str(config["model"]["backbone"]).upper() != "VIT256"
+    load_info = load_base_checkpoint(
+        model,
+        base_checkpoint,
+        reproduce_training_init=reproduce_training_init,
+    )
     inserted = insert_adapters_from_config(model, config)
     return model, load_info, inserted
 
@@ -290,7 +318,13 @@ def adapter_metadata(config, run_dir, checkpoint_path, base_checkpoint, model):
     repo_root = Path(__file__).resolve().parents[1]
     return {
         "format_version": FORMAT_VERSION,
-        "base_model": "CellViT-SAM-H-x40",
+        "base_model": (
+            "CellViT-256-x40"
+            if str(config["model"]["backbone"]).upper() == "VIT256"
+            else "CellViT-{}-x40".format(
+                str(config["model"]["backbone"]).upper()
+            )
+        ),
         "base_checkpoint": config["model"].get("pretrained"),
         "base_checkpoint_resolved": str(base_checkpoint),
         "adapter_type": adapter_config.get("adapter_type"),

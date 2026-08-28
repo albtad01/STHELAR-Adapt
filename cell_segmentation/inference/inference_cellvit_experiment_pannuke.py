@@ -1462,7 +1462,19 @@ class InferenceCellViT:
     ) -> DataclassHVStorage:
         # get ground truth values, perform one hot encoding for segmentation maps
         gt_nuclei_binary_map_onehot = (F.one_hot(masks["nuclei_binary_map"], num_classes=2)).type(torch.float32)  # background, nuclei
-        nuclei_type_maps = torch.squeeze(masks["nuclei_type_map"]).type(torch.int64)
+        nuclei_type_maps = masks["nuclei_type_map"]
+        if nuclei_type_maps.ndim == 4 and nuclei_type_maps.shape[1] == 1:
+            # Remove only the singleton channel dimension.  A bare squeeze()
+            # also removes the batch dimension when the final batch contains
+            # one patch, leaving a 3-D one-hot tensor that cannot be permuted
+            # as (B, C, H, W).
+            nuclei_type_maps = nuclei_type_maps.squeeze(1)
+        if nuclei_type_maps.ndim != 3:
+            raise ValueError(
+                "Expected nuclei_type_map with shape (B, H, W) or "
+                "(B, 1, H, W), got {}".format(tuple(nuclei_type_maps.shape))
+            )
+        nuclei_type_maps = nuclei_type_maps.type(torch.int64)
         gt_nuclei_type_maps_onehot = F.one_hot(nuclei_type_maps, num_classes=self.num_classes).type(torch.float32)  # background + nuclei types
 
         # assemble ground truth dictionary

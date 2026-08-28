@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Evaluate untouched CellViT-SAM-H x40 with class-agnostic metrics only."""
+"""Evaluate an untouched pretrained CellViT with class-agnostic metrics only."""
 
 import argparse
 import hashlib
@@ -44,10 +44,13 @@ def _atomic_yaml(path: Path, payload: Dict[str, Any]) -> None:
             temporary.unlink()
 
 
-def _checkpoint_metadata(checkpoint: Dict[str, Any]) -> Dict[str, Any]:
+def _checkpoint_metadata(
+    checkpoint: Dict[str, Any], expected_arch: str, expected_backbone: str
+) -> Dict[str, Any]:
     flattened = checkpoint.get("config", {})
     required = {
         "arch": checkpoint.get("arch"),
+        "dataset": flattened.get("data.dataset"),
         "num_nuclei_classes": flattened.get("data.num_nuclei_classes"),
         "num_tissue_classes": flattened.get("data.num_tissue_classes"),
         "backbone": flattened.get("model.backbone"),
@@ -58,10 +61,18 @@ def _checkpoint_metadata(checkpoint: Dict[str, Any]) -> Dict[str, Any]:
             "transformations.normalize.std", [0.5, 0.5, 0.5]
         ),
     }
-    if required["arch"] != "CellViTSAM":
-        raise ValueError("Frozen checkpoint is not CellViTSAM: {}".format(required))
-    if required["backbone"].lower() != "sam-h":
-        raise ValueError("Frozen checkpoint is not SAM-H: {}".format(required))
+    if required["arch"] != expected_arch:
+        raise ValueError(
+            "Frozen checkpoint architecture mismatch: expected={} observed={}".format(
+                expected_arch, required
+            )
+        )
+    if str(required["backbone"]).lower() != str(expected_backbone).lower():
+        raise ValueError(
+            "Frozen checkpoint backbone mismatch: expected={} observed={}".format(
+                expected_backbone, required
+            )
+        )
     if required["num_nuclei_classes"] is None or required["num_tissue_classes"] is None:
         raise ValueError("Checkpoint lacks original output taxonomy dimensions")
     return required
@@ -70,15 +81,22 @@ def _checkpoint_metadata(checkpoint: Dict[str, Any]) -> Dict[str, Any]:
 def _run_config(
     config: Dict[str, Any], checkpoint_meta: Dict[str, Any], output_dir: Path
 ) -> Dict[str, Any]:
+    backbone_identity = config.get("backbone_identity")
+    if backbone_identity is None:
+        backbone_identity = (
+            "CellViT-SAM-H x40"
+            if str(checkpoint_meta["backbone"]).lower() == "sam-h"
+            else "CellViT-256 x40"
+        )
     return {
         "adapters": {"adapter_type": "frozen"},
         "logging": {
             "level": "debug",
             "log_comment": config["run_name"],
             "notes": (
-                "Untouched official CellViT-SAM-H x40 checkpoint. PanNuke semantic "
+                "Untouched pretrained {} x40 checkpoint. PanNuke semantic "
                 "head retained; only class-agnostic metrics may be reported."
-            ),
+            ).format(checkpoint_meta["backbone"]),
             "log_dir": str(output_dir),
         },
         "random_seed": int(config.get("seed", 42)),
@@ -118,12 +136,13 @@ def _run_config(
             "enabled": True,
             "fold": str(config["fold"]),
             "method": "Frozen",
+            "backbone": backbone_identity,
         },
         "frozen_evaluation": {
             "untouched_pretrained_checkpoint": True,
             "optimizer_created": False,
             "semantic_head_reinitialized": False,
-            "original_taxonomy": "PanNuke",
+            "original_taxonomy": checkpoint_meta["dataset"],
             "target_taxonomy": "STHELAR",
             "taxonomy_mapping": None,
             "metric_scope": "class_agnostic_only",
@@ -169,7 +188,11 @@ def evaluate(config_path: Path, smoke_test: bool = False, gpu_override: str = No
             )
         )
     checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
-    checkpoint_meta = _checkpoint_metadata(checkpoint)
+    checkpoint_meta = _checkpoint_metadata(
+        checkpoint,
+        expected_arch=config.get("expected_arch", "CellViTSAM"),
+        expected_backbone=config.get("expected_backbone", "SAM-H"),
+    )
 
     if smoke_test:
         context = tempfile.TemporaryDirectory(prefix="sthelar-frozen-smoke-")
