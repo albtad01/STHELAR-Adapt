@@ -1,5 +1,16 @@
 # KLT ablation strategy recommendation
 
+> **Paper-registry note, 2026-08-27:** this completed within-slide ablation is
+> historical method-selection evidence. It includes LP, LoRA, VeRA,
+> AdaptFormer, decoder-convolution/late-decoder combinations, Selected PEFT and
+> FullFT families where listed below. The primary LoRA(Q,V)+AdaptFormer+final
+> heads method was selected before the held-out-slide campaign. Do not rerun or
+> reopen this architecture search for the revised paper; report it in the
+> appendix or as historical pre-selection provenance.
+> The old table's Frozen class-aware mPQ/type columns are not valid under the
+> PanNuke/STHELAR taxonomy mismatch; only its class-agnostic detection and
+> segmentation quantities may be reused.
+
 Source metrics: `reports/runs_summary.csv`, using only completed runs with final inference/test metrics (`test_*`). Validation epoch metrics are not mixed into the comparisons below. Earlier partial/no-test rows are excluded when a later completed final-inference row exists for the same run name.
 
 ## 1. KLT ablation table

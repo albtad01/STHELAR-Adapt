@@ -1,0 +1,6 @@
+true_label,Epithelial,Immune,Stromal,Melanocyte,Other
+Epithelial,134666,50792,38997,0,56
+Immune,35600,388304,113596,0,31
+Stromal,14712,57045,131929,0,50
+Melanocyte,0,0,0,0,0
+Other,1375,9073,9252,0,13

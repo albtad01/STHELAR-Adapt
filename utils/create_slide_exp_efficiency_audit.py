@@ -33,7 +33,9 @@ def write_csv(path, rows, fieldnames=None):
     if fieldnames is None:
         fieldnames = list(rows[0]) if rows else []
     with path.open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer = csv.DictWriter(
+            handle, fieldnames=fieldnames, lineterminator="\n"
+        )
         writer.writeheader()
         writer.writerows(rows)
 

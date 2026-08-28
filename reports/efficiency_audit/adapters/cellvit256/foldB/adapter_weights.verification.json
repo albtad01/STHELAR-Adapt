@@ -1,0 +1,208 @@
+{
+  "artifact_path": "${PROJECT_ROOT}/reports/efficiency_audit/adapters/cellvit256/foldB/adapter_weights.pth",
+  "artifact_sha256": "d63f79861497fcb38208b3f67e63dd431c20613ac90922dcc8f298bd22d864ee",
+  "artifact_size_bytes": 1623604,
+  "backbone": "CellViT-256 x40",
+  "base_checkpoint": "${PROJECT_ROOT}/models/pretrained/CellViT-256-x40.pth",
+  "base_load_info": {
+    "loaded_tensors": 437,
+    "missing_target_keys": [
+      "encoder.head.weight",
+      "encoder.head.bias"
+    ],
+    "skipped_shape": {
+      "encoder.head.bias": {
+        "checkpoint": [
+          19
+        ],
+        "model": [
+          1
+        ]
+      },
+      "encoder.head.weight": {
+        "checkpoint": [
+          19,
+          384
+        ],
+        "model": [
+          1,
+          384
+        ]
+      }
+    }
+  },
+  "changed_mutable_buffer_element_count": 13891,
+  "changed_mutable_buffer_names": [
+    "decoder0.0.block.1.num_batches_tracked",
+    "decoder0.0.block.1.running_mean",
+    "decoder0.0.block.1.running_var",
+    "decoder0.1.block.1.num_batches_tracked",
+    "decoder0.1.block.1.running_mean",
+    "decoder0.1.block.1.running_var",
+    "decoder1.0.block.2.num_batches_tracked",
+    "decoder1.0.block.2.running_mean",
+    "decoder1.0.block.2.running_var",
+    "decoder1.1.block.2.num_batches_tracked",
+    "decoder1.1.block.2.running_mean",
+    "decoder1.1.block.2.running_var",
+    "decoder1.2.block.2.num_batches_tracked",
+    "decoder1.2.block.2.running_mean",
+    "decoder1.2.block.2.running_var",
+    "decoder2.0.block.2.num_batches_tracked",
+    "decoder2.0.block.2.running_mean",
+    "decoder2.0.block.2.running_var",
+    "decoder2.1.block.2.num_batches_tracked",
+    "decoder2.1.block.2.running_mean",
+    "decoder2.1.block.2.running_var",
+    "decoder3.0.block.2.num_batches_tracked",
+    "decoder3.0.block.2.running_mean",
+    "decoder3.0.block.2.running_var",
+    "hv_map_decoder.decoder0_header.0.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder0_header.0.block.1.running_mean",
+    "hv_map_decoder.decoder0_header.0.block.1.running_var",
+    "hv_map_decoder.decoder0_header.1.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder0_header.1.block.1.running_mean",
+    "hv_map_decoder.decoder0_header.1.block.1.running_var",
+    "hv_map_decoder.decoder1_upsampler.0.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder1_upsampler.0.block.1.running_mean",
+    "hv_map_decoder.decoder1_upsampler.0.block.1.running_var",
+    "hv_map_decoder.decoder1_upsampler.1.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder1_upsampler.1.block.1.running_mean",
+    "hv_map_decoder.decoder1_upsampler.1.block.1.running_var",
+    "hv_map_decoder.decoder2_upsampler.0.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder2_upsampler.0.block.1.running_mean",
+    "hv_map_decoder.decoder2_upsampler.0.block.1.running_var",
+    "hv_map_decoder.decoder2_upsampler.1.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder2_upsampler.1.block.1.running_mean",
+    "hv_map_decoder.decoder2_upsampler.1.block.1.running_var",
+    "hv_map_decoder.decoder3_upsampler.0.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder3_upsampler.0.block.1.running_mean",
+    "hv_map_decoder.decoder3_upsampler.0.block.1.running_var",
+    "hv_map_decoder.decoder3_upsampler.1.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder3_upsampler.1.block.1.running_mean",
+    "hv_map_decoder.decoder3_upsampler.1.block.1.running_var",
+    "hv_map_decoder.decoder3_upsampler.2.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder3_upsampler.2.block.1.running_mean",
+    "hv_map_decoder.decoder3_upsampler.2.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder0_header.0.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder0_header.0.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder0_header.0.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder0_header.1.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder0_header.1.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder0_header.1.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder0_header.0.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder0_header.0.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder0_header.0.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder0_header.1.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder0_header.1.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder0_header.1.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.running_var"
+  ],
+  "changed_mutable_buffer_tensor_count": 105,
+  "component_parameter_element_counts": {
+    "AdaptFormer": 226092,
+    "LoRA": 147456,
+    "NP/HV/NT final heads": 650
+  },
+  "component_parameter_tensor_counts": {
+    "AdaptFormer": 60,
+    "LoRA": 48,
+    "NP/HV/NT final heads": 6
+  },
+  "fold": "B",
+  "format": "flat_adapter_only_state_dict",
+  "format_version": 1,
+  "forward_output_comparison": [
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "output.hv_map",
+      "shape": [
+        1,
+        2,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "output.nuclei_binary_map",
+      "shape": [
+        1,
+        2,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "output.nuclei_type_map",
+      "shape": [
+        1,
+        6,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "output.tissue_types",
+      "shape": [
+        1,
+        1
+      ]
+    }
+  ],
+  "forward_verification": "exact_all_output_tensors",
+  "frozen_parameter_override_count": 0,
+  "method": "Selected PEFT",
+  "parameter_element_count": 374198,
+  "parameter_tensor_count": 114,
+  "source_checkpoint": "${PROJECT_ROOT}/run/sthelar40x_klt_5class_slideind_foldB_cellvit256_lora_adaptformer_r8_a8_red16_heads_e10_seed42/log/2026-08-25T114238_sthelar40x_klt_5class_slideind_foldB_cellvit256_lora_adaptformer_r8_a8_red16_heads_e10_seed42/checkpoints/checkpoint_10.pth",
+  "source_run_dir": "${PROJECT_ROOT}/run/sthelar40x_klt_5class_slideind_foldB_cellvit256_lora_adaptformer_r8_a8_red16_heads_e10_seed42/log/2026-08-25T114238_sthelar40x_klt_5class_slideind_foldB_cellvit256_lora_adaptformer_r8_a8_red16_heads_e10_seed42",
+  "state_reconstruction": "exact_all_tensors"
+}

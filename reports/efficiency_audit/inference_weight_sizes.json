@@ -1,0 +1,66 @@
+{
+  "CellViT-256|Frozen": {
+    "inference_weight_size_bytes": 187221926,
+    "source": "${PROJECT_ROOT}/models/pretrained/CellViT-256-x40.pth",
+    "source_size_bytes": 187224155,
+    "tensor_count": 439,
+    "tensor_elements": 46764240,
+    "tensor_payload_bytes": 187057100
+  },
+  "CellViT-256|FullFT": {
+    "inference_weight_size_bytes": 187194214,
+    "source": "${PROJECT_ROOT}/run/sthelar40x_klt_5class_slideind_foldA_cellvit256_fullft_lr1e-5_e10_seed42/log/2026-08-24T115109_sthelar40x_klt_5class_slideind_foldA_cellvit256_fullft_lr1e-5_e10_seed42/checkpoints/checkpoint_10.pth",
+    "source_size_bytes": 561446912,
+    "tensor_count": 439,
+    "tensor_elements": 46757310,
+    "tensor_payload_bytes": 187029380
+  },
+  "CellViT-256|LP": {
+    "inference_weight_size_bytes": 187194214,
+    "source": "${PROJECT_ROOT}/run/sthelar40x_klt_5class_slideind_foldA_cellvit256_lp_final_heads_e10_seed42/log/2026-08-24T195358_sthelar40x_klt_5class_slideind_foldA_cellvit256_lp_final_heads_e10_seed42/checkpoints/checkpoint_10.pth",
+    "source_size_bytes": 187219887,
+    "tensor_count": 439,
+    "tensor_elements": 46757310,
+    "tensor_payload_bytes": 187029380
+  },
+  "CellViT-256|Selected PEFT": {
+    "inference_weight_size_bytes": 188732694,
+    "source": "${PROJECT_ROOT}/run/sthelar40x_klt_5class_slideind_foldA_cellvit256_lora_adaptformer_r8_a8_red16_heads_e10_seed42/log/2026-08-25T114238_sthelar40x_klt_5class_slideind_foldA_cellvit256_lora_adaptformer_r8_a8_red16_heads_e10_seed42/checkpoints/checkpoint_10.pth",
+    "source_size_bytes": 191842847,
+    "tensor_count": 547,
+    "tensor_elements": 47130858,
+    "tensor_payload_bytes": 188523572
+  },
+  "SAM-H|Frozen": {
+    "inference_weight_size_bytes": 2799311538,
+    "source": "${PROJECT_ROOT}/models/pretrained/CellViT-SAM-H-x40.pth",
+    "source_size_bytes": 2799315941,
+    "tensor_count": 746,
+    "tensor_elements": 699760320,
+    "tensor_payload_bytes": 2799041420
+  },
+  "SAM-H|FullFT": {
+    "inference_weight_size_bytes": 2799293042,
+    "source": "${PROJECT_ROOT}/run/sthelar40x_klt_5class_slideind_foldA_fullft_lr1e-5_e10_seed42/log/2026-08-19T110413_sthelar40x_klt_5class_slideind_foldA_fullft_lr1e-5_e10_seed42/checkpoints/checkpoint_10.pth",
+    "source_size_bytes": 8397788372,
+    "tensor_count": 746,
+    "tensor_elements": 699755694,
+    "tensor_payload_bytes": 2799022916
+  },
+  "SAM-H|LP": {
+    "inference_weight_size_bytes": 2799293042,
+    "source": "${PROJECT_ROOT}/run/sthelar40x_klt_5class_slideind_foldA_lp_final_heads_e10_seed42/log/2026-08-19T114405_sthelar40x_klt_5class_slideind_foldA_lp_final_heads_e10_seed42/checkpoints/checkpoint_10.pth",
+    "source_size_bytes": 2799325178,
+    "tensor_count": 746,
+    "tensor_elements": 699755694,
+    "tensor_payload_bytes": 2799022916
+  },
+  "SAM-H|Selected PEFT": {
+    "inference_weight_size_bytes": 2831044052,
+    "source": "${PROJECT_ROOT}/run/sthelar40x_klt_5class_slideind_foldA_lora_adaptformer_r8_a8_red16_heads_e10_seed42/log/2026-08-19T105648_sthelar40x_klt_5class_slideind_foldA_lora_adaptformer_r8_a8_red16_heads_e10_seed42/checkpoints/checkpoint_10.pth",
+    "source_size_bytes": 2894602378,
+    "tensor_count": 1034,
+    "tensor_elements": 707663566,
+    "tensor_payload_bytes": 2830654404
+  }
+}

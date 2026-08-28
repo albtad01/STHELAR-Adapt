@@ -178,7 +178,7 @@ def main() -> None:
     temporary = args.output.with_name(".{}.tmp-{}".format(args.output.name, os.getpid()))
     try:
         with temporary.open("w", newline="") as handle:
-            writer = csv.DictWriter(handle, fieldnames=FIELDS)
+            writer = csv.DictWriter(handle, fieldnames=FIELDS, lineterminator="\n")
             writer.writeheader()
             writer.writerows(rows)
             handle.flush()
