@@ -1,0 +1,114 @@
+experiment_family,tissue_fold_seed_method,anonymous_run_id,gpu_type,number_gpus,elapsed_wall_time,gpu_hours
+within-slide KLT development,"KLT FullFT, seed 42",R001,A100-SXM4-40GB,1,14:17:20,14.288889
+within-slide KLT development,"KLT decoder conv only, seed 42",R002,A100-SXM4-40GB,1,10:54:50,10.913889
+within-slide KLT development,"KLT LoRA only, seed 42",R003,A100-SXM4-40GB,1,12:07:33,12.125833
+within-slide KLT development,"KLT AdaptFormer only, seed 42",R004,A100-SXM4-40GB,1,11:18:22,11.306111
+within-slide KLT development,"KLT VeRA only, seed 42",R005,A100-SXM4-40GB,1,11:42:20,11.705556
+within-slide KLT development,"KLT LoRA + AdaptFormer conv, seed 42",R006,A100-SXM4-40GB,1,13:14:07,13.235278
+within-slide KLT development,"KLT VeRA + AdaptFormer conv, seed 42",R007,A100-SXM4-40GB,1,13:37:25,13.623611
+within-slide KLT development,"KLT selected LoRA + AdaptFormer heads, seed 42",R008,A100-SXM4-40GB,1,12:03:05,12.051389
+within-slide KLT development,"KLT LoRA + AdaptFormer last stage, seed 42",R009,A100-SXM4-40GB,1,12:16:38,12.277222
+within-slide KLT development,"KLT FullFT, seed 43",R010,A100-SXM4-40GB,1,13:45:56,13.765556
+within-slide KLT development,"KLT LoRA + AdaptFormer conv, seed 43",R011,A100-SXM4-40GB,1,13:25:36,13.426667
+within-slide KLT development,"KLT selected LoRA + AdaptFormer heads, seed 43",R012,A100-SXM4-40GB,1,12:21:10,12.352778
+within-slide KLT development,"KLT LoRA + AdaptFormer last stage, seed 43",R013,A100-SXM4-40GB,1,12:24:43,12.411944
+within-slide KLT development,"KLT VeRA + AdaptFormer conv, seed 43",R014,A100-SXM4-40GB,1,13:30:54,13.515000
+within-slide KLT development,"KLT VeRA + AdaptFormer heads, seed 43",R015,A100-SXM4-40GB,1,12:45:31,12.758611
+within-slide KLT development,"KLT final-head LP, seed 42",R016,V100 path (32 GB),1,17:16:19,17.271944
+within-slide KLT development,"KLT AdaptFormer + heads, seed 42",R017,A100-SXM4-40GB,1,10:39:13,10.653611
+within-slide KLT development,"KLT AdaptFormer + heads, seed 43",R018,V100 path (32 GB),1,20:19:16,20.321111
+complete-slide KLT,"KLT SAM-H PEFT, fold A, seed 42",R019,A100-SXM4-40GB,1,08:37:46,8.629444
+complete-slide KLT,"KLT SAM-H FullFT, fold A, seed 42",R020,A100-SXM4-40GB,1,09:35:28,9.591111
+complete-slide KLT,"KLT SAM-H LP, fold A, seed 42",R021,A100-SXM4-40GB,1,06:22:15,6.370833
+complete-slide KLT,"KLT SAM-H LP, fold B, seed 42",R022,A100-SXM4-40GB,1,05:55:29,5.924722
+complete-slide KLT,"KLT SAM-H FullFT, fold B, seed 42",R023,A100-SXM4-40GB,1,08:04:04,8.067778
+complete-slide KLT,"KLT SAM-H PEFT, fold B, seed 42",R024,A100-SXM4-40GB,1,07:56:26,7.940556
+complete-slide KLT,"KLT SAM-H LP, fold A, seed 43",R025,A100-SXM4-40GB,1,06:28:37,6.476944
+complete-slide KLT,"KLT SAM-H LP, fold B, seed 43",R026,A100-SXM4-40GB,1,05:57:02,5.950556
+complete-slide KLT,"KLT SAM-H PEFT, fold A, seed 43",R027,A100-SXM4-40GB,1,07:26:59,7.449722
+complete-slide KLT,"KLT SAM-H PEFT, fold B, seed 43",R028,A100-SXM4-40GB,1,06:43:31,6.725278
+complete-slide KLT,"KLT SAM-H FullFT, fold A, seed 43",R029,A100-SXM4-40GB,1,09:34:24,9.573333
+complete-slide KLT,"KLT SAM-H FullFT, fold B, seed 43",R030,A100-SXM4-40GB,1,08:29:36,8.493333
+complete-slide KLT,"KLT SAM-H PEFT, fold A, seed 44",R031,A100-SXM4-40GB,1,07:58:27,7.974167
+complete-slide KLT,"KLT SAM-H PEFT, fold B, seed 44",R032,A100-SXM4-40GB,1,07:13:46,7.229444
+complete-slide KLT,"KLT SAM-H FullFT, fold A, seed 44",R033,A100-SXM4-40GB,1,09:14:47,9.246389
+complete-slide KLT,"KLT SAM-H FullFT, fold B, seed 44",R034,A100-SXM4-40GB,1,08:09:16,8.154444
+complete-slide KLT,"KLT SAM-H LP, fold A, seed 44",R035,A100-SXM4-40GB,1,06:18:59,6.316389
+complete-slide KLT,"KLT SAM-H LP, fold B, seed 44",R036,A100-SXM4-40GB,1,06:17:43,6.295278
+complete-slide KLT,"KLT CellViT-256 FullFT, fold A, seed 42",R037,A100-SXM4-40GB,1,06:46:55,6.781944
+complete-slide KLT,"KLT CellViT-256 FullFT, fold B, seed 42",R038,A100-SXM4-40GB,1,06:06:40,6.111111
+complete-slide KLT,"KLT CellViT-256 LP, fold A, seed 42",R039,A100-SXM4-40GB,1,05:18:42,5.311667
+complete-slide KLT,"KLT CellViT-256 LP, fold B, seed 42",R040,A100-SXM4-40GB,1,04:50:32,4.842222
+complete-slide KLT,"KLT CellViT-256 PEFT, fold A, seed 42",R041,A100-SXM4-40GB,1,07:37:52,7.631111
+complete-slide KLT,"KLT CellViT-256 PEFT, fold B, seed 42",R042,A100-SXM4-40GB,1,06:01:49,6.030278
+complete-slide KLT,"KLT CellViT-256 PEFT, fold A, seed 43",R043,A100-SXM4-40GB,1,06:25:57,6.432500
+complete-slide KLT,"KLT CellViT-256 PEFT, fold B, seed 43",R044,A100-SXM4-40GB,1,05:51:28,5.857778
+complete-slide KLT,"KLT CellViT-256 FullFT, fold A, seed 43",R045,A100-SXM4-40GB,1,06:51:23,6.856389
+complete-slide KLT,"KLT CellViT-256 FullFT, fold B, seed 43",R046,A100-SXM4-40GB,1,06:09:21,6.155833
+complete-slide KLT,"KLT CellViT-256 PEFT, fold A, seed 44",R047,A100-SXM4-40GB,1,06:49:09,6.819167
+complete-slide KLT,"KLT CellViT-256 PEFT, fold B, seed 44",R048,A100-SXM4-40GB,1,07:12:06,7.201667
+complete-slide KLT,"KLT CellViT-256 FullFT, fold A, seed 44",R049,A100-SXM4-40GB,1,08:23:28,8.391111
+complete-slide KLT,"KLT CellViT-256 FullFT, fold B, seed 44",R050,A100-SXM4-40GB,1,06:14:33,6.242500
+complete-slide KLT,"KLT CellViT-256 LP, fold A, seed 43",R051,A100-SXM4-40GB,1,05:27:24,5.456667
+complete-slide KLT,"KLT CellViT-256 LP, fold B, seed 43",R052,A100-SXM4-40GB,1,05:31:56,5.532222
+complete-slide KLT,"KLT CellViT-256 LP, fold A, seed 44",R053,A100-SXM4-40GB,1,06:27:53,6.464722
+complete-slide KLT,"KLT CellViT-256 LP, fold B, seed 44",R054,A100-SXM4-40GB,1,05:22:33,5.375833
+nine-tissue held-out-slide,"Tonsil SAM-H PEFT, fold B, seed 42",R055,A100-SXM4-40GB,1,07:45:56,7.765556
+nine-tissue held-out-slide,"Tonsil SAM-H PEFT, fold A, seed 42",R056,A100-SXM4-40GB,1,09:09:14,9.153889
+nine-tissue held-out-slide,"Kidney SAM-H PEFT, fold A, seed 42",R057,A100-SXM4-40GB,1,01:52:04,1.867778
+nine-tissue held-out-slide,"Liver SAM-H PEFT, fold A, seed 42",R058,A100-SXM4-40GB,1,05:33:12,5.553333
+nine-tissue held-out-slide,"Breast SAM-H PEFT, fold A, seed 42",R059,A100-SXM4-40GB,1,12:19:43,12.328611
+nine-tissue held-out-slide,"Pancreatic SAM-H PEFT, fold A, seed 42",R060,A100-SXM4-40GB,1,06:26:33,6.442500
+nine-tissue held-out-slide,"Ovary SAM-H PEFT, fold A, seed 42",R061,A100-SXM4-40GB,1,03:19:50,3.330556
+nine-tissue held-out-slide,"Colon SAM-H PEFT, fold A, seed 42",R062,A100-SXM4-40GB,1,05:35:27,5.590833
+nine-tissue held-out-slide,"Lung SAM-H PEFT, fold A, seed 42",R063,A100-SXM4-40GB,1,03:22:48,3.380000
+nine-tissue held-out-slide,"Skin SAM-H PEFT, fold A, seed 42",R064,A100-SXM4-40GB,1,03:06:24,3.106667
+nine-tissue held-out-slide,"Breast SAM-H PEFT, fold B, seed 42",R065,A100-SXM4-40GB,1,12:46:57,12.782500
+nine-tissue held-out-slide,"Pancreatic SAM-H PEFT, fold B, seed 42",R066,A100-SXM4-40GB,1,03:59:33,3.992500
+nine-tissue held-out-slide,"Skin SAM-H PEFT, fold B, seed 42",R067,A100-SXM4-40GB,1,03:26:07,3.435278
+nine-tissue held-out-slide,"Ovary SAM-H PEFT, fold B, seed 42",R068,A100-SXM4-40GB,1,07:03:22,7.056111
+nine-tissue held-out-slide,"Colon SAM-H PEFT, fold B, seed 42",R069,A100-SXM4-40GB,1,04:22:50,4.380556
+nine-tissue held-out-slide,"Lung SAM-H PEFT, fold B, seed 42",R070,A100-SXM4-40GB,1,05:26:55,5.448611
+nine-tissue held-out-slide,"Kidney SAM-H PEFT, fold B, seed 42",R071,A100-SXM4-40GB,1,01:21:10,1.352778
+nine-tissue held-out-slide,"Liver SAM-H PEFT, fold B, seed 42",R072,A100-SXM4-40GB,1,02:56:14,2.937222
+nine-tissue held-out-slide,"Kidney CellViT-256 PEFT, fold B, seed 42",R073,A100-SXM4-40GB,1,01:01:45,1.029167
+nine-tissue held-out-slide,"Liver CellViT-256 PEFT, fold A, seed 42",R074,A100-SXM4-40GB,1,04:11:50,4.197222
+nine-tissue held-out-slide,"Liver CellViT-256 PEFT, fold B, seed 42",R075,A100-SXM4-40GB,1,02:26:44,2.445556
+nine-tissue held-out-slide,"Tonsil CellViT-256 PEFT, fold A, seed 42",R076,A100-SXM4-40GB,1,08:12:01,8.200278
+nine-tissue held-out-slide,"Tonsil CellViT-256 PEFT, fold B, seed 42",R077,A100-SXM4-40GB,1,06:32:26,6.540556
+nine-tissue held-out-slide,"Kidney CellViT-256 PEFT, fold A, seed 42",R078,A100-SXM4-40GB,1,01:35:44,1.595556
+nine-tissue held-out-slide,"Lung CellViT-256 PEFT, fold B, seed 42",R079,A100-SXM4-40GB,1,05:28:02,5.467222
+nine-tissue held-out-slide,"Ovary CellViT-256 PEFT, fold A, seed 42",R080,A100-SXM4-40GB,1,03:43:08,3.718889
+nine-tissue held-out-slide,"Pancreatic CellViT-256 PEFT, fold B, seed 42",R081,A100-SXM4-40GB,1,03:08:21,3.139167
+nine-tissue held-out-slide,"Breast CellViT-256 PEFT, fold A, seed 42",R082,A100-SXM4-40GB,1,09:02:14,9.037222
+nine-tissue held-out-slide,"Breast CellViT-256 PEFT, fold B, seed 42",R083,A100-SXM4-40GB,1,09:45:23,9.756389
+nine-tissue held-out-slide,"Colon CellViT-256 PEFT, fold A, seed 42",R084,A100-SXM4-40GB,1,04:33:38,4.560556
+nine-tissue held-out-slide,"Colon CellViT-256 PEFT, fold B, seed 42",R085,A100-SXM4-40GB,1,02:59:11,2.986389
+nine-tissue held-out-slide,"Lung CellViT-256 PEFT, fold A, seed 42",R086,A100-SXM4-40GB,1,02:59:35,2.993056
+nine-tissue held-out-slide,"Ovary CellViT-256 PEFT, fold B, seed 42",R087,A100-SXM4-40GB,1,05:19:53,5.331389
+nine-tissue held-out-slide,"Pancreatic CellViT-256 PEFT, fold A, seed 42",R088,A100-SXM4-40GB,1,05:51:14,5.853889
+nine-tissue held-out-slide,"Skin CellViT-256 PEFT, fold A, seed 42",R089,A100-SXM4-40GB,1,02:28:53,2.481389
+nine-tissue held-out-slide,"Skin CellViT-256 PEFT, fold B, seed 42",R090,A100-SXM4-40GB,1,02:40:33,2.675833
+nine-tissue held-out-slide,"Kidney SAM-H FullFT, fold A, seed 42",R091,A100-SXM4-40GB,1,02:16:25,2.273611
+nine-tissue held-out-slide,"Kidney SAM-H FullFT, fold B, seed 42",R092,A100-SXM4-40GB,1,01:32:50,1.547222
+nine-tissue held-out-slide,"Liver SAM-H FullFT, fold A, seed 42",R093,A100-SXM4-40GB,1,06:01:34,6.026111
+nine-tissue held-out-slide,"Liver SAM-H FullFT, fold B, seed 42",R094,A100-SXM4-40GB,1,03:06:50,3.113889
+nine-tissue held-out-slide,"Tonsil SAM-H FullFT, fold A, seed 42",R095,A100-SXM4-40GB,1,10:14:25,10.240278
+nine-tissue held-out-slide,"Tonsil SAM-H FullFT, fold B, seed 42",R096,A100-SXM4-40GB,1,08:25:54,8.431667
+nine-tissue held-out-slide,"Breast SAM-H FullFT, fold A, seed 42",R097,A100-SXM4-40GB,1,13:24:09,13.402500
+nine-tissue held-out-slide,"Breast SAM-H FullFT, fold B, seed 42",R098,A100-SXM4-40GB,1,13:58:54,13.981667
+nine-tissue held-out-slide,"Colon SAM-H FullFT, fold A, seed 42",R099,A100-SXM4-40GB,1,06:14:54,6.248333
+nine-tissue held-out-slide,"Colon SAM-H FullFT, fold B, seed 42",R100,A100-SXM4-40GB,1,04:30:23,4.506389
+nine-tissue held-out-slide,"Lung SAM-H FullFT, fold A, seed 42",R101,A100-SXM4-40GB,1,03:39:14,3.653889
+nine-tissue held-out-slide,"Lung SAM-H FullFT, fold B, seed 42",R102,A100-SXM4-40GB,1,06:12:10,6.202778
+nine-tissue held-out-slide,"Ovary SAM-H FullFT, fold A, seed 42",R103,A100-SXM4-40GB,1,03:52:38,3.877222
+nine-tissue held-out-slide,"Ovary SAM-H FullFT, fold B, seed 42",R104,A100-SXM4-40GB,1,07:43:12,7.720000
+nine-tissue held-out-slide,"Pancreatic SAM-H FullFT, fold A, seed 42",R105,A100-SXM4-40GB,1,07:17:14,7.287222
+nine-tissue held-out-slide,"Pancreatic SAM-H FullFT, fold B, seed 42",R106,A100-SXM4-40GB,1,04:19:27,4.324167
+nine-tissue held-out-slide,"Skin SAM-H FullFT, fold A, seed 42",R107,A100-SXM4-40GB,1,03:40:16,3.671111
+nine-tissue held-out-slide,"Skin SAM-H FullFT, fold B, seed 42",R108,A100-SXM4-40GB,1,03:56:15,3.937500
+complete-slide KLT evaluation,"SAM-H Frozen, fold A",R109,A100-SXM4-40GB,1,00:40:55,0.681944
+complete-slide KLT evaluation,"SAM-H Frozen, fold B",R110,A100-SXM4-40GB,1,00:50:48,0.846667
+complete-slide KLT evaluation,"CellViT-256 Frozen, fold A",R111,A100-SXM4-40GB,1,00:38:12,0.636667
+complete-slide KLT evaluation,"CellViT-256 Frozen, fold B",R112,A100-SXM4-40GB,1,00:47:31,0.791944
+nine-tissue held-out-slide evaluation,"Kidney SAM-H PEFT, fold A, seed 42 inference recovery",R113,A100-SXM4-40GB,1,00:07:39,0.127500

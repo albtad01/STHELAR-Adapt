@@ -1,8 +1,8 @@
 fold: B
 strategy: slide
 reuse_packed_data: true
-source_dataset_root: ${DATA_ROOT}/sthelar40x_liver_5class_spatial_margin128
-output_root: ${DATA_ROOT}/sthelar40x_liver_5class_slideind_foldB_margin128
+source_dataset_root: "${DATA_ROOT}/sthelar40x_liver_5class_spatial_margin128"
+output_root: "${DATA_ROOT}/sthelar40x_liver_5class_slideind_foldB_margin128"
 slide_ids: [liver_s0, liver_s1]
 train_slides: [liver_s1]
 valid_slides: []

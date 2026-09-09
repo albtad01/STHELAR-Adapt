@@ -1,8 +1,8 @@
 fold: A
 strategy: slide
 reuse_packed_data: true
-source_dataset_root: ${DATA_ROOT}/sthelar40x_ovary_5class_spatial_margin128
-output_root: ${DATA_ROOT}/sthelar40x_ovary_5class_slideind_foldA_margin128
+source_dataset_root: "${DATA_ROOT}/sthelar40x_ovary_5class_spatial_margin128"
+output_root: "${DATA_ROOT}/sthelar40x_ovary_5class_slideind_foldA_margin128"
 slide_ids: [ovary_s0, ovary_s1]
 train_slides: [ovary_s0]
 valid_slides: []

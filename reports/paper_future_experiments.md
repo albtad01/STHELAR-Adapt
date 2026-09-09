@@ -1,27 +1,24 @@
 # Future experiments and analyses for the STHELAR-Adapt paper
 
-Status: 2026-08-28. This is a planning document only. No job was launched and
-no listed item should be interpreted as an existing result. The primary method
-remains the pre-selected CellViT-SAM-H x40 LoRA(Q,V) rank-8/alpha-8 plus
-AdaptFormer reduction-16 GELU plus final NP/HV/NT heads configuration.
+Status update: 2026-08-29 17:07 CEST. The SAM-H seed-44, CellViT-256
+seed-43, and Kidney/Liver reciprocal Fold-B conditions listed in the earlier
+plan are now scientifically complete. CellViT-256 seed-44 PEFT/FullFT and
+CellViT-256 Kidney/Liver/Tonsil specialist conditions were submitted as the
+next preregistered extension. Infrastructure-only `gpu11` attempts were
+superseded by the canonical active/pending job IDs recorded in
+`reports/cellvit256_slide_exp_seed44_jobs.md` and
+`reports/cellvit256_tissue_specific_klt_seed42_jobs.md`; they are not
+results until canonical epoch-10 inference completes. SAM-H LP seed44 A/B
+remains `READY_NOT_SUBMITTED`. This file remains a planning record.
 
 ## Priority A — highest value for the main claims
 
 ### Third SAM-H stochastic seed
 
-The main held-out-slide comparison currently has seeds 42 and 43. The most
-valuable additional runs are:
-
-1. Selected PEFT seed 44, Fold A.
-2. Selected PEFT seed 44, Fold B.
-3. FullFT seed 44, Fold A.
-4. FullFT seed 44, Fold B.
-
-These four runs directly strengthen the paper's core PEFT-versus-FullFT claim
-under slide shift. A third seed improves robustness and variance estimation; it
-is not a magical threshold for statistical validity. If completed, report mean
-and sample SD across seeds separately inside Fold A and Fold B. Never pool the
-two folds and three seeds into an `n=6` replicate sample.
+The main held-out-slide Selected-PEFT/FullFT comparison now has completed
+seeds 42, 43 and 44 in each fold. Report mean and sample SD separately inside
+Fold A and Fold B; never pool the two folds and three seeds into an `n=6`
+replicate sample.
 
 LP seed 44 Fold A/B is useful but secondary. It would make the optimization-
 variance reporting symmetric across all trainable SAM-H baselines, but it adds
@@ -32,13 +29,11 @@ primary methods.
 
 ## Priority B — backbone-scale robustness
 
-CellViT-256 currently has only seed 42. Useful lightweight-backbone
-replications, in order, are:
-
-1. CellViT-256 Selected PEFT seed 43, Fold A/B.
-2. CellViT-256 FullFT seed 43, Fold A/B.
-3. CellViT-256 Selected PEFT seed 44, Fold A/B.
-4. CellViT-256 FullFT seed 44, Fold A/B.
+CellViT-256 Selected PEFT and FullFT seeds 42/43 are complete. Seed-44 Fold
+A/B jobs 1558251--1558254 are submitted and currently running. Do not
+duplicate them. After canonical completion, the remaining lightweight
+replication question is whether extra LP seeds are worth the lower marginal
+value.
 
 Extra CellViT-256 LP seeds rank below these. The scientifically relevant
 question is whether the lightweight PEFT-versus-FullFT trade-off and the
@@ -52,17 +47,12 @@ The primary nine-tissue one-direction Fold-A study is complete. Reciprocal
 Fold-B evidence is complete for Tonsil, Breast, Pancreatic, Skin, Ovary, Colon
 and Lung. Do not duplicate these completed conditions.
 
-The missing high-value reciprocal conditions are:
-
-1. Kidney Selected PEFT seed 42: train/validate `kidney_s1`, test all
-   `kidney_s0`.
-2. Liver Selected PEFT seed 42: train/validate `liver_s1`, test all
-   `liver_s0`.
-
-Together with completed Tonsil Fold B, these would permit reciprocal,
-slide-direction-matched generalist-KLT versus tissue-specialist comparisons for
-all three KLT tissues. This is primarily longer-term supporting work. Do not
-propose three seeds times nine tissues as a near-term requirement.
+Kidney and Liver Fold B are now complete, so reciprocal SAM-H specialist
+coverage exists for all nine tissues. CellViT-256 specialist Kidney, Liver and
+Tonsil Fold A/B jobs 1558255--1558260 are submitted to form the corresponding
+backbone-scale generalist-versus-specialist comparison. Do not duplicate these
+conditions and do not propose three seeds times nine tissues as a near-term
+requirement.
 
 ### Existing-output analysis still needed
 
@@ -123,8 +113,7 @@ be completed and validated without compromising the core revision.
 
 | Rank | Future work | Scientific value | Near-term status |
 |---:|---|---|---|
-| 1 | SAM-H Selected PEFT seed 44 A/B | Direct robustness of the central method | Highest priority |
-| 2 | SAM-H FullFT seed 44 A/B | Completes the core PEFT-versus-FullFT three-seed comparison | Highest priority |
-| 3 | CellViT-256 Selected PEFT and FullFT seed 43 A/B | Tests backbone-scale robustness of the adaptation trade-off | High value, deadline-dependent |
-| 4 | Kidney/Liver tissue-specific reciprocal Fold B | Completes reciprocal specialist/generalist KLT comparison | Longer-term supporting work |
-| 5 | HoVer-Net held-out-slide baseline | Addresses conventional-baseline criticism | High engineering cost |
+| 1 | CellViT-256 Selected PEFT and FullFT seed 44 A/B | Completes lightweight three-seed robustness | Submitted: 1558251--1558254 |
+| 2 | CellViT-256 K/L/T tissue specialists A/B | Backbone-scale generalist/specialist comparison | Submitted: 1558255--1558260 |
+| 3 | SAM-H LP seed 44 A/B | Symmetric LP seed variance | READY_NOT_SUBMITTED; secondary |
+| 4 | HoVer-Net held-out-slide baseline | Addresses conventional-baseline criticism | High engineering cost |

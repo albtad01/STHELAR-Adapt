@@ -1,8 +1,8 @@
 fold: A
 strategy: slide
 reuse_packed_data: true
-source_dataset_root: ${DATA_ROOT}/sthelar40x_kidney_5class_spatial_margin128
-output_root: ${DATA_ROOT}/sthelar40x_kidney_5class_slideind_foldA_margin128
+source_dataset_root: "${DATA_ROOT}/sthelar40x_kidney_5class_spatial_margin128"
+output_root: "${DATA_ROOT}/sthelar40x_kidney_5class_slideind_foldA_margin128"
 slide_ids: [kidney_s0, kidney_s1]
 train_slides: [kidney_s0]
 valid_slides: []

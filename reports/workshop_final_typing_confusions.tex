@@ -1,0 +1,33 @@
+\begin{table}[t]
+\caption{Matched-nucleus typing errors across 18 tissue-specific \SAMH{} complete-slide directions (seed 42). Class F1 is averaged equally over directions with nonzero matched true support; Melanocyte therefore uses only the two Skin directions. Dominant-pair counts indicate how often an ordered off-diagonal pair was the largest raw matched-nucleus error within a direction. PEFT and \FullFT{} shared the dominant pair in 16/18 directions.}
+\label{tab:tissue-typing-confusions}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrr}
+\toprule
+Class / dominant pair & PEFT & \FullFT{} & $\Delta$ (P$-$F) \\
+\midrule
+\multicolumn{4}{l}{\textit{Mean matched-nucleus class F1}} \\
+Immune & 0.460 & 0.496 & -0.036 \\
+Stromal & 0.451 & 0.472 & -0.021 \\
+Epithelial & 0.619 & 0.607 & +0.012 \\
+Melanocyte $^{\dagger}$ & 0.018 & 0.020 & -0.002 \\
+Other & 0.022 & 0.120 & -0.098 \\
+\midrule
+\multicolumn{4}{l}{\textit{Directions where pair is the largest off-diagonal error}} \\
+Stromal$\rightarrow$Immune & 5 & 5 & -- \\
+Epithelial$\rightarrow$Immune & 4 & 4 & -- \\
+Immune$\rightarrow$Stromal & 3 & 3 & -- \\
+Epithelial$\rightarrow$Stromal & 2 & 2 & -- \\
+Immune$\rightarrow$Epithelial & 1 & 1 & -- \\
+Other$\rightarrow$Immune & 1 & 1 & -- \\
+Stromal$\rightarrow$Epithelial & 1 & 0 & -- \\
+Melanocyte$\rightarrow$Stromal & 1 & 0 & -- \\
+Melanocyte$\rightarrow$Epithelial & 0 & 1 & -- \\
+Other$\rightarrow$Epithelial & 0 & 1 & -- \\
+\bottomrule
+\end{tabular}
+\vspace{1pt}
+\parbox{0.96\linewidth}{\scriptsize $^{\dagger}$Melanocyte F1 uses $n=2$ supported directions; all other class-F1 rows use $n=18$. Rows are descriptive and are not treated as independent biological replicates.}
+\end{table}

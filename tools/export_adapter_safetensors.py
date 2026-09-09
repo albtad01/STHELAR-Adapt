@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import codecs
+from datetime import datetime, timezone
 import hashlib
 import inspect
 import json
@@ -44,7 +45,6 @@ PRIVATE_METADATA_PATTERNS = (
     re.compile(r"(?:^|[\\/])home[\\/]", re.IGNORECASE),
     re.compile(r"(?:^|[\\/])Users[\\/]"),
     re.compile(r"(?:^|[\\/])Volumes[\\/]"),
-    re.compile(r"taddeial", re.IGNORECASE),
     re.compile(r"ruche", re.IGNORECASE),
 )
 
@@ -239,6 +239,7 @@ def main() -> None:
             "source_config_filename": source_config.name,
             "source_config_sha256": sha256(source_config),
             "base_checkpoint_sha256": args.base_checkpoint_sha256,
+            "export_timestamp": datetime.now(timezone.utc).isoformat(),
             "expected_components": args.expected_components,
             **structural,
         }

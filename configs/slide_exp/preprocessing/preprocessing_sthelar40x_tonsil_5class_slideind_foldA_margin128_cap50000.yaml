@@ -1,8 +1,8 @@
 fold: A
 strategy: slide
 reuse_packed_data: true
-source_dataset_root: ${DATA_ROOT}/sthelar40x_tonsil_5class_spatial_margin128_cap50000
-output_root: ${DATA_ROOT}/sthelar40x_tonsil_5class_slideind_foldA_margin128_cap50000
+source_dataset_root: "${DATA_ROOT}/sthelar40x_tonsil_5class_spatial_margin128_cap50000"
+output_root: "${DATA_ROOT}/sthelar40x_tonsil_5class_slideind_foldA_margin128_cap50000"
 slide_ids: [tonsil_s0, tonsil_s1]
 train_slides: [tonsil_s0]
 valid_slides: []

@@ -227,3 +227,52 @@ IDs are Ovary `1501898`, Colon `1501899`, and Lung `1501917`; interim Lung job
   retraining.
 - MAIN PAPER: nine Fold-A tissue-specialization rows. SUPPORTING ANALYSIS:
   reciprocal Fold-B rows and generalist-versus-specialist comparisons.
+
+## Kidney/Liver reciprocal completion submission — 2026-08-28
+
+The two missing KLT specialist reciprocal conditions were resubmitted without
+scientific changes. Their earlier jobs 1478433 (Kidney B) and 1478432 (Liver B)
+failed during CUDA device initialization before a complete epoch or valid
+scientific artifact and remain provenance-only.
+
+| Tissue | Fold | Seed | Old failed ID | New job ID | State at 16:00 CEST | Dependency | Config |
+|---|---|---:|---:|---:|---|---|---|
+| Kidney | B | 42 | 1478433 | 1524196 | PENDING (`Dependency`) | `afterok:1524191` | `configs/slide_exp/training/training_sthelar40x_kidney_5class_slideind_foldB_lora_adaptformer_heads_seed42_retry_adapterexport.yaml` |
+| Liver | B | 42 | 1478432 | 1524197 | PENDING (`Dependency`) | `afterok:1524196` | `configs/slide_exp/training/training_sthelar40x_liver_5class_slideind_foldB_lora_adaptformer_heads_seed42_retry_adapterexport.yaml` |
+
+Both use the validated Fold-B metadata, seed 42, SAM-H Selected PEFT,
+`checkpoint_10.pth`, the same A100 resources and the verified adapter-export
+wrapper. Kidney remains 3,912 / 537 / 6,723 train/validation/test patches;
+Liver remains 8,174 / 992 / 20,427. Slide and patch disjointness and immutable
+payload links passed immediately before submission. The dependencies are only
+for quota-safe staging, not scientific ordering.
+
+Dependency re-audit at approximately 16:15 CEST removed Kidney's unnecessary
+dependency on all four CellViT-256 jobs and replaced it in place with
+`afterok:1524191` (SAM-H FullFT-B). Liver remains `afterok:1524196`. This is the
+earliest conservative tissue eligibility because persisting either 2.696-GiB
+tissue checkpoint before the large FullFT-B atomic save would reduce the
+projected quota headroom below the hard five-GiB target. No job ID or scientific
+setting changed.
+
+## Kidney/Liver Fold-B final scientific status — 2026-08-29
+
+Jobs 1524196 (Kidney B) and 1524197 (Liver B) both completed ten training
+epochs, whole-held-out-slide checkpoint-10 inference, efficiency output and
+one-checkpoint retention. Slurm reports `FAILED` only because the subsequent
+safetensors exporter rejected uppercase fold characters in its public ID.
+Their scientific conditions are therefore **COMPLETED VALID**, not failed
+training attempts, and no retraining is required.
+
+| Tissue | Fold | Scientific job | Scientific status | Adapter recovery job |
+|---|---|---:|---|---:|
+| Kidney | B | 1524196 | COMPLETED VALID; adapter export failed only | 1556307 |
+| Liver | B | 1524197 | COMPLETED VALID; adapter export failed only | 1556308 |
+
+Recovery is CPU-only and verifies exact base-plus-adapter reconstruction
+against each retained canonical checkpoint before atomic publication.
+
+Recovery jobs 1556307 and 1556308 completed successfully (`ExitCode=0:0`) in
+1:54 and 1:52. Kidney and Liver packages both report
+`state_reconstruction: exact_all_tensors`; staging files were removed only
+after verification.
