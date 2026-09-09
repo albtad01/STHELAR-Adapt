@@ -21,7 +21,7 @@ CONFIGS=(
   "configs/train_sthelar40x_skin_5class_spatial_margin128_lora_adaptformer_heads_only_seed42.yaml"
 )
 
-REPO="/gpfs/workdir/taddeial/workspace/STHELAR-Adapt"
+REPO="${SLURM_SUBMIT_DIR:-$(pwd)}"
 CONFIG="${CONFIGS[$SLURM_ARRAY_TASK_ID]}"
 MODULE_NAME="${MODULE_NAME:-miniconda3/25.5.1/none-none}"
 CONDA_ENV="${CONDA_ENV:-cellvit39}"

@@ -1,0 +1,14 @@
+{
+  "exported": {
+    "adapter_config.json": "61fb077c4abddbf9baf9830e00bd13e180a19817cc88ce4f36977819a7704797",
+    "adapter_model.safetensors": "2152328ff703f7fd9d34bd877594ce1367882328b9ebb0b6cf80e5ac266e69d8"
+  },
+  "source": {
+    "path": "samh_liver_folda_seed42_adapter.pth",
+    "sha256": "b03f2831345607acb42f8ee30fea75932c39260c871c804e231e816303ea51b1"
+  },
+  "source_config": {
+    "path": "training_sthelar40x_liver_5class_slideind_foldA_lora_adaptformer_heads_seed42.yaml",
+    "sha256": "12a2ebfa59b1ad30bacb27489af474e740baac2d2b12dbc776457dda160eb943"
+  }
+}

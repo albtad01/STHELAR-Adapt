@@ -1,0 +1,917 @@
+{
+  "adapter_id": "cellvit-256-x40/klt/slideind/foldb/seed42",
+  "adapter_state_tensor_count": 114,
+  "adapter_type": "lora_adaptformer",
+  "adapter_weight_file": "adapter_model.safetensors",
+  "adaptformer": {
+    "activation": "GELU",
+    "reduction": 16
+  },
+  "base_checkpoint": "models/pretrained/CellViT-256-x40.pth",
+  "base_checkpoint_resolved": "CellViT-256-x40.pth",
+  "base_checkpoint_sha256": "ee3986922fc500353db3d7692c566e19e1c694c8f10e47cf49dfd90160fc3b2b",
+  "base_load_info": {
+    "loaded_tensors": 437,
+    "missing_target_keys": [
+      "encoder.head.weight",
+      "encoder.head.bias"
+    ],
+    "skipped_shape": {
+      "encoder.head.bias": {
+        "checkpoint": [
+          19
+        ],
+        "model": [
+          1
+        ]
+      },
+      "encoder.head.weight": {
+        "checkpoint": [
+          19,
+          384
+        ],
+        "model": [
+          1,
+          384
+        ]
+      }
+    }
+  },
+  "base_model": "CellViT-256-x40",
+  "config_path": "config.yaml",
+  "decoder_adapter": {
+    "activation": null,
+    "alpha_init": null,
+    "reduction": null,
+    "train_alpha": null
+  },
+  "decoder_train_scope": "heads_only",
+  "expected_components": [
+    "lora",
+    "adaptformer",
+    "np_head",
+    "hv_head",
+    "nt_head"
+  ],
+  "expected_tensor_shapes": {
+    "adapter_state_dict.encoder.blocks.0.attn.qkv.adapter_q_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.0.attn.qkv.adapter_q_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.0.attn.qkv.adapter_v_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.0.attn.qkv.adapter_v_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.0.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.0.mlp.adapter_downsample.bias": [
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.0.mlp.adapter_downsample.weight": [
+      24,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.0.mlp.adapter_upsample.bias": [
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.0.mlp.adapter_upsample.weight": [
+      384,
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.1.attn.qkv.adapter_q_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.1.attn.qkv.adapter_q_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.1.attn.qkv.adapter_v_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.1.attn.qkv.adapter_v_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.1.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.1.mlp.adapter_downsample.bias": [
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.1.mlp.adapter_downsample.weight": [
+      24,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.1.mlp.adapter_upsample.bias": [
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.1.mlp.adapter_upsample.weight": [
+      384,
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.10.attn.qkv.adapter_q_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.10.attn.qkv.adapter_q_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.10.attn.qkv.adapter_v_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.10.attn.qkv.adapter_v_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.10.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.10.mlp.adapter_downsample.bias": [
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.10.mlp.adapter_downsample.weight": [
+      24,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.10.mlp.adapter_upsample.bias": [
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.10.mlp.adapter_upsample.weight": [
+      384,
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.11.attn.qkv.adapter_q_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.11.attn.qkv.adapter_q_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.11.attn.qkv.adapter_v_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.11.attn.qkv.adapter_v_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.11.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.11.mlp.adapter_downsample.bias": [
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.11.mlp.adapter_downsample.weight": [
+      24,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.11.mlp.adapter_upsample.bias": [
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.11.mlp.adapter_upsample.weight": [
+      384,
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.2.attn.qkv.adapter_q_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.2.attn.qkv.adapter_q_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.2.attn.qkv.adapter_v_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.2.attn.qkv.adapter_v_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.2.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.2.mlp.adapter_downsample.bias": [
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.2.mlp.adapter_downsample.weight": [
+      24,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.2.mlp.adapter_upsample.bias": [
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.2.mlp.adapter_upsample.weight": [
+      384,
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.3.attn.qkv.adapter_q_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.3.attn.qkv.adapter_q_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.3.attn.qkv.adapter_v_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.3.attn.qkv.adapter_v_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.3.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.3.mlp.adapter_downsample.bias": [
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.3.mlp.adapter_downsample.weight": [
+      24,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.3.mlp.adapter_upsample.bias": [
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.3.mlp.adapter_upsample.weight": [
+      384,
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.4.attn.qkv.adapter_q_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.4.attn.qkv.adapter_q_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.4.attn.qkv.adapter_v_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.4.attn.qkv.adapter_v_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.4.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.4.mlp.adapter_downsample.bias": [
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.4.mlp.adapter_downsample.weight": [
+      24,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.4.mlp.adapter_upsample.bias": [
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.4.mlp.adapter_upsample.weight": [
+      384,
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.5.attn.qkv.adapter_q_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.5.attn.qkv.adapter_q_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.5.attn.qkv.adapter_v_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.5.attn.qkv.adapter_v_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.5.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.5.mlp.adapter_downsample.bias": [
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.5.mlp.adapter_downsample.weight": [
+      24,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.5.mlp.adapter_upsample.bias": [
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.5.mlp.adapter_upsample.weight": [
+      384,
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.6.attn.qkv.adapter_q_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.6.attn.qkv.adapter_q_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.6.attn.qkv.adapter_v_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.6.attn.qkv.adapter_v_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.6.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.6.mlp.adapter_downsample.bias": [
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.6.mlp.adapter_downsample.weight": [
+      24,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.6.mlp.adapter_upsample.bias": [
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.6.mlp.adapter_upsample.weight": [
+      384,
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.7.attn.qkv.adapter_q_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.7.attn.qkv.adapter_q_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.7.attn.qkv.adapter_v_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.7.attn.qkv.adapter_v_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.7.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.7.mlp.adapter_downsample.bias": [
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.7.mlp.adapter_downsample.weight": [
+      24,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.7.mlp.adapter_upsample.bias": [
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.7.mlp.adapter_upsample.weight": [
+      384,
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.8.attn.qkv.adapter_q_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.8.attn.qkv.adapter_q_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.8.attn.qkv.adapter_v_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.8.attn.qkv.adapter_v_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.8.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.8.mlp.adapter_downsample.bias": [
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.8.mlp.adapter_downsample.weight": [
+      24,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.8.mlp.adapter_upsample.bias": [
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.8.mlp.adapter_upsample.weight": [
+      384,
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.9.attn.qkv.adapter_q_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.9.attn.qkv.adapter_q_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.9.attn.qkv.adapter_v_down.weight": [
+      8,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.9.attn.qkv.adapter_v_up.weight": [
+      384,
+      8
+    ],
+    "adapter_state_dict.encoder.blocks.9.mlp.adapter_alpha": [
+      1
+    ],
+    "adapter_state_dict.encoder.blocks.9.mlp.adapter_downsample.bias": [
+      24
+    ],
+    "adapter_state_dict.encoder.blocks.9.mlp.adapter_downsample.weight": [
+      24,
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.9.mlp.adapter_upsample.bias": [
+      384
+    ],
+    "adapter_state_dict.encoder.blocks.9.mlp.adapter_upsample.weight": [
+      384,
+      24
+    ],
+    "adapter_state_dict.hv_map_decoder.decoder0_header.2.bias": [
+      2
+    ],
+    "adapter_state_dict.hv_map_decoder.decoder0_header.2.weight": [
+      2,
+      64,
+      1,
+      1
+    ],
+    "adapter_state_dict.nuclei_binary_map_decoder.decoder0_header.2.bias": [
+      2
+    ],
+    "adapter_state_dict.nuclei_binary_map_decoder.decoder0_header.2.weight": [
+      2,
+      64,
+      1,
+      1
+    ],
+    "adapter_state_dict.nuclei_type_maps_decoder.decoder0_header.2.bias": [
+      6
+    ],
+    "adapter_state_dict.nuclei_type_maps_decoder.decoder0_header.2.weight": [
+      6,
+      64,
+      1,
+      1
+    ],
+    "mutable_buffer_state_dict.decoder0.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder0.0.block.1.running_mean": [
+      32
+    ],
+    "mutable_buffer_state_dict.decoder0.0.block.1.running_var": [
+      32
+    ],
+    "mutable_buffer_state_dict.decoder0.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder0.1.block.1.running_mean": [
+      64
+    ],
+    "mutable_buffer_state_dict.decoder0.1.block.1.running_var": [
+      64
+    ],
+    "mutable_buffer_state_dict.decoder1.0.block.2.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder1.0.block.2.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.decoder1.0.block.2.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.decoder1.1.block.2.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder1.1.block.2.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.decoder1.1.block.2.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.decoder1.2.block.2.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder1.2.block.2.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.decoder1.2.block.2.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.decoder2.0.block.2.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder2.0.block.2.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.decoder2.0.block.2.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.decoder2.1.block.2.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder2.1.block.2.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.decoder2.1.block.2.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.decoder3.0.block.2.num_batches_tracked": [],
+    "mutable_buffer_state_dict.decoder3.0.block.2.running_mean": [
+      312
+    ],
+    "mutable_buffer_state_dict.decoder3.0.block.2.running_var": [
+      312
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder0_header.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder0_header.0.block.1.running_mean": [
+      64
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder0_header.0.block.1.running_var": [
+      64
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder0_header.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder0_header.1.block.1.running_mean": [
+      64
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder0_header.1.block.1.running_var": [
+      64
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder1_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder1_upsampler.0.block.1.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder1_upsampler.0.block.1.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder1_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder1_upsampler.1.block.1.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder1_upsampler.1.block.1.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder2_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder2_upsampler.0.block.1.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder2_upsampler.0.block.1.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder2_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder2_upsampler.1.block.1.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder2_upsampler.1.block.1.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.0.block.1.running_mean": [
+      312
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.0.block.1.running_var": [
+      312
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.1.block.1.running_mean": [
+      312
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.1.block.1.running_var": [
+      312
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.2.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.2.block.1.running_mean": [
+      312
+    ],
+    "mutable_buffer_state_dict.hv_map_decoder.decoder3_upsampler.2.block.1.running_var": [
+      312
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder0_header.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder0_header.0.block.1.running_mean": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder0_header.0.block.1.running_var": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder0_header.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder0_header.1.block.1.running_mean": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder0_header.1.block.1.running_var": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.running_mean": [
+      312
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.running_var": [
+      312
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.running_mean": [
+      312
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.running_var": [
+      312
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.running_mean": [
+      312
+    ],
+    "mutable_buffer_state_dict.nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.running_var": [
+      312
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder0_header.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder0_header.0.block.1.running_mean": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder0_header.0.block.1.running_var": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder0_header.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder0_header.1.block.1.running_mean": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder0_header.1.block.1.running_var": [
+      64
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.running_mean": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.running_var": [
+      128
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.running_mean": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.running_var": [
+      256
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.running_mean": [
+      312
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.running_var": [
+      312
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.running_mean": [
+      312
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.running_var": [
+      312
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.num_batches_tracked": [],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.running_mean": [
+      312
+    ],
+    "mutable_buffer_state_dict.nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.running_var": [
+      312
+    ]
+  },
+  "export_timestamp": "2026-08-28T10:06:30.146171+00:00",
+  "fold": "B",
+  "format": "cellvit_adapter_checkpoint",
+  "format_version": 1,
+  "frozen_parameter_override_count": 0,
+  "git_commit": "5dc3ae1dea3999c5c78863a28e2216cafafa55e6",
+  "inserted_decoder_conv_adapters": 0,
+  "label_mapping": {
+    "Background": 0,
+    "Epithelial": 3,
+    "Immune": 1,
+    "Melanocyte": 4,
+    "Other": 5,
+    "Stromal": 2
+  },
+  "label_mode": null,
+  "load_verification": "exact_state_match",
+  "lora": {
+    "alpha": 8,
+    "dropout": 0.0,
+    "rank": 8,
+    "targets": [
+      "q",
+      "v"
+    ]
+  },
+  "method": "Selected PEFT",
+  "metrics": {
+    "checkpoint": {
+      "best_epoch": 8,
+      "best_metric": 0.40990180334676085,
+      "epoch": 9
+    },
+    "inference": {
+      "Binary-Cell-Dice-Mean": 0.8147085949506604,
+      "Binary-Cell-Jacard-Mean": 0.7000795457453479,
+      "Tissue-Multiclass-Accuracy": 1.0,
+      "bDQ": 0.7592723399251176,
+      "bPQ": 0.5675917229322182,
+      "bSQ": 0.7267921547286504,
+      "f1_detection": 0.8593128212795217,
+      "mDQ": 0.26021047855352214,
+      "mPQ": 0.19522308006393244,
+      "mSQ": 0.3812479511525521,
+      "precision_detection": 0.9052982815367904,
+      "recall_detection": 0.8177732743962894
+    }
+  },
+  "mutable_buffer_names": [
+    "decoder0.0.block.1.num_batches_tracked",
+    "decoder0.0.block.1.running_mean",
+    "decoder0.0.block.1.running_var",
+    "decoder0.1.block.1.num_batches_tracked",
+    "decoder0.1.block.1.running_mean",
+    "decoder0.1.block.1.running_var",
+    "decoder1.0.block.2.num_batches_tracked",
+    "decoder1.0.block.2.running_mean",
+    "decoder1.0.block.2.running_var",
+    "decoder1.1.block.2.num_batches_tracked",
+    "decoder1.1.block.2.running_mean",
+    "decoder1.1.block.2.running_var",
+    "decoder1.2.block.2.num_batches_tracked",
+    "decoder1.2.block.2.running_mean",
+    "decoder1.2.block.2.running_var",
+    "decoder2.0.block.2.num_batches_tracked",
+    "decoder2.0.block.2.running_mean",
+    "decoder2.0.block.2.running_var",
+    "decoder2.1.block.2.num_batches_tracked",
+    "decoder2.1.block.2.running_mean",
+    "decoder2.1.block.2.running_var",
+    "decoder3.0.block.2.num_batches_tracked",
+    "decoder3.0.block.2.running_mean",
+    "decoder3.0.block.2.running_var",
+    "hv_map_decoder.decoder0_header.0.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder0_header.0.block.1.running_mean",
+    "hv_map_decoder.decoder0_header.0.block.1.running_var",
+    "hv_map_decoder.decoder0_header.1.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder0_header.1.block.1.running_mean",
+    "hv_map_decoder.decoder0_header.1.block.1.running_var",
+    "hv_map_decoder.decoder1_upsampler.0.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder1_upsampler.0.block.1.running_mean",
+    "hv_map_decoder.decoder1_upsampler.0.block.1.running_var",
+    "hv_map_decoder.decoder1_upsampler.1.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder1_upsampler.1.block.1.running_mean",
+    "hv_map_decoder.decoder1_upsampler.1.block.1.running_var",
+    "hv_map_decoder.decoder2_upsampler.0.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder2_upsampler.0.block.1.running_mean",
+    "hv_map_decoder.decoder2_upsampler.0.block.1.running_var",
+    "hv_map_decoder.decoder2_upsampler.1.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder2_upsampler.1.block.1.running_mean",
+    "hv_map_decoder.decoder2_upsampler.1.block.1.running_var",
+    "hv_map_decoder.decoder3_upsampler.0.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder3_upsampler.0.block.1.running_mean",
+    "hv_map_decoder.decoder3_upsampler.0.block.1.running_var",
+    "hv_map_decoder.decoder3_upsampler.1.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder3_upsampler.1.block.1.running_mean",
+    "hv_map_decoder.decoder3_upsampler.1.block.1.running_var",
+    "hv_map_decoder.decoder3_upsampler.2.block.1.num_batches_tracked",
+    "hv_map_decoder.decoder3_upsampler.2.block.1.running_mean",
+    "hv_map_decoder.decoder3_upsampler.2.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder0_header.0.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder0_header.0.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder0_header.0.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder0_header.1.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder0_header.1.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder0_header.1.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder1_upsampler.0.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder1_upsampler.1.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder2_upsampler.0.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder2_upsampler.1.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder3_upsampler.0.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder3_upsampler.1.block.1.running_var",
+    "nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.num_batches_tracked",
+    "nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.running_mean",
+    "nuclei_binary_map_decoder.decoder3_upsampler.2.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder0_header.0.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder0_header.0.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder0_header.0.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder0_header.1.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder0_header.1.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder0_header.1.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder1_upsampler.0.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder1_upsampler.1.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder2_upsampler.0.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder2_upsampler.1.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder3_upsampler.0.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder3_upsampler.1.block.1.running_var",
+    "nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.num_batches_tracked",
+    "nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.running_mean",
+    "nuclei_type_maps_decoder.decoder3_upsampler.2.block.1.running_var"
+  ],
+  "mutable_buffer_tensor_count": 105,
+  "nuclei_types": {
+    "Background": 0,
+    "Epithelial": 3,
+    "Immune": 1,
+    "Melanocyte": 4,
+    "Other": 5,
+    "Stromal": 2
+  },
+  "num_nuclei_classes": 6,
+  "num_tissue_classes": 1,
+  "original_config_path": "config.yaml",
+  "original_run_dir": "2026-08-25T114238_sthelar40x_klt_5class_slideind_foldB_cellvit256_lora_adaptformer_r8_a8_red16_heads_e10_seed42",
+  "original_run_name": "sthelar40x_klt_5class_slideind_foldB_cellvit256_lora_adaptformer_r8_a8_red16_heads_e10_seed42",
+  "random_seed": 42,
+  "run_name": "sthelar40x_klt_5class_slideind_foldB_cellvit256_lora_adaptformer_r8_a8_red16_heads_e10_seed42",
+  "section_counts": {
+    "adapter_state_dict": 114,
+    "mutable_buffer_state_dict": 105
+  },
+  "seed": 42,
+  "source_checkpoint": "checkpoint_10.pth",
+  "source_config_filename": "training_sthelar40x_klt_5class_slideind_foldB_cellvit256_lora_adaptformer_heads_seed42.yaml",
+  "source_config_sha256": "d8971ff852eb81d4e1830100c6465afc21a34bf36c14f2ea20b91ac316e5cb0b",
+  "source_filename": "cellvit256_foldb_seed42_adapter.pth",
+  "split": null,
+  "tissue": null,
+  "tissue_types": {
+    "KidneyLiverTonsil": 0
+  },
+  "total_parameter_count": 47116967,
+  "trainable_parameter_count": 374198,
+  "trainable_params": 374198,
+  "trainable_ratio": 0.7941894901681595,
+  "trainable_ratio_percent": 0.7941894901681595,
+  "vera": null
+}

@@ -1,0 +1,121 @@
+{
+  "adapter_path": "release/huggingface/adapters/cellvit-sam-h-x40/tissue_specific/pancreatic/slideind/foldb/seed42/adapter_model.safetensors",
+  "adapter_sha256": "9cfac88bec69d9c40d875007866213d2265a882ac09123876b4cc7589b9895c8",
+  "adapter_size_bytes": 31810308,
+  "base_checkpoint": "models/pretrained/CellViT-SAM-H-x40.pth",
+  "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+  "base_load_info": {
+    "loaded_tensors": 744,
+    "missing_target_keys": [
+      "classifier_head.weight",
+      "classifier_head.bias"
+    ],
+    "skipped_shape": {
+      "classifier_head.bias": {
+        "checkpoint": [
+          19
+        ],
+        "model": [
+          1
+        ]
+      },
+      "classifier_head.weight": {
+        "checkpoint": [
+          19,
+          256
+        ],
+        "model": [
+          1,
+          256
+        ]
+      }
+    }
+  },
+  "base_model": "CellViT-SAM-H-x40",
+  "canonical_checkpoint": "run/sthelar40x_pancreatic_5class_slideind_foldB_lora_adaptformer_r8_a8_red16_heads_e10_seed42/log/2026-08-26T225723_sthelar40x_pancreatic_5class_slideind_foldB_lora_adaptformer_r8_a8_red16_heads_e10_seed42/checkpoints/checkpoint_10.pth",
+  "canonical_checkpoint_sha256": "d9fb7d91ccbb6f296070947d7702a8a541292c595ef8a0cdbedd9bdcf734cce6",
+  "forward_output_comparison": [
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "hv_map",
+      "shape": [
+        1,
+        2,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "nuclei_binary_map",
+      "shape": [
+        1,
+        2,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "nuclei_type_map",
+      "shape": [
+        1,
+        6,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "tissue_types",
+      "shape": [
+        1,
+        1
+      ]
+    }
+  ],
+  "forward_tested": true,
+  "forward_verification": "exact_all_output_tensors",
+  "loaded_state_key_count": 401,
+  "missing_adapter_keys": [],
+  "missing_mutable_buffer_keys": [],
+  "model_load_tested": true,
+  "output_tensor_shapes": {
+    "hv_map": [
+      1,
+      2,
+      256,
+      256
+    ],
+    "nuclei_binary_map": [
+      1,
+      2,
+      256,
+      256
+    ],
+    "nuclei_type_map": [
+      1,
+      6,
+      256,
+      256
+    ],
+    "tissue_types": [
+      1,
+      1
+    ]
+  },
+  "release_dir": "release/huggingface/adapters/cellvit-sam-h-x40/tissue_specific/pancreatic/slideind/foldb/seed42",
+  "state_reconstruction": "exact_all_tensors",
+  "state_tensor_count": 1034,
+  "status": "ok",
+  "tensor_count": 401,
+  "trainable_parameter_count": 7908779,
+  "training_config": "configs/slide_exp/training/training_sthelar40x_pancreatic_5class_slideind_foldB_lora_adaptformer_heads_seed42.yaml",
+  "unexpected_adapter_keys": [],
+  "unexpected_mutable_buffer_keys": [],
+  "verification_timestamp": "2026-08-28T14:24:25.516759+00:00"
+}

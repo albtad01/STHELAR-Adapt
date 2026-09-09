@@ -1,0 +1,86 @@
+STHELAR-Adapt
+Third-party attribution and modification notice
+================================================
+
+This distribution incorporates and modifies portions of CellViT:
+https://github.com/TIO-IKIM/CellViT
+License source retrieved 2026-09-04:
+https://github.com/TIO-IKIM/CellViT/blob/main/LICENSE
+
+The complete applicable CellViT component terms, including the Apache
+License 2.0 text and Commons Clause conditions, are reproduced in LICENSE.
+
+UPSTREAM ATTRIBUTIONS
+
+- CellViT original code and inference/training components
+  Copyright © 2024 Fabian Hörst and Jens Kleesiek.
+  Source: https://github.com/TIO-IKIM/CellViT
+  Required citation:
+  Hörst, F., Rempe, M., Heine, L., et al. (2024).
+  "CellViT: Vision Transformers for Precise Cell Segmentation and
+  Classification." Medical Image Analysis 94, 103143.
+  https://doi.org/10.1016/j.media.2024.103143
+
+- Segment Anything Model (SAM)-derived components
+  Copyright © 2023 Meta Platforms, Inc.
+  Source: https://github.com/facebookresearch/segment-anything
+  License: Apache License 2.0.
+
+- HIPT-derived components used by CellViT-256
+  Copyright © 2022 Mahmood Lab.
+  Source: https://github.com/mahmoodlab/HIPT
+  License: Apache License 2.0 with the Commons Clause stated in LICENSE.
+
+- DINO/timm-derived ViT implementation retained through CellViT
+  Copyright (c) Facebook, Inc. and its affiliates, and applicable timm
+  contributors.
+  Sources:
+  https://github.com/facebookresearch/dino
+  https://github.com/huggingface/pytorch-image-models
+  License: Apache License 2.0. Existing file-level notices are retained.
+
+MODIFICATION STATEMENT
+
+STHELAR-Adapt is a modified derivative of the CellViT framework. For
+avoidance of doubt, all CellViT-derived files distributed here are to be
+treated as modified unless a retained file header explicitly states that the
+file is unchanged. CellViT-derived material occurs principally under
+base_ml/, cell_segmentation/, datamodel/, models/, preprocessing/, utils/,
+the associated configuration files, and README_CellViT.md.
+
+Project modifications include STHELAR data conversion and label mapping,
+spatial and complete-slide splitting, LoRA and AdaptFormer integration,
+trainability controls, adapter export/loading/verification, experiment
+configuration, evaluation, and release documentation. The repository's Git
+history is the detailed record of those changes. This global notice does not
+remove or replace any more-specific notice retained in an individual file.
+
+PRETRAINED CHECKPOINTS AND ADAPTER STATE
+
+The official CellViT-SAM-H x40 and CellViT-256 x40 base checkpoints are not
+redistributed. Users must obtain them separately from CellViT and comply with
+their applicable terms. Verified STHELAR-Adapt adapter exports contain trained
+adapter/head state and changed mutable normalization buffers; they do not
+contain unchanged frozen base parameters.
+
+DATASET ATTRIBUTION
+
+STHELAR 40x revision
+e32a8cdd50eff2d38e237f3729e9ac85bbb5203b is released under Creative
+Commons Attribution 4.0 International:
+https://creativecommons.org/licenses/by/4.0/
+
+Source: https://huggingface.co/datasets/FelicieGS/STHELAR_40x
+Publication: https://doi.org/10.1038/s41597-026-06937-6
+
+STHELAR source data are not redistributed as training data in this package.
+Qualitative figures that contain STHELAR imagery are adapted material: model
+predictions, ground-truth rendering, labels, layout, and overlays were added
+for this work. No endorsement by the STHELAR authors is implied.
+
+The CellViT checkpoints were pretrained upstream on PanNuke. PanNuke images
+are not redistributed here. Source/citation:
+https://warwick.ac.uk/fac/cross_fac/tia/data/pannuke/
+https://arxiv.org/abs/2003.10778
+
+This NOTICE is informational and does not modify any applicable license.

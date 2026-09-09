@@ -1,0 +1,61 @@
+{
+  "adapter_required_missing_keys": [],
+  "adapter_required_unexpected_keys": [],
+  "adapter_sha256": "aaa20a8f7c4dbb61e1c989c8a997c848ae12dd81a7966a4820d936060898a157",
+  "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+  "forward_output_comparison": [
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "hv_map",
+      "shape": [
+        1,
+        2,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "nuclei_binary_map",
+      "shape": [
+        1,
+        2,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "nuclei_type_map",
+      "shape": [
+        1,
+        6,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "tissue_types",
+      "shape": [
+        1,
+        1
+      ]
+    }
+  ],
+  "forward_verification": "exact_all_output_tensors",
+  "metadata_consistency": "pass",
+  "mutable_buffer_missing_keys": [],
+  "mutable_buffer_unexpected_keys": [],
+  "safetensors_parse": "pass",
+  "source_checkpoint_sha256": "03727b7097805fa3ebfab430da48db4a882c8f58a52f4a7dfe702e5347460360",
+  "source_tensor_equality": "pass",
+  "source_verification_sha256": "76440e06c230dc1eaf1c8f0b5fbbf89c177bf89f73fe8a8230c3973a0beb6811",
+  "state_reconstruction": "exact_all_tensors",
+  "status": "VERIFIED",
+  "verified_source_package": "release/huggingface/adapters/cellvit-sam-h-x40/tissue_specific/tonsil/slideind/foldb/seed42"
+}

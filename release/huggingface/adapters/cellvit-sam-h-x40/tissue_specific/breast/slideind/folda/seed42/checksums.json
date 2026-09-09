@@ -1,0 +1,14 @@
+{
+  "exported": {
+    "adapter_config.json": "5a0237fa89711e895cd13946b69742fe1b90c4cf2d3faa220543b8743d749647",
+    "adapter_model.safetensors": "ab7167931cc192fd7b41006e42b0df8ce679d1159b015ab4acd31225de9d7653"
+  },
+  "source": {
+    "path": "samh_breast_folda_seed42_adapter.pth",
+    "sha256": "d53be275c104ef377ce2470c1ce6be4c977d0b036b299a8dfa54cfc67592501b"
+  },
+  "source_config": {
+    "path": "training_sthelar40x_breast_5class_slideind_foldA_lora_adaptformer_heads_seed42.yaml",
+    "sha256": "c295626d7aa7e2db39ce44c91918eb07bdb49f38da3f8840409ccf33527e8460"
+  }
+}

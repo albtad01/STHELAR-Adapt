@@ -147,13 +147,13 @@ All `${PROJECT_ROOT}`, `${DATA_ROOT}`, and `${STHELAR_ROOT}` placeholders are
 expanded by the project config loaders and fail when unresolved. Keep raw data,
 materialized datasets, runs, logs, and checkpoints outside Git.
 
-## Public/double-blind note
+## Public provenance note
 
 Newly committed reports contain no personal account path or direct personal
 repository/model namespace. Existing repository history, remote configuration,
 and upstream source attribution predate this migration and can identify
 contributors; history was intentionally not rewritten. The result-package
-directory and generator retain the venue-oriented name
+directory and generator retain the historical venue-oriented name
 `neurips2026_paper_results` for provenance, and job registries retain scheduler
-IDs and old cluster/node names. Review those names against the destination's
-double-blind policy before making the branch public.
+IDs and old cluster/node names. These names are preserved to avoid breaking
+recorded paths and do not identify a manuscript submission.

@@ -9,6 +9,10 @@ wandb/
 outputs/
 checkpoints/
 logs/
+timing_audit/
+slurm-*.out
+slurm-*.err
+events.out.tfevents.*
 
 # Model checkpoints / large binaries
 *.pth
@@ -48,6 +52,25 @@ reports/storage_cleanup_*.md
 
 # Local adapter inventories
 adapters/SHA256SUMS.local
+adapters/slide_exp_safetensors/
+
+# Local scheduler snapshots and one-off campaign wrappers
+reports/*_jobs.md
+reports/*queue_reconciliation*.md
+ruche/tissue_fullft_samh_seed42_remaining.tsv
+ruche/slurm_cleanup_samh_tissue_fullft_seed42_array.sh
+ruche/slurm_consolidate_samh_nine_tissue_fullft.sh
+ruche/slurm_inference_checkpoint10_retention.sh
+ruche/slurm_recover_adapter_safetensors.sh
+ruche/slurm_train_checkpoint10_adapter_safetensors.sh
+ruche/slurm_train_samh_tissue_fullft_seed42_array.sh
+
+# Superseded generated/intermediate manuscript tables
+reports/cellvit256_tissue_specific_results.csv
+reports/preregistered_extension_analysis_scaffold.md
+reports/workshop_ablation_seed_audit.csv
+reports/workshop_ablation_seed_audit.md
+reports/workshop_latex_tables.tex
 
 # Allow only curated public configurations
 !configs/release/**/*.yaml
@@ -80,9 +103,22 @@ figures/*
 
 # Hugging Face release metadata includes curated configs and figures.
 !release/huggingface/configs/**/*.yaml
+!release/huggingface/complete_slide_v1/**/*.yaml
 
 # Binary model-release artifacts stay local / belong in the eventual HF LFS upload.
 release/huggingface/adapters/**/*.safetensors
 release/huggingface/adapters/**/*.pth
+release/huggingface/complete_slide_v1/**/*.safetensors
+release/huggingface/complete_slide_v1/**/*.pth
 release/huggingface/.cache/
 release/huggingface/cache/
+
+# Local release-operation state and unpublished planning records.
+release/huggingface/.complete_slide_v1_finalize.lock
+release/huggingface/publish_complete_slide_v1.sh
+release/huggingface/cellvit256_release_plan.md
+release/huggingface/cellvit256_release_proposal.md
+release/huggingface/workshop_job_plan.md
+release/huggingface/workshop_release_inventory.csv
+release/huggingface/workshop_release_inventory.md
+release/huggingface/workshop_submitted_jobs.md

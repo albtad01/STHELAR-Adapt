@@ -1,0 +1,60 @@
+created_at_utc: '2026-08-25T09:56:26.794479+00:00'
+fold: B
+source_dataset_root: ${DATA_ROOT}/sthelar40x_liver_5class_spatial_margin128
+output_root: ${DATA_ROOT}/sthelar40x_liver_5class_slideind_foldB_margin128
+split_strategy: slide
+split_axis: x
+spatial_margin: 128
+train_fraction_inside_training_slides: 0.85
+validation_fraction_inside_training_slides: 0.15
+train_slide_ids:
+- liver_s1
+validation_source_slide_ids:
+- liver_s1
+test_slide_ids:
+- liver_s0
+patch_counts:
+  train: 8174
+  valid: 992
+  test: 20427
+counts_per_slide:
+  train:
+    liver_s1: 8174
+  valid:
+    liver_s1: 992
+  test:
+    liver_s0: 20427
+class_counts_per_split:
+  train:
+    Immune: 63296
+    Stromal: 68778
+    Epithelial: 160100
+    Melanocyte: 0
+    Other: 1016
+  valid:
+    Immune: 3916
+    Stromal: 5019
+    Epithelial: 18702
+    Melanocyte: 0
+    Other: 118
+  test:
+    Immune: 107969
+    Stromal: 98569
+    Epithelial: 274899
+    Melanocyte: 0
+    Other: 5446
+reused_packed_payload: true
+reused_files:
+- images.zip
+- labels.zip
+- types.csv
+- dataset_config.yaml
+helper_manifest:
+  train_slides:
+  - liver_s1
+  valid_slides: []
+  test_slides:
+  - liver_s0
+  uses_spatial_valid_inside_train_slide: true
+  train_frac_inside_train_slide: 0.85
+  valid_frac_inside_train_slide: 0.15

@@ -1,0 +1,19 @@
+{
+  "all_checks_passed": true,
+  "fold": "all_slides",
+  "patch_identifiers_unique_across_splits": true,
+  "test_slide_ids": [],
+  "test_slides_exact": true,
+  "train_slide_ids": [
+    "ovary_s0",
+    "ovary_s1"
+  ],
+  "train_slides_exact": true,
+  "train_test_disjoint": true,
+  "validation_source_slide_ids": [
+    "ovary_s0",
+    "ovary_s1"
+  ],
+  "validation_sources_exact": true,
+  "validation_test_disjoint": true
+}

@@ -1,0 +1,14 @@
+{
+  "exported": {
+    "adapter_config.json": "9dc17982d44bf90f293788c90ae75eb7c017d3e54bbfe445ae17960ffa6ebd2e",
+    "adapter_model.safetensors": "0e897f4a468953a702fc24058db299d0602e79481411756ca7338f62c3896fed"
+  },
+  "source": {
+    "path": "samh_klt_foldb_seed42_adapter.pth",
+    "sha256": "13d1dd3f31a380dac10ba8fc8a26a2dd01dc5d629e187834d62dc5d2caefb4c7"
+  },
+  "source_config": {
+    "path": "training_sthelar40x_klt_5class_slideind_foldB_lora_adaptformer_heads_seed42.yaml",
+    "sha256": "a82439729b0f2526ee4f63b7ffcd06190bac40b7c22570b47ef5b84ee36ad21d"
+  }
+}

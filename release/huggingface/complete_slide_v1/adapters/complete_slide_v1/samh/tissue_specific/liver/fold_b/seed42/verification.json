@@ -1,0 +1,61 @@
+{
+  "adapter_required_missing_keys": [],
+  "adapter_required_unexpected_keys": [],
+  "adapter_sha256": "9259464cb714568d5dc4c22006c7307bfc2aea4648e8045c06faf3d3be9e701e",
+  "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+  "forward_output_comparison": [
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "hv_map",
+      "shape": [
+        1,
+        2,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "nuclei_binary_map",
+      "shape": [
+        1,
+        2,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "nuclei_type_map",
+      "shape": [
+        1,
+        6,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "tissue_types",
+      "shape": [
+        1,
+        1
+      ]
+    }
+  ],
+  "forward_verification": "exact_all_output_tensors",
+  "metadata_consistency": "pass",
+  "mutable_buffer_missing_keys": [],
+  "mutable_buffer_unexpected_keys": [],
+  "safetensors_parse": "pass",
+  "source_checkpoint_sha256": "29f6001e358994c4254304ed4ee3c7c0f31059e68049f5461c18742ce0f3a002",
+  "source_tensor_equality": "pass",
+  "source_verification_sha256": "1a25aada01c517399dd0eb46436aad25ea118d97b3827cf13dcd9725c81ce4c3",
+  "state_reconstruction": "exact_all_tensors",
+  "status": "VERIFIED",
+  "verified_source_package": "adapters/slide_exp_safetensors/sthelar40x_liver_5class_slideind_foldB_lora_adaptformer_r8_a8_red16_heads_e10_seed42"
+}

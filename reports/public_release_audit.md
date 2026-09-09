@@ -78,7 +78,7 @@ Dependency issues: PyTorch is intentionally installed separately; `safetensors` 
 
 ## 3. Hard-coded paths and personal information
 
-The initial tracked scan found path/user matches in 18 files for `/gpfs/`, 2 for `/home/`, 6 for `/Users/`, 16 for `/Volumes/`, 15 for `taddeial`, 4 for `felicie`, and 20 for `ruche` (overlapping sets). Author names/citations and a source comment mentioning Felicie are legitimate attribution and should remain. Git author emails are normal repository metadata.
+The initial tracked scan found path/user matches across cluster and workstation prefixes and contributor usernames (overlapping sets). Author names/citations and source comments containing author names are legitimate attribution and should remain. Git author emails are normal repository metadata.
 
 Low-risk fixes made:
 
@@ -92,7 +92,7 @@ Remaining path-bearing categories:
 
 - inherited notebooks and PanNuke/CoNSeP/MoNuSeg scripts with workstation examples/output;
 - `configs/in_use/train_cellvit_sweep.yaml`;
-- one-off `utils/analysis/create_split_cap_sanity_report.py`, `utils/create_next_sthelar_yamls.py`, and `utils/make_adapter_yamls.py`;
+- inherited one-off analysis utilities outside the supported complete-slide workflow;
 - Ruche and `shell_commands/` scripts, where cluster paths are historical examples;
 - local ignored adapter `.pth` metadata, which embeds `/gpfs/workdir/<user>/...` source/base/run paths.
 

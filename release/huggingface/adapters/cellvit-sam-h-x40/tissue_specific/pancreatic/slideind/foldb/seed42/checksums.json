@@ -1,0 +1,14 @@
+{
+  "exported": {
+    "adapter_config.json": "a02f221ad59426b6e2695f7bb12ca1dded102738a74dc39b51513295d41e0c3b",
+    "adapter_model.safetensors": "9cfac88bec69d9c40d875007866213d2265a882ac09123876b4cc7589b9895c8"
+  },
+  "source": {
+    "path": "samh_pancreatic_foldb_seed42_adapter.pth",
+    "sha256": "56ea747ed14a7ced2149fa158d22a1934ff1aa034163a5e7b23fb90a194efc6c"
+  },
+  "source_config": {
+    "path": "training_sthelar40x_pancreatic_5class_slideind_foldB_lora_adaptformer_heads_seed42.yaml",
+    "sha256": "7427232e5152f0005e2d8d538c30d8fe599f131792215bd00799cc8ffdc300e2"
+  }
+}

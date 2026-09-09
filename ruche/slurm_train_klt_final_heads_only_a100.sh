@@ -12,7 +12,7 @@
 
 set -euo pipefail
 
-REPO="${SLURM_SUBMIT_DIR:-/gpfs/workdir/taddeial/workspace/STHELAR-Adapt}"
+REPO="${SLURM_SUBMIT_DIR:-$(pwd)}"
 CONFIG="${REPO}/configs/examples/training_sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_klt_final_heads_only_frozen_encoder_decoder_e10_seed42.yaml"
 MODULE_NAME="${MODULE_NAME:-miniconda3/25.5.1/none-none}"
 CONDA_ENV="${CONDA_ENV:-cellvit39}"

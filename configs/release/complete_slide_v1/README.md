@@ -1,0 +1,3 @@
+# complete_slide_v1 configs
+
+Fold A/B files are byte-for-byte curated copies of the canonical complete-slide seed-42 experiment configs. `all_slides` uses all designated slides, with a nominal deterministic spatial-axis 85% training / 15% validation partition and a 128-unit boundary margin inside every slide. Actual patch fractions vary with spatial patch density and are recorded in each materialized split manifest. Therefore “all slides” does not mean every eligible patch receives gradient updates. All-slides configs set `test_folds: null`; framework post-training inference falls back to validation and is not a held-out evaluation.

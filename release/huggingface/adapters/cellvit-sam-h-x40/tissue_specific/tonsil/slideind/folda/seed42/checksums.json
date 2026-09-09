@@ -1,0 +1,14 @@
+{
+  "exported": {
+    "adapter_config.json": "fc151d47724bdc89a46faff741f618a7c653b541a59b6efbb357e08d023ef05e",
+    "adapter_model.safetensors": "1435c7c9522e5c4a6c602ccfe16ee23198fe6032a0f38227156cabf3c77f8252"
+  },
+  "source": {
+    "path": "samh_tonsil_folda_seed42_adapter.pth",
+    "sha256": "8f8f48a672deaa42da34532ff2c52c90415179b11be94a6149e821577ec03c7f"
+  },
+  "source_config": {
+    "path": "training_sthelar40x_tonsil_5class_slideind_foldA_lora_adaptformer_heads_seed42.yaml",
+    "sha256": "834b958fc38b23f8966d31060338f6809a307ca71a4fe2d43c20179f87e19dac"
+  }
+}

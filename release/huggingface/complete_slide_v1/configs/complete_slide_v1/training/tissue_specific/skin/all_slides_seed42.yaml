@@ -1,0 +1,154 @@
+adapters:
+  adapter_type: lora_adaptformer
+  decoder_train_scope: heads_only
+  lora:
+    rank: 8
+    alpha: 8
+    targets:
+    - q
+    - v
+    dropout: 0.0
+  adaptformer:
+    activation: GELU
+    reduction: 16
+logging:
+  mode: offline
+  project: sthelar40x_complete_slide_v1_deployment
+  notes: Deployment-only all-slides adapter. No held-out test claim; 15% spatial validation
+    is retained within every designated slide.
+  log_comment: sthelar40x_skin_5class_all_slides_lora_adaptformer_r8_a8_red16_heads_e10_seed42
+  tags:
+  - sthelar
+  - 40x
+  - skin
+  - all_slides
+  - deployment
+  - selected_peft
+  - seed42
+  wandb_dir: run/sthelar40x_skin_5class_all_slides_lora_adaptformer_r8_a8_red16_heads_e10_seed42/wandb
+  log_dir: run/sthelar40x_skin_5class_all_slides_lora_adaptformer_r8_a8_red16_heads_e10_seed42/log
+  level: debug
+  log_images: false
+random_seed: 42
+gpu: 0
+data:
+  dataset: STHELAR
+  dataset_path: ${DATA_ROOT}/sthelar40x_skin_5class_all_slides_margin128_cap50000
+  label_mode: 5class
+  split: all_slides_deployment
+  train_folds:
+  - train
+  val_folds:
+  - valid
+  test_folds: null
+  num_nuclei_classes: 6
+  num_tissue_classes: 1
+  input_shape: 256
+  magnification: 40
+model:
+  backbone: SAM-H
+  pretrained_encoder: null
+  pretrained: models/pretrained/CellViT-SAM-H-x40.pth
+  embed_dim: 1280
+  input_channels: 3
+  depth: 32
+  num_heads: 16
+  extract_layers: 4
+  shared_decoders: false
+training:
+  batch_size: 4
+  epochs: 10
+  unfreeze_epoch: 999
+  optimizer: AdamW
+  optimizer_hyperparameter:
+    lr: 5.0e-05
+    betas:
+    - 0.85
+    - 0.85
+  early_stopping_patience: 10
+  scheduler:
+    scheduler_type: exponential
+  sampling_strategy: cell
+  sampling_gamma: 0.85
+  mixed_precision: true
+  eval_every: 1
+  unfreeze_encoder: false
+checkpointing:
+  save_best: true
+  save_last: true
+  keep_last_n: 1
+  save_every: 1
+  delete_intermediate_checkpoints: true
+adapter_export:
+  enabled: true
+  format: pth
+  output_dir: adapters/complete_slide_v1_staging
+  export_best: false
+  export_last: true
+  verify_load: true
+transformations:
+  randomrotate90:
+    p: 0.5
+  horizontalflip:
+    p: 0.5
+  verticalflip:
+    p: 0.5
+  downscale:
+    p: 0.5
+    scale: 0.2
+  blur:
+    p: 0.5
+    blur_limit: 10
+  gaussnoise:
+    p: 0.5
+    var_limit: 10
+  colorjitter:
+    p: 0.5
+    scale_setting: 0.25
+    scale_color: 0.1
+  superpixels:
+    p: 0.5
+  zoomblur:
+    p: 0.5
+  randomsizedcrop:
+    p: 0.5
+  elastictransform:
+    p: 0.5
+  normalize:
+    mean:
+    - 0.5
+    - 0.5
+    - 0.5
+    std:
+    - 0.5
+    - 0.5
+    - 0.5
+eval_checkpoint: checkpoint_10.pth
+inference:
+  batch_size: 16
+  qc_jaccard_thresholds:
+  - 0.45
+  - 0.6
+  - 0.7
+  - 0.8
+efficiency:
+  enabled: true
+  tissue: Skin
+  fold: A
+  method: Selected PEFT
+  backbone: CellViT-SAM-H x40
+release_metadata:
+  release: complete_slide_v1
+  semantic_role: all_slides
+  evaluation_role: deployment
+  held_out_test: null
+  paper_metric: null
+  designated_slides:
+  - skin_s1
+  - skin_s2
+  nominal_spatial_train_fraction: 0.85
+  nominal_spatial_validation_fraction: 0.15
+  validation_strategy: deterministic spatial x-axis split within every designated
+    slide with a 128-coordinate-unit boundary margin
+  dataset_revision: e32a8cdd50eff2d38e237f3729e9ac85bbb5203b
+  base_sha256: b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf

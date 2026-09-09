@@ -1,0 +1,26 @@
+fold: all_slides
+strategy: slide
+reuse_packed_data: true
+source_dataset_root: ${DATA_ROOT}/sthelar40x_liver_5class_spatial_margin128
+output_root: ${DATA_ROOT}/sthelar40x_liver_5class_all_slides_margin128
+slide_ids: &id001
+- liver_s0
+- liver_s1
+train_slides: *id001
+valid_slides: []
+test_slides: []
+split_axis: x
+boundary_margin: 128
+train_frac: 0.7
+valid_frac: 0.15
+test_frac: 0.15
+train_frac_inside_train_slide: 0.85
+valid_frac_inside_train_slide: 0.15
+random_seed: 42
+release_metadata:
+  evaluation_role: deployment
+  held_out_test: null
+  paper_metric: null
+  all_slides_definition: All designated slides are eligible; a nominal 85%/15% spatial-axis
+    train partition with a 128-unit boundary margin is applied within every slide.
+    Patch-count fractions vary with spatial density.

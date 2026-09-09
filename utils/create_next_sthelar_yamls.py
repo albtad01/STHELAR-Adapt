@@ -1,9 +1,12 @@
+import os
 from pathlib import Path
 import yaml
 
 
 OUT = Path("configs/examples")
 OUT.mkdir(parents=True, exist_ok=True)
+DATA_ROOT = os.environ.get("DATA_ROOT", "${DATA_ROOT}")
+STHELAR_ROOT = os.environ.get("STHELAR_ROOT", "${STHELAR_ROOT}")
 
 
 def write_yaml(path, data):
@@ -117,8 +120,8 @@ def base_training_config(
 # ============================================================
 
 preprocess_liver_5class_spatial = {
-    "sthelar_root": "/gpfs/workdir/taddeial/workspace/Datasets/STHELAR_40x",
-    "output_root": "/gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_liver_5class_spatial",
+    "sthelar_root": STHELAR_ROOT,
+    "output_root": f"{DATA_ROOT}/sthelar40x_liver_5class_spatial",
     "tissue_name": "Liver",
     "tissue": "liver",
     "slide_ids": ["liver_s0", "liver_s1"],
@@ -181,7 +184,7 @@ write_yaml(
 # 2. Liver 5-class spatial AdaptFormer e10
 # ============================================================
 
-liver5_dataset = "/gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_liver_5class_spatial"
+liver5_dataset = f"{DATA_ROOT}/sthelar40x_liver_5class_spatial"
 
 run_name = "sthelar40x_liver_5class_spatial_adaptformer_gelu_red16_lr5e-5_e10_seed42_CLEAN"
 
@@ -259,7 +262,7 @@ cfg = base_training_config(
         "tonsil 9-class slide-level split. "
         f"Run: {run_name}."
     ),
-    dataset_path="/gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_tonsil_9class_slide",
+    dataset_path=f"{DATA_ROOT}/sthelar40x_tonsil_9class_slide",
     adapter_block={
         "adapter_type": "adaptformer",
         "adaptformer": {
@@ -291,7 +294,7 @@ cfg = base_training_config(
         "tonsil 9-class slide-level split. "
         f"Run: {run_name}. IMPORTANT: verify trainable params; true full fine-tuning should unfreeze the encoder."
     ),
-    dataset_path="/gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_tonsil_9class_slide",
+    dataset_path=f"{DATA_ROOT}/sthelar40x_tonsil_9class_slide",
     adapter_block={
         "adapter_type": "all",
     },
@@ -322,7 +325,7 @@ cfg = base_training_config(
         "tonsil 9-class slide-level split. "
         f"Run: {run_name}."
     ),
-    dataset_path="/gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_tonsil_9class_slide",
+    dataset_path=f"{DATA_ROOT}/sthelar40x_tonsil_9class_slide",
     adapter_block={
         "adapter_type": "freeze",
     },

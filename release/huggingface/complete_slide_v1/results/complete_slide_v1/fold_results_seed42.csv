@@ -1,0 +1,21 @@
+protocol,domain,tissue,seed,fold,checkpoint_policy,bPQ,mPQ,F1det,F1type,test_patches,train_slide,test_slide,test_patch_id_sha256
+held_out_slide_KLT,KLT,Kidney+Liver+Tonsil,42,A,checkpoint_10 TEST,0.519822534,0.216963135,0.842759783,0.483567384,23494,kidney_s0;liver_s0;tonsil_s0,kidney_s1;liver_s1;tonsil_s1,47b58bbfec248fadb420a3ee2072039375f23f2aae3ff5dc4146be2664e97a61
+held_out_slide_KLT,KLT,Kidney+Liver+Tonsil,42,B,checkpoint_10 TEST,0.609579157,0.230505236,0.862920171,0.477919743,26335,kidney_s1;liver_s1;tonsil_s1,kidney_s0;liver_s0;tonsil_s0,ecb48f53f1b24e779857cc2415f3f61e87130e253e65857542adbf7ca5b3972e
+tissue_specific_held_out_slide,Breast,Breast,42,A,checkpoint_10 TEST,0.411261618,0.238573055,0.812884174,0.500013574,49569,breast_s0,breast_s1,6919f9d362da83fdab6869db214f1149625570ce8b9e2d81ed9651cf98f0fe57
+tissue_specific_held_out_slide,Breast,Breast,42,B,checkpoint_10 TEST,0.452459328,0.277942334,0.831756725,0.534306874,45773,breast_s1,breast_s0,d41bd81521359b3f03b1832ffa33157a6ad1b2fd89819853a91a8a9835dc7d73
+tissue_specific_held_out_slide,Colon,Colon,42,A,checkpoint_10 TEST,0.284720845,0.149549371,0.750952323,0.426502817,11903,colon_s1,colon_s2,95091217911927e0dbf677070725bf1795fe5191566c82602778576ae497686a
+tissue_specific_held_out_slide,Colon,Colon,42,B,checkpoint_10 TEST,0.286509128,0.119909138,0.744117931,0.386677610,18464,colon_s2,colon_s1,c2b49d03ad766c3afc07938621d46e2f5c85d2a631a4aab9b7b8b26e804887d3
+tissue_specific_held_out_slide,Kidney,Kidney,42,A,checkpoint_10 TEST,0.549528894,0.090364372,0.847799845,0.149248608,4449,kidney_s0,kidney_s1,b294169ffe32e16f2d9a571f70ab523bd530581e1f64bbc0e475f24dbba448ad
+tissue_specific_held_out_slide,Kidney,Kidney,42,B,checkpoint_10 TEST,0.609419493,0.052900124,0.900829712,0.105982137,6723,kidney_s1,kidney_s0,b20a4b6f38be145511cdb41d76c9e6d2830968b56af08084050986485b1e3cb5
+tissue_specific_held_out_slide,Liver,Liver,42,A,checkpoint_10 TEST,0.480070241,0.171505713,0.843155925,0.264901675,9166,liver_s0,liver_s1,804074f4d9746fe34711ab8329cd95971876a36acf8f6fa8a4c397d23944bd17
+tissue_specific_held_out_slide,Liver,Liver,42,B,checkpoint_10 TEST,0.521889107,0.244554879,0.882646972,0.403020125,20427,liver_s1,liver_s0,c190501712ee96da9433ec72d5f100102a64473809a4f9c0f7644314e577f11c
+tissue_specific_held_out_slide,Lung,Lung,42,A,checkpoint_10 TEST,0.508303818,0.193408481,0.842962916,0.404211364,20621,lung_s1,lung_s3,5db06a5c053f1e5e1cf24db539858410b34c8bfc91c24b2ae46ccf93e461091d
+tissue_specific_held_out_slide,Lung,Lung,42,B,checkpoint_10 TEST,0.563651005,0.251397281,0.861941938,0.470081725,10938,lung_s3,lung_s1,ec3ab11027a24760ba6aaea75d3a6b61bd6113cdc815385289d049041b754bb1
+tissue_specific_held_out_slide,Ovary,Ovary,42,A,checkpoint_10 TEST,0.448759877,0.222644702,0.834354971,0.505402914,25498,ovary_s0,ovary_s1,e501c6aab1225b8b8a96a9e00d89d1b12dc0f10ecd006e9ff4fcd0ce70334617
+tissue_specific_held_out_slide,Ovary,Ovary,42,B,checkpoint_10 TEST,0.387430107,0.154828265,0.832847863,0.480599340,10039,ovary_s1,ovary_s0,0792454f7561464ffbbad200e7863074519bf3f66522fb5e97ed0aa2b4dd9189
+tissue_specific_held_out_slide,Pancreatic,Pancreatic,42,A,checkpoint_10 TEST,0.377441166,0.123930722,0.733775571,0.278762512,12647,pancreatic_s0,pancreatic_s1,6c5b9bfb903b0e1be01f4c8af47025b2de17cfc067b4756773b74d84bbfc7ed4
+tissue_specific_held_out_slide,Pancreatic,Pancreatic,42,B,checkpoint_10 TEST,0.389165727,0.174534048,0.725043142,0.416725354,25526,pancreatic_s1,pancreatic_s0,131dba6a8406983810271632caff4321d009223660b4eac06350afd1f06466a3
+tissue_specific_held_out_slide,Skin,Skin,42,A,checkpoint_10 TEST,0.440097632,0.134162919,0.743151222,0.242518971,12790,skin_s1,skin_s2,40d1b93990a1e94d7bc5cc7bca9bf05e0c8537e4aa3fbf7caa58e2bd26163bee
+tissue_specific_held_out_slide,Skin,Skin,42,B,checkpoint_10 TEST,0.213661360,0.071668448,0.662776393,0.293580725,11209,skin_s2,skin_s1,f3031bff17e940b3fe42adbb4bfbd4f26484bb7227111655332a7632620a51d7
+tissue_specific_held_out_slide,Tonsil,Tonsil,42,A,checkpoint_10 TEST,0.452244022,0.215840309,0.838258952,0.487866434,21083,tonsil_s0,tonsil_s1,e6c67abea5f71f64b93f484dca1b8271dc1a36351cb2f69ae542e13e9105452b
+tissue_specific_held_out_slide,Tonsil,Tonsil,42,B,checkpoint_10 TEST,0.577059605,0.260302041,0.855993609,0.510764350,23067,tonsil_s1,tonsil_s0,1504d6aa6fde1cfdc9c35ba08d98d6c14e3a97208b3b0adf12801766c596de3c

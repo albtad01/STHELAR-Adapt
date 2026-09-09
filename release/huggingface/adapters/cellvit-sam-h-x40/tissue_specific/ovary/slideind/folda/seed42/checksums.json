@@ -1,0 +1,14 @@
+{
+  "exported": {
+    "adapter_config.json": "5015d8da29c49ff675ce1d1e91b3b14581d6a13037092d429d5725d2b6b67844",
+    "adapter_model.safetensors": "9d81bcf84981e9a19b45907ae65f505b52f394b7aaf828372f243ed55fdc2830"
+  },
+  "source": {
+    "path": "samh_ovary_folda_seed42_adapter.pth",
+    "sha256": "37e1411b3121b9608f6df28246435307acf1f0a1ffa8c86776729be1afd7fe46"
+  },
+  "source_config": {
+    "path": "training_sthelar40x_ovary_5class_slideind_foldA_lora_adaptformer_heads_seed42.yaml",
+    "sha256": "579b5383cd0bda94773aa2aff7714fffd8c57a6e59fe26308878149191ca84d6"
+  }
+}

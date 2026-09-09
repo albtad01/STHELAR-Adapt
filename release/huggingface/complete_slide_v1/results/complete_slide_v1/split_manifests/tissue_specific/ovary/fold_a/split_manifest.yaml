@@ -1,0 +1,60 @@
+created_at_utc: '2026-08-25T20:01:24.642578+00:00'
+fold: A
+source_dataset_root: ${DATA_ROOT}/sthelar40x_ovary_5class_spatial_margin128
+output_root: ${DATA_ROOT}/sthelar40x_ovary_5class_slideind_foldA_margin128
+split_strategy: slide
+split_axis: x
+spatial_margin: 128
+train_fraction_inside_training_slides: 0.85
+validation_fraction_inside_training_slides: 0.15
+train_slide_ids:
+- ovary_s0
+validation_source_slide_ids:
+- ovary_s0
+test_slide_ids:
+- ovary_s1
+patch_counts:
+  train: 9770
+  valid: 269
+  test: 25498
+counts_per_slide:
+  train:
+    ovary_s0: 9770
+  valid:
+    ovary_s0: 269
+  test:
+    ovary_s1: 25498
+class_counts_per_split:
+  train:
+    Immune: 105133
+    Stromal: 62037
+    Epithelial: 314259
+    Melanocyte: 0
+    Other: 21780
+  valid:
+    Immune: 968
+    Stromal: 808
+    Epithelial: 683
+    Melanocyte: 0
+    Other: 979
+  test:
+    Immune: 91824
+    Stromal: 309105
+    Epithelial: 368980
+    Melanocyte: 0
+    Other: 61243
+reused_packed_payload: true
+reused_files:
+- images.zip
+- labels.zip
+- types.csv
+- dataset_config.yaml
+helper_manifest:
+  train_slides:
+  - ovary_s0
+  valid_slides: []
+  test_slides:
+  - ovary_s1
+  uses_spatial_valid_inside_train_slide: true
+  train_frac_inside_train_slide: 0.85
+  valid_frac_inside_train_slide: 0.15

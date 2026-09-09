@@ -1,276 +1,156 @@
-# STHELAR-Adapt: Tissue-Specific Adaptation for Spatial Transcriptomics-Informed Cell Segmentation and Classification
+# STHELAR-Adapt
 
-STHELAR-Adapt is a parameter-efficient framework for spatial transcriptomics-informed nuclei instance segmentation and cell-type classification from 40x H&E images.
+STHELAR-Adapt is research software for parameter-efficient adaptation of CellViT to nuclei instance segmentation and spatial-transcriptomics-derived five-class cell typing on STHELAR 40x H&E images. The current reproducibility release uses reciprocal **complete-slide holdouts** across Kidney–Liver–Tonsil (KLT) and nine tissue-specific tasks; older COMPAYL-era within-slide experiments remain in the repository as explicitly historical material.
 
-[COMPAYL 2026 paper (link pending)](#citation) · [Hugging Face adapters](https://huggingface.co/albtad01/STHELAR-Adapt-CellViT-SAM-H-x40) · [STHELAR paper](https://doi.org/10.1038/s41597-026-06937-6) · [STHELAR 40x data](https://huggingface.co/datasets/FelicieGS/STHELAR_40x) · [CellViT](https://github.com/TIO-IKIM/CellViT)
+![STHELAR-Adapt architecture](docs/figures/architecture.png)
 
-<p align="center">
-  <img src="figures/paper_figures/architecture.png" alt="STHELAR-Adapt architecture: pretrained encoder base weights frozen, trainable LoRA and AdaptFormer modules, frozen decoder body, and trainable final heads" width="900">
-</p>
+## Method
 
-STHELAR pairs H&E morphology with Xenium spatial-transcriptomics cell annotations. The task combines nuclei instance segmentation and five-class cell typing across nine tissues, where tissue-dependent morphology and label composition create domain shift.
+The selected configuration freezes the CellViT-SAM-H-x40 encoder base weights and decoder body, and trains:
 
-STHELAR-Adapt evaluates tissue-specific and multi-tissue adaptation of CellViT-SAM-H x40. The selected method trains LoRA Q/V modules, AdaptFormer bottlenecks, and final NP/HV/NT heads while freezing the encoder base weights and decoder body. Approximately 1.12% of parameters are trainable, and selected PEFT recovers 94.96% of FullFT mPQ in the multi-tissue experiment. This repository provides code, preprocessing and training configs, spatial splitting, evaluation, release tools, and verified adapter packages.
+- LoRA rank-8 adapters on every encoder attention Q and V projection;
+- AdaptFormer bottlenecks with reduction 16 in the encoder MLP blocks;
+- the final NP (nuclei probability), HV (horizontal/vertical), and NT (nuclei type) heads.
 
-## Key results
+An adapter archive also stores the mutable normalization buffers required to reconstruct the evaluated state. It does **not** contain frozen CellViT or SAM base weights.
 
-### Kidney–Liver–Tonsil (KLT) multi-tissue setting
+```text
+official CellViT-SAM-H-x40 base checkpoint
+                  +
+STHELAR-Adapt adapter-only safetensors
+                  =
+adapted CellViT model
+```
 
-KLT values are test-set means over seeds 42 and 43.
+These composite archives are not standard Hugging Face PEFT packages. Load them with this repository's `utils.cellvit_adapter_hub` API.
 
-| KLT method | Trainable modules | Trainable | mPQ | bPQ | F1 detection | F1 type |
-|---|---|---:|---:|---:|---:|---:|
-| Full fine-tuning | All weights | 100% | 0.309 | 0.515 | 0.829 | 0.666 |
-| Selected PEFT | LoRA Q/V + AdaptFormer + NP/HV/NT heads | 1.12% | 0.294 | 0.504 | 0.835 | 0.578 |
-| Final-head linear probe | NP/HV/NT heads | <0.01% | 0.204 | 0.446 | 0.818 | 0.430 |
+## Main complete-slide evaluation
 
-### Tissue-specific selected PEFT
+The main tissue-specific comparison uses nine SAM-H tissues, seed 42, and two reciprocal directions per tissue. Each direction trains on one slide and tests on the other; Fold A and Fold B are distinct held-out slides, not independent biological or stochastic replicates. Values below are unweighted means of the two folds within each tissue, followed by an unweighted mean across the nine tissues.
 
-These within-dataset results use the released tissue-specific adapters and do not represent cross-patient or cross-site evaluation.
+| Metric | Full fine-tuning | Selected PEFT | PEFT − FullFT |
+|---|---:|---:|---:|
+| bPQ | 0.445141 | 0.441871 | -0.003270 |
+| mPQ | 0.186681 | 0.174890 | -0.011791 |
+| F1 detection | 0.806061 | 0.808069 | +0.002008 |
+| F1 type | 0.417683 | 0.381176 | -0.036507 |
 
-| Tissue | Adapter seed(s) | mPQ | F1 detection | F1 type |
-|---|---:|---:|---:|---:|
-| Liver | 42 | 0.3925 | 0.8916 | 0.5673 |
-| Kidney | 42, 43 mean | 0.2484 | 0.8332 | 0.5013 |
-| Ovary | 42 | 0.2999 | 0.8414 | 0.6182 |
-| Breast | 42 | 0.3348 | 0.8424 | 0.5873 |
-| Colon | 42 | 0.2047 | 0.7904 | 0.6076 |
-| Lung | 42 | 0.3015 | 0.8637 | 0.6271 |
-| Pancreatic | 43 | 0.2389 | 0.7383 | 0.6682 |
-| Skin | 42 | 0.2239 | 0.7250 | 0.6778 |
-| Tonsil | 43 | 0.2346 | 0.8226 | 0.5955 |
-| **Mean** | — | **0.2755** | **0.8165** | **0.6056** |
+The PEFT/FullFT ratio of the grand tissue means is 0.936837 for mPQ. This is a descriptive recovery ratio, not an equivalence, non-inferiority, or superiority result. The canonical values and aggregation policy are in [the matched tissue table](reports/tissue_peft_vs_fullft_slideind.csv) and [scientific audit](reports/workshop_final_scientific_audit.md). KLT multi-seed, fold-specific results are in [the master CSV](reports/workshop_master_results.csv) and [readable table](reports/workshop_master_results.md).
 
-See [the final KLT table](reports/paper_tables/klt_ablation_final_with_type_metrics.csv) and [the tissue table](reports/paper_tables/tissue_specific_compayl2026_final.csv) for the complete values and aggregation policy.
+Historical within-slide configurations and results are preserved under [`configs/release/compayl2026/`](configs/release/compayl2026/) and [`reports/paper_tables/`](reports/paper_tables/). They document an earlier release and are not the current main complete-slide result.
 
-## Quick start: CellViT-SAM-H x40 + Lung adapter
-
-The normal workflow combines the official CellViT-SAM-H x40 checkpoint with one released adapter; users do not convert legacy training checkpoints.
-
-### A. Clone and install
+## Quick start
 
 ```bash
-git clone https://github.com/albtad01/STHELAR-Adapt.git
+git clone --branch sthelar-adapt https://github.com/albtad01/STHELAR-Adapt.git
 cd STHELAR-Adapt
 conda env create -f environment.yml
 conda activate sthelar-adapt
-python -m pip install torch
 python -m pip install -r requirements.txt
 ```
 
-### B. Obtain the official base checkpoint
+Obtain the official `CellViT-SAM-H-x40.pth` checkpoint from the [CellViT project](https://github.com/TIO-IKIM/CellViT). It is required but is not redistributed here. The released adapters were verified against exactly:
 
-Download the [official CellViT-SAM-H x40 checkpoint](https://drive.usercontent.google.com/download?id=1MvRKNzDW2eHbQb5rAgTEp6s2zAXHixRV&export=download&authuser=0), place it at `models/pretrained/CellViT-SAM-H-x40.pth`, and verify it:
-
-```bash
-sha256sum models/pretrained/CellViT-SAM-H-x40.pth
-# b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf
+```text
+b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf  CellViT-SAM-H-x40.pth
 ```
 
-The base checkpoint is required but not redistributed by STHELAR-Adapt. Users must comply with its applicable terms.
-
-### C. Download the Lung seed-42 adapter
-
-The repeated `--include` form below was dry-run validated with `huggingface-hub` 1.8.0:
+Verify the checkpoint before use:
 
 ```bash
-hf download \
-  albtad01/STHELAR-Adapt-CellViT-SAM-H-x40 \
-  --include "adapters/tissue_specific/lung/seed42/*" \
-  --include "configs/release/compayl2026/tissue_specific/training_sthelar40x_lung_5class_spatial_margin128_cap50000_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml" \
-  --include "scripts/verify_released_adapter.py" \
-  --local-dir sthelar-adapt-release
+echo "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf  /path/to/CellViT-SAM-H-x40.pth" | sha256sum --check
+python tools/verify_released_adapter.py /path/to/adapter-package \
+  --base-checkpoint /path/to/CellViT-SAM-H-x40.pth
 ```
 
-### D. Verify the downloaded adapter
-
-```bash
-python sthelar-adapt-release/scripts/verify_released_adapter.py \
-  sthelar-adapt-release/adapters/tissue_specific/lung/seed42 \
-  --base-checkpoint models/pretrained/CellViT-SAM-H-x40.pth
-```
-
-### E. Reconstruct CellViT and load the adapter
+Load a complete-slide KLT Fold-A adapter with its matching architecture config:
 
 ```python
 from utils.cellvit_adapter_hub import load_cellvit_base, load_sthelar_adapter
 
-base_checkpoint = "models/pretrained/CellViT-SAM-H-x40.pth"
-config_path = (
-    "sthelar-adapt-release/configs/release/compayl2026/tissue_specific/"
-    "training_sthelar40x_lung_5class_spatial_margin128_cap50000_"
-    "lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml"
-)
-adapter_path = "sthelar-adapt-release/adapters/tissue_specific/lung/seed42"
-
 model = load_cellvit_base(
     model_name="cellvit-sam-h-x40",
-    base_checkpoint=base_checkpoint,
-    config_path=config_path,
+    base_checkpoint="/path/to/CellViT-SAM-H-x40.pth",
+    config_path=(
+        "configs/slide_exp/training/"
+        "training_sthelar40x_klt_5class_slideind_foldA_"
+        "lora_adaptformer_heads_seed42.yaml"
+    ),
     device="cpu",
 )
-load_sthelar_adapter(model, adapter_path)
+load_sthelar_adapter(model, "/path/to/adapter-package")
 model.eval()
 ```
 
-This reconstructs the released Lung-adapted CellViT model. The released Lung test values are mPQ 0.3015, F1 detection 0.8637, and F1 type 0.6271; they do not guarantee improvement on arbitrary external lung images. See [Training and evaluation](#training-and-evaluation) for dataset inference.
-
-## Qualitative results
-
-![Ground truth, linear probing, and selected PEFT predictions across nine tissues](docs/figures/qualitative.png)
-
-Ground-truth overlays (top), final-head linear-probing predictions (middle), and selected LoRA+AdaptFormer plus final-head predictions (bottom) for one chosen patch from each of kidney, liver, tonsil, ovary, breast, colon, lung, pancreatic, and skin. Examples were selected for qualitative illustration and are not intended to constitute a statistically representative sample.
-
-## Dataset preparation and spatial splitting
-
-Download or materialize the STHELAR 40x Hugging Face Parquet dataset, then set local roots. `${STHELAR_ROOT}` and `${DATA_ROOT}` are expanded by the config loaders and fail if unresolved.
-
-```bash
-export STHELAR_ROOT=/path/to/STHELAR_40x
-export DATA_ROOT=/path/to/cellvit_ready
-
-python preprocessing/sthelar/convert_hf_to_cellvit.py \
-  --config configs/release/compayl2026/preprocessing/preprocessing_sthelar40x_kidney_liver_tonsil_5class_spatial_margin128.yaml
-
-python utils/check_spatial_split_leakage.py \
-  --dataset "$DATA_ROOT/sthelar40x_kidney_liver_tonsil_5class_spatial_margin128" \
-  --config configs/release/compayl2026/preprocessing/preprocessing_sthelar40x_kidney_liver_tonsil_5class_spatial_margin128.yaml \
-  --output-dir reports/split_checks
-```
-
-The spatial splitter assigns within-slide train/validation/test regions along a coordinate axis and discards patches in a 128-coordinate-unit band around boundaries. Inspect `split_manifest.yaml`, `patch_info_with_split.csv`, and the leakage-check CSV before training. The other paper preprocessing configs are under `configs/release/compayl2026/preprocessing/`.
-
-The released label mapping contains five foreground types plus background:
-
-| ID | Label |
-|---:|---|
-| 0 | Background |
-| 1 | Immune |
-| 2 | Stromal |
-| 3 | Epithelial |
-| 4 | Melanocyte |
-| 5 | Other |
-
-All curated configs set `num_tissue_classes: 1`. CellViT's one-output tissue classifier is retained for compatibility with the inherited architecture, trainer interface, and packaged state. With a single output, its softmax prediction and cross-entropy objective are degenerate; tissue classification is not a reported task. The paper results evaluate the NP, HV, and NT nuclei outputs.
+The Git repository tracks code, configurations, checksums, and verification metadata—not adapter binaries or base checkpoints. Obtain an adapter package separately from the model release and keep its directory contents together.
 
 ## Training and evaluation
 
-These advanced workflows require the prepared dataset, official base checkpoint, and appropriate compute. They are separate from the normal adapter-user workflow above.
-
-### Training
+Set a portable data root; curated complete-slide configs expand `${DATA_ROOT}` at runtime:
 
 ```bash
-# Final NP/HV/NT-head linear probe
-python cell_segmentation/run_cellvit.py --config \
-  configs/release/compayl2026/klt/training_sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_klt_final_heads_only_frozen_encoder_decoder_e10_seed42.yaml
-
-# Selected PEFT, seed 42 (repeat with the adjacent seed-43 config)
-python cell_segmentation/run_cellvit.py --config \
-  configs/release/compayl2026/klt/training_sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_lora_adaptformer_r8_a8_red16_decoder_heads_only_lr5e-5_e10_seed42_CLEAN.yaml
-
-# Full fine-tuning, seed 42 (repeat with the adjacent seed-43 config)
-python cell_segmentation/run_cellvit.py --config \
-  configs/release/compayl2026/klt/training_sthelar40x_kidney_liver_tonsil_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml
+export DATA_ROOT=/path/to/cellvit_ready
+export CELLVIT_SAM_H_X40_CHECKPOINT=/path/to/CellViT-SAM-H-x40.pth
 ```
 
-Tissue-specific FullFT and selected-PEFT configs are in `configs/release/compayl2026/tissue_specific/`. The paper used seed 42 except Pancreatic and Tonsil (seed 43); Kidney PEFT is the mean of seeds 42 and 43.
+Prepare one reciprocal KLT direction and train the selected configuration:
 
-### Dataset inference and evaluation
+```bash
+python preprocessing/sthelar/convert_hf_to_cellvit.py \
+  --config configs/slide_exp/preprocessing/preprocessing_sthelar40x_klt_5class_slideind_foldA_margin128.yaml
 
-Training invokes patch inference after the final epoch. To rerun inference without retraining:
+python cell_segmentation/run_cellvit.py --config \
+  configs/slide_exp/training/training_sthelar40x_klt_5class_slideind_foldA_lora_adaptformer_heads_seed42.yaml
+```
+
+The paired Fold-B config reverses the training and held-out slides. Tissue-specific and CellViT-256 configurations are in [`configs/slide_exp/`](configs/slide_exp/), and the exact split assignments are in [`manifests/slide_independent/`](manifests/slide_independent/). Training normally performs final inference; an existing run can be evaluated again with:
 
 ```bash
 python utils/rerun_cellvit_inference.py \
-  --run_dir /path/to/timestamped/run \
-  --checkpoint_name model_best.pth \
+  --run_dir /path/to/run \
+  --checkpoint_name checkpoint_10.pth \
   --gpu 0 --magnification 40
 ```
 
-To rebuild the run summaries and paper tables from local run logs:
+These commands require appropriate local data, the upstream checkpoint, and suitable compute. They do not download or embed either asset.
 
-```bash
-python utils/collect_sthelar_run_tables_v2.py --run-root run \
-  --out-summary reports/runs_summary.csv --out-epochs reports/epoch_metrics.csv
-python utils/analysis/create_final_type_metric_tables.py
-```
+## Adapter release
 
-Aggregate paper tables are tracked. Some prediction-level artifacts and timestamped runs required for complete figure and QC regeneration are not included; see [the public release audit](reports/public_release_audit.md) for details.
+[`release/huggingface/complete_slide_adapter_manifest.csv`](release/huggingface/complete_slide_adapter_manifest.csv) is the current SAM-H release matrix. It records 30 seed-42 targets: 20 Fold-A/Fold-B complete-slide evaluation adapters have exact state-reconstruction and deterministic-forward verification; 10 separate `all_slides` deployment targets are explicitly marked `MISSING_NEEDS_TRAINING`. The matching public configs are under [`configs/release/complete_slide_v1/`](configs/release/complete_slide_v1/). Binary `safetensors` files are intentionally excluded from Git.
 
-## Verified adapter inventory
-
-All 12 adapter packages passed conversion, exact tensor round-trip, metadata, base-loading, and 256×256 CPU forward checks. Exact source/config/export hashes are frozen in [the verified release manifest](release/huggingface/adapter_manifest_verified.csv); the broader 51-checkpoint audit remains in [the audit manifest](release/adapter_manifest.csv). No full CellViT base weights belong in the adapter release.
-
-| Public adapter ID | Tissue(s) | Seed |
-|---|---|---:|
-| `klt/seed42` | Kidney + Liver + Tonsil | 42 |
-| `klt/seed43` | Kidney + Liver + Tonsil | 43 |
-| `tissue_specific/breast/seed42` | Breast | 42 |
-| `tissue_specific/colon/seed42` | Colon | 42 |
-| `tissue_specific/kidney/seed42` | Kidney | 42 |
-| `tissue_specific/kidney/seed43` | Kidney | 43 |
-| `tissue_specific/liver/seed42` | Liver | 42 |
-| `tissue_specific/lung/seed42` | Lung | 42 |
-| `tissue_specific/ovary/seed42` | Ovary | 42 |
-| `tissue_specific/pancreatic/seed43` | Pancreatic | 43 |
-| `tissue_specific/skin/seed42` | Skin | 42 |
-| `tissue_specific/tonsil/seed43` | Tonsil | 43 |
+Evaluation adapters are fold-specific: each is trained without its designated held-out slide. The all-slides configs define future deployment artifacts trained on all designated slides; they have no held-out-slide metrics and must not be used to reproduce the evaluation results. The earlier 22-package snapshot, which also includes CellViT-256 and extra KLT seeds, remains in [`release/huggingface/slideind_adapter_manifest_verified.csv`](release/huggingface/slideind_adapter_manifest_verified.csv) for provenance.
 
 ## Repository structure
 
-| Path | Role |
+| Path | Contents |
 |---|---|
-| `preprocessing/sthelar/` | STHELAR Parquet inspection and CellViT conversion |
-| `cell_segmentation/`, `models/`, `base_ml/`, `datamodel/` | inherited CellViT framework plus STHELAR/adapter extensions |
-| `configs/release/compayl2026/` | curated preprocessing and training configurations |
-| `utils/` | evaluation, analysis, checkpoint, and adapter utilities |
-| `tools/` | public adapter audit, conversion, and verification tools |
-| `reports/`, `figures/paper_figures/`, `docs/figures/` | selected metrics, audits, the publication architecture source, and synchronized figures |
-| `ruche/`, `jeanzay/` | optional, cluster-specific SLURM examples; not required locally |
-| `release/huggingface/` | Hugging Face adapter-release metadata, configs, scripts, results, and synchronized figures |
-
-### Maintainer utilities
-
-Checkpoint auditing, safetensors export, and package verification are documented in [the adapter release audit](reports/adapter_release_audit.md) and implemented under `tools/`. Normal adapter users do not need the legacy export workflow.
+| `cell_segmentation/`, `models/`, `utils/` | inherited CellViT pipeline and STHELAR-Adapt implementation |
+| `preprocessing/sthelar/` | STHELAR conversion and split preparation |
+| `configs/slide_exp/` | current complete-slide preprocessing and training configs |
+| `manifests/slide_independent/` | reciprocal slide assignments and provenance |
+| `reports/` | canonical result tables and scientific audits |
+| `release/huggingface/` | current and historical adapter-release metadata, verification records, and notices |
+| `configs/release/compayl2026/` | historical within-slide release configs |
 
 ## Limitations
 
-- Evaluation uses few slides per tissue and within-slide spatial splits; spatial separation does not establish cross-site generalization.
-- STHELAR cell labels are derived from spatial transcriptomics and retain assignment uncertainty.
-- Selected PEFT nearly recovers FullFT mPQ but retains a gap in cell-type F1.
-- The work is for research use only and is not validated for clinical diagnosis or treatment.
-- The base checkpoint is required but not redistributed; users must comply with its applicable terms and the repository license notices.
+- STHELAR contains few slides per tissue. Complete-slide holdout does not establish patient independence, cross-site generalization, or clinical validity.
+- Spatial-transcriptomics-derived cell labels contain assignment uncertainty and are not interchangeable with morphology-only annotations.
+- Typing-sensitive mPQ and F1 type vary more across reciprocal directions than detection F1 in several tissues.
+- Performance may change with tissue, stain, scanner, magnification, preprocessing, label mapping, or base-checkpoint version.
+- This software and all released adapters are for research use only and are not medical devices or validated for clinical use.
 
 ## Citation
 
-Please cite the STHELAR-Adapt COMPAYL paper when its final bibliographic record is available, together with the underlying works:
+Please cite the STHELAR-Adapt manuscript when its bibliographic record is available, together with the upstream resources used in your work:
 
-```bibtex
-@article{hoerst2024cellvit,
-  title   = {CellViT: Vision Transformers for Precise Cell Segmentation and Classification},
-  author  = {Hörst, Fabian and others},
-  journal = {Medical Image Analysis},
-  volume  = {94},
-  pages   = {103143},
-  year    = {2024},
-  doi     = {10.1016/j.media.2024.103143}
-}
-
-@article{giraudsauveur2026sthelar,
-  title   = {STHELAR, a Multi-Tissue Dataset Linking Spatial Transcriptomics and Histology for Cell Type Annotation},
-  author  = {Giraud-Sauveur, Felicie and others},
-  journal = {Scientific Data},
-  year    = {2026},
-  doi     = {10.1038/s41597-026-06937-6}
-}
-
-@inproceedings{kirillov2023segment,
-  title  = {Segment Anything},
-  author = {Kirillov, Alexander and others},
-  booktitle = {ICCV},
-  year   = {2023}
-}
-```
+- Hörst et al., “CellViT: Vision Transformers for Precise Cell Segmentation and Classification,” *Medical Image Analysis* 94 (2024), 103143. [doi:10.1016/j.media.2024.103143](https://doi.org/10.1016/j.media.2024.103143)
+- Giraud-Sauveur et al., “STHELAR, a Multi-Tissue Dataset Linking Spatial Transcriptomics and Histology for Cell Type Annotation,” *Scientific Data* (2026). [doi:10.1038/s41597-026-06937-6](https://doi.org/10.1038/s41597-026-06937-6)
+- Kirillov et al., “Segment Anything,” ICCV 2023.
+- Chen et al., “Scaling Vision Transformers to Gigapixel Images via Hierarchical Self-Supervised Learning,” CVPR 2022.
 
 ## License and acknowledgements
 
-This repository inherits substantial code and documentation from CellViT. The preserved upstream README is [README_CellViT.md](README_CellViT.md), and the repository carries CellViT's [Apache 2.0 with Commons Clause notice](LICENSE). STHELAR source data remain under CC BY 4.0, which does not automatically govern this code, the adapters, SAM-derived components, or the CellViT base checkpoint. Users must comply with all applicable terms and preserve the CellViT, SAM, and STHELAR citations.
+The distributed code contains components subject to different upstream terms. [`LICENSE`](LICENSE) reproduces the applicable CellViT component terms, including Apache License 2.0 and Commons Clause conditions; [`NOTICE`](NOTICE) records CellViT, Segment Anything, HIPT, STHELAR, and PanNuke provenance and modification statements. STHELAR data and imagery are licensed separately under CC BY 4.0. Neither that data license nor this repository's code terms grant a license to redistribute upstream base checkpoints.
+
+No CellViT/SAM base checkpoint is included. Review the component-specific terms and upstream checkpoint conditions before redistribution or deployment.

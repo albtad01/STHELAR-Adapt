@@ -1,0 +1,121 @@
+{
+  "adapter_path": "release/huggingface/adapters/cellvit-256-x40/klt/slideind/foldb/seed42/adapter_model.safetensors",
+  "adapter_sha256": "aa14ba7c6f4248edd0e109e61250c198b5b0940a5ab6760e2ffb094d78f3d382",
+  "adapter_size_bytes": 1611672,
+  "base_checkpoint": "models/pretrained/CellViT-256-x40.pth",
+  "base_checkpoint_sha256": "ee3986922fc500353db3d7692c566e19e1c694c8f10e47cf49dfd90160fc3b2b",
+  "base_load_info": {
+    "loaded_tensors": 437,
+    "missing_target_keys": [
+      "encoder.head.weight",
+      "encoder.head.bias"
+    ],
+    "skipped_shape": {
+      "encoder.head.bias": {
+        "checkpoint": [
+          19
+        ],
+        "model": [
+          1
+        ]
+      },
+      "encoder.head.weight": {
+        "checkpoint": [
+          19,
+          384
+        ],
+        "model": [
+          1,
+          384
+        ]
+      }
+    }
+  },
+  "base_model": "CellViT-256-x40",
+  "canonical_checkpoint": "run/sthelar40x_klt_5class_slideind_foldB_cellvit256_lora_adaptformer_r8_a8_red16_heads_e10_seed42/log/2026-08-25T114238_sthelar40x_klt_5class_slideind_foldB_cellvit256_lora_adaptformer_r8_a8_red16_heads_e10_seed42/checkpoints/checkpoint_10.pth",
+  "canonical_checkpoint_sha256": "36fd3c7a4ff0a911aa584e39e35462db242335576f6c9bb2683475a9acd2ffbc",
+  "forward_output_comparison": [
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "hv_map",
+      "shape": [
+        1,
+        2,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "nuclei_binary_map",
+      "shape": [
+        1,
+        2,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "nuclei_type_map",
+      "shape": [
+        1,
+        6,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "tissue_types",
+      "shape": [
+        1,
+        1
+      ]
+    }
+  ],
+  "forward_tested": true,
+  "forward_verification": "exact_all_output_tensors",
+  "loaded_state_key_count": 219,
+  "missing_adapter_keys": [],
+  "missing_mutable_buffer_keys": [],
+  "model_load_tested": true,
+  "output_tensor_shapes": {
+    "hv_map": [
+      1,
+      2,
+      256,
+      256
+    ],
+    "nuclei_binary_map": [
+      1,
+      2,
+      256,
+      256
+    ],
+    "nuclei_type_map": [
+      1,
+      6,
+      256,
+      256
+    ],
+    "tissue_types": [
+      1,
+      1
+    ]
+  },
+  "release_dir": "release/huggingface/adapters/cellvit-256-x40/klt/slideind/foldb/seed42",
+  "state_reconstruction": "exact_all_tensors",
+  "state_tensor_count": 547,
+  "status": "ok",
+  "tensor_count": 219,
+  "trainable_parameter_count": 374198,
+  "training_config": "configs/slide_exp/training/training_sthelar40x_klt_5class_slideind_foldB_cellvit256_lora_adaptformer_heads_seed42.yaml",
+  "unexpected_adapter_keys": [],
+  "unexpected_mutable_buffer_keys": [],
+  "verification_timestamp": "2026-08-28T10:08:13.100704+00:00"
+}

@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """Create split/cap sanity tables for STHELAR 5-class paper datasets."""
 
+import os
 from pathlib import Path
 
 import pandas as pd
 import yaml
 
 
-DATASET_ROOT = Path("/gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready")
-OVERVIEW = Path(
-    "/gpfs/workdir/taddeial/workspace/Datasets/STHELAR_40x/patches_overview_sthelar40x.parquet"
-)
+DATASET_ROOT = Path(os.environ.get("DATA_ROOT", "data/cellvit_ready")).expanduser()
+STHELAR_ROOT = Path(os.environ.get("STHELAR_ROOT", "data/STHELAR_40x")).expanduser()
+OVERVIEW = STHELAR_ROOT / "patches_overview_sthelar40x.parquet"
 SPLIT_CHECK_DIR = Path("reports/split_checks")
 OUT_DIR = Path("reports/paper_tables")
 OUT_CSV = OUT_DIR / "split_cap_sanity_table.csv"

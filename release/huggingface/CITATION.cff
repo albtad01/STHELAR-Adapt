@@ -1,7 +1,8 @@
 cff-version: 1.2.0
 message: >-
-  Cite the final STHELAR-Adapt COMPAYL 2026 paper when its bibliographic record
-  is available, together with the CellViT and STHELAR papers listed in README.md.
+  Cite the STHELAR-Adapt manuscript when its bibliographic record is available,
+  together with the CellViT, STHELAR, Segment Anything, HIPT,
+  and PanNuke papers listed in README.md.
 title: STHELAR-Adapt
 type: software
 authors:

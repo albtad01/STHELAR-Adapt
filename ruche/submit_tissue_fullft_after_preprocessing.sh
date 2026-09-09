@@ -41,6 +41,8 @@ if [[ "$GROUP" != "all" && "$GROUP" != "1" && "$GROUP" != "2" && "$GROUP" != "3"
   exit 2
 fi
 
+: "${DATA_ROOT:?Set DATA_ROOT to the prepared CellViT dataset root}"
+
 declare -a COMMANDS=()
 declare -a CONFIGS=()
 declare -a DATASETS=()
@@ -55,21 +57,21 @@ add_job() {
 }
 
 if [[ "$GROUP" == "all" || "$GROUP" == "1" ]]; then
-  add_job 1170941 configs/examples/training_sthelar40x_liver_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_liver_5class_spatial_margin128
-  add_job 1170941 configs/examples/training_sthelar40x_kidney_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_kidney_5class_spatial_margin128
-  add_job 1170941 configs/examples/training_sthelar40x_tonsil_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_tonsil_5class_spatial_margin128
+  add_job 1170941 configs/examples/training_sthelar40x_liver_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml "$DATA_ROOT/sthelar40x_liver_5class_spatial_margin128"
+  add_job 1170941 configs/examples/training_sthelar40x_kidney_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml "$DATA_ROOT/sthelar40x_kidney_5class_spatial_margin128"
+  add_job 1170941 configs/examples/training_sthelar40x_tonsil_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml "$DATA_ROOT/sthelar40x_tonsil_5class_spatial_margin128"
 fi
 
 if [[ "$GROUP" == "all" || "$GROUP" == "2" ]]; then
-  add_job 1170942 configs/examples/training_sthelar40x_breast_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_breast_5class_spatial_margin128
-  add_job 1170942 configs/examples/training_sthelar40x_colon_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_colon_5class_spatial_margin128
-  add_job 1170942 configs/examples/training_sthelar40x_lung_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_lung_5class_spatial_margin128
+  add_job 1170942 configs/examples/training_sthelar40x_breast_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml "$DATA_ROOT/sthelar40x_breast_5class_spatial_margin128"
+  add_job 1170942 configs/examples/training_sthelar40x_colon_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml "$DATA_ROOT/sthelar40x_colon_5class_spatial_margin128"
+  add_job 1170942 configs/examples/training_sthelar40x_lung_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml "$DATA_ROOT/sthelar40x_lung_5class_spatial_margin128"
 fi
 
 if [[ "$GROUP" == "all" || "$GROUP" == "3" ]]; then
-  add_job 1170943 configs/examples/training_sthelar40x_ovary_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_ovary_5class_spatial_margin128
-  add_job 1170943 configs/examples/training_sthelar40x_pancreatic_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_pancreatic_5class_spatial_margin128
-  add_job 1170943 configs/examples/training_sthelar40x_skin_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_skin_5class_spatial_margin128
+  add_job 1170943 configs/examples/training_sthelar40x_ovary_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml "$DATA_ROOT/sthelar40x_ovary_5class_spatial_margin128"
+  add_job 1170943 configs/examples/training_sthelar40x_pancreatic_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml "$DATA_ROOT/sthelar40x_pancreatic_5class_spatial_margin128"
+  add_job 1170943 configs/examples/training_sthelar40x_skin_5class_spatial_margin128_fullft_lr1e-5_e10_seed42_CLEAN.yaml "$DATA_ROOT/sthelar40x_skin_5class_spatial_margin128"
 fi
 
 echo "Checking configs and dataset paths..."

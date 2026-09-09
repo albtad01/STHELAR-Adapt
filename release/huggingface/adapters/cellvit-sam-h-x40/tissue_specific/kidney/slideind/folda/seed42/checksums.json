@@ -1,0 +1,14 @@
+{
+  "exported": {
+    "adapter_config.json": "b7f3a70e915197d11c39d15936a0f6309f5f6d7f10f3e15d60055303b19b3c7f",
+    "adapter_model.safetensors": "c83e2cfd2807b38149c6671b912dc980766dd5b40927dde0bfe56d335aa7c219"
+  },
+  "source": {
+    "path": "samh_kidney_folda_seed42_adapter.pth",
+    "sha256": "66c1541fc31ad0f36edd09570517b521ba1f445370b9f873eccf8d2f0eab55bc"
+  },
+  "source_config": {
+    "path": "training_sthelar40x_kidney_5class_slideind_foldA_lora_adaptformer_heads_seed42.yaml",
+    "sha256": "4a320a19269e60ad21914d5c06b44befae9b016eceb7826b048825bed564e2dd"
+  }
+}

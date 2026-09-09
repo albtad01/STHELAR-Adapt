@@ -1,0 +1,60 @@
+created_at_utc: '2026-08-25T09:56:02.532717+00:00'
+fold: B
+source_dataset_root: ${DATA_ROOT}/sthelar40x_kidney_5class_spatial_margin128
+output_root: ${DATA_ROOT}/sthelar40x_kidney_5class_slideind_foldB_margin128
+split_strategy: slide
+split_axis: x
+spatial_margin: 128
+train_fraction_inside_training_slides: 0.85
+validation_fraction_inside_training_slides: 0.15
+train_slide_ids:
+- kidney_s1
+validation_source_slide_ids:
+- kidney_s1
+test_slide_ids:
+- kidney_s0
+patch_counts:
+  train: 3912
+  valid: 537
+  test: 6723
+counts_per_slide:
+  train:
+    kidney_s1: 3912
+  valid:
+    kidney_s1: 537
+  test:
+    kidney_s0: 6723
+class_counts_per_split:
+  train:
+    Immune: 52988
+    Stromal: 24057
+    Epithelial: 13873
+    Melanocyte: 0
+    Other: 1837
+  valid:
+    Immune: 6285
+    Stromal: 3027
+    Epithelial: 4071
+    Melanocyte: 0
+    Other: 290
+  test:
+    Immune: 20030
+    Stromal: 55988
+    Epithelial: 108430
+    Melanocyte: 0
+    Other: 10054
+reused_packed_payload: true
+reused_files:
+- images.zip
+- labels.zip
+- types.csv
+- dataset_config.yaml
+helper_manifest:
+  train_slides:
+  - kidney_s1
+  valid_slides: []
+  test_slides:
+  - kidney_s0
+  uses_spatial_valid_inside_train_slide: true
+  train_frac_inside_train_slide: 0.85
+  valid_frac_inside_train_slide: 0.15

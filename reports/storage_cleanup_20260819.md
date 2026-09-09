@@ -27,9 +27,9 @@ bytes (23.828 GiB) in the three separately approved cluster directories.
 | `run/sthelar40x_bps_9class_slide_adaptformer_gelu_r16_e3` | 21,326 | 2026-06-10 17:42:21 +00:00 | Exact failed/debug directory identified by the audit. |
 | `run/sthelar40x_tonsil_9class_slide_adaptformer_gelu_red16_lr5e-5_e15_seed42_CLEAN` | 21,471 | 2026-06-10 17:42:19 +00:00 | Exact failed/incomplete directory identified by the audit. |
 | `run/sthelar40x_tonsil_9class_slide_fullft_lr5e-5_e1_seed42_TEST` | 14,420,744 | 2026-06-17 12:59:23 +00:00 | Exact one-epoch TEST/debug directory identified by the audit. |
-| `/gpfs/workdir/taddeial/workspace/Datasets/STHELAR_20x` | 17,840,127,488 | 2026-04-11 17:21:34.280 +02:00 | Confirmed ordinary directory at the exact path, not a symlink; not referenced by the release KLT/40x configs. |
-| `/gpfs/workdir/taddeial/workspace/Datasets/BioImageArchive` | 7,199,483,904 | 2026-04-03 11:28:21.590 +02:00 | Confirmed ordinary directory, not a symlink; no `brain_s0` entry; not referenced by release KLT/40x configs. |
-| `/gpfs/workdir/taddeial/workspace/sthelar-release-smoke-fFJYHw` | 545,911,296 | 2026-07-21 15:53:32.269411 +02:00 | Confirmed ordinary temporary clone at the exact approved path, not a symlink and not referenced by release KLT/40x configs. |
+| `${RUCHE_WORKDIR}/workspace/Datasets/STHELAR_20x` | 17,840,127,488 | 2026-04-11 17:21:34.280 +02:00 | Confirmed ordinary directory at the exact path, not a symlink; not referenced by the release KLT/40x configs. |
+| `${RUCHE_WORKDIR}/workspace/Datasets/BioImageArchive` | 7,199,483,904 | 2026-04-03 11:28:21.590 +02:00 | Confirmed ordinary directory, not a symlink; no `brain_s0` entry; not referenced by release KLT/40x configs. |
+| `${RUCHE_WORKDIR}/workspace/sthelar-release-smoke-<temporary>` | 545,911,296 | 2026-07-21 15:53:32.269411 +02:00 | Confirmed ordinary temporary clone at the exact approved path, not a symlink and not referenced by release KLT/40x configs. |
 
 All nine paths were rechecked after the interrupted session and remain absent.
 
@@ -38,9 +38,9 @@ All nine paths were rechecked after the interrupted session and remain absent.
 The required post-cleanup `du` check reported:
 
 ```text
-310M  /gpfs/workdir/taddeial/workspace/Datasets/CellViT_for_STHELAR_debug
-51G   /gpfs/workdir/taddeial/workspace/Datasets/STHELAR_40x
-56G   /gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready
+310M  ${RUCHE_WORKDIR}/workspace/Datasets/CellViT_for_STHELAR_debug
+51G   ${RUCHE_WORKDIR}/workspace/Datasets/STHELAR_40x
+56G   ${RUCHE_WORKDIR}/workspace/Datasets/cellvit_ready
 ```
 
 `STHELAR_20x` and `BioImageArchive` are absent as intended. The raw brain

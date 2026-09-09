@@ -1,0 +1,62 @@
+created_at_utc: '2026-09-09T10:47:33.275590+00:00'
+fold: all_slides
+source_dataset_root: ${DATA_ROOT}/sthelar40x_colon_5class_spatial_margin128_cap50000
+output_root: ${DATA_ROOT}/sthelar40x_colon_5class_all_slides_margin128_cap50000
+split_strategy: slide
+split_axis: x
+spatial_margin: 128
+train_fraction_inside_training_slides: 0.85
+validation_fraction_inside_training_slides: 0.15
+train_slide_ids:
+- colon_s1
+- colon_s2
+validation_source_slide_ids:
+- colon_s1
+- colon_s2
+test_slide_ids: []
+patch_counts:
+  train: 27125
+  valid: 3242
+  test: 0
+counts_per_slide:
+  train:
+    colon_s1: 16435
+    colon_s2: 10690
+  valid:
+    colon_s1: 2029
+    colon_s2: 1213
+  test: {}
+class_counts_per_split:
+  train:
+    Immune: 369554
+    Stromal: 344451
+    Epithelial: 1031688
+    Melanocyte: 0
+    Other: 28092
+  valid:
+    Immune: 40867
+    Stromal: 60810
+    Epithelial: 88323
+    Melanocyte: 0
+    Other: 3750
+  test:
+    Immune: 0
+    Stromal: 0
+    Epithelial: 0
+    Melanocyte: 0
+    Other: 0
+reused_packed_payload: true
+reused_files:
+- images.zip
+- labels.zip
+- types.csv
+- dataset_config.yaml
+helper_manifest:
+  train_slides:
+  - colon_s1
+  - colon_s2
+  valid_slides: []
+  test_slides: []
+  uses_spatial_valid_inside_train_slide: true
+  train_frac_inside_train_slide: 0.85
+  valid_frac_inside_train_slide: 0.15

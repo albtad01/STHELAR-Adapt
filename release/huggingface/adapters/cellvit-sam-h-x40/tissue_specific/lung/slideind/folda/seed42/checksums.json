@@ -1,0 +1,14 @@
+{
+  "exported": {
+    "adapter_config.json": "77128d2580201338ec5a8162232d28c9ca68ecd113be1b85dcfa07103ebaa12e",
+    "adapter_model.safetensors": "fd2f2ef49e66891764a247859013f649bb683f98b03b1eb38b353eb4efbe519b"
+  },
+  "source": {
+    "path": "samh_lung_folda_seed42_adapter.pth",
+    "sha256": "f59cb4c54c615a189672f55429490986eaf71c75eac8327201190c6adfabff60"
+  },
+  "source_config": {
+    "path": "training_sthelar40x_lung_5class_slideind_foldA_lora_adaptformer_heads_seed42.yaml",
+    "sha256": "b58bfd7182a4d82b93c0d7f3927ec2b60367b7fd7fdf94a708fe7358beb6f8bb"
+  }
+}

@@ -3,13 +3,15 @@
 from __future__ import annotations
 
 import argparse
+import os
 from copy import deepcopy
 from pathlib import Path
 
 import yaml
 
 
-DATASET_PATH = "/gpfs/workdir/taddeial/workspace/Datasets/cellvit_ready/sthelar40x_tonsil_9class_slide"
+DATA_ROOT = os.environ.get("DATA_ROOT", "${DATA_ROOT}")
+DATASET_PATH = f"{DATA_ROOT}/sthelar40x_tonsil_9class_slide"
 PROJECT_NAME = "sthelar40x_tonsil_9class_adapters"
 
 

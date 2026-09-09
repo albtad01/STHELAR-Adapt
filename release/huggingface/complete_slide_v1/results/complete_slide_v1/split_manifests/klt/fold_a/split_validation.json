@@ -1,0 +1,25 @@
+{
+  "all_checks_passed": true,
+  "fold": "A",
+  "patch_identifiers_unique_across_splits": true,
+  "test_slide_ids": [
+    "kidney_s1",
+    "liver_s1",
+    "tonsil_s1"
+  ],
+  "test_slides_exact": true,
+  "train_slide_ids": [
+    "kidney_s0",
+    "liver_s0",
+    "tonsil_s0"
+  ],
+  "train_slides_exact": true,
+  "train_test_disjoint": true,
+  "validation_source_slide_ids": [
+    "kidney_s0",
+    "liver_s0",
+    "tonsil_s0"
+  ],
+  "validation_sources_exact": true,
+  "validation_test_disjoint": true
+}

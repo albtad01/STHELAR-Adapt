@@ -1,0 +1,121 @@
+{
+  "adapter_path": "release/huggingface/adapters/cellvit-sam-h-x40/tissue_specific/tonsil/slideind/folda/seed42/adapter_model.safetensors",
+  "adapter_sha256": "1435c7c9522e5c4a6c602ccfe16ee23198fe6032a0f38227156cabf3c77f8252",
+  "adapter_size_bytes": 31810284,
+  "base_checkpoint": "models/pretrained/CellViT-SAM-H-x40.pth",
+  "base_checkpoint_sha256": "b324c10fddb0f80f5ab03a0459453a4c4848866934daf63435b46749a6b278cf",
+  "base_load_info": {
+    "loaded_tensors": 744,
+    "missing_target_keys": [
+      "classifier_head.weight",
+      "classifier_head.bias"
+    ],
+    "skipped_shape": {
+      "classifier_head.bias": {
+        "checkpoint": [
+          19
+        ],
+        "model": [
+          1
+        ]
+      },
+      "classifier_head.weight": {
+        "checkpoint": [
+          19,
+          256
+        ],
+        "model": [
+          1,
+          256
+        ]
+      }
+    }
+  },
+  "base_model": "CellViT-SAM-H-x40",
+  "canonical_checkpoint": "run/sthelar40x_tonsil_5class_slideind_foldA_lora_adaptformer_r8_a8_red16_heads_e10_seed42/log/2026-08-25T192051_sthelar40x_tonsil_5class_slideind_foldA_lora_adaptformer_r8_a8_red16_heads_e10_seed42/checkpoints/checkpoint_10.pth",
+  "canonical_checkpoint_sha256": "c0399f39a428b5cb0e45217dc153c28b82ed7083ce39ab1024066393b6e27c65",
+  "forward_output_comparison": [
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "hv_map",
+      "shape": [
+        1,
+        2,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "nuclei_binary_map",
+      "shape": [
+        1,
+        2,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "nuclei_type_map",
+      "shape": [
+        1,
+        6,
+        256,
+        256
+      ]
+    },
+    {
+      "exact": true,
+      "max_abs_difference": 0.0,
+      "name": "tissue_types",
+      "shape": [
+        1,
+        1
+      ]
+    }
+  ],
+  "forward_tested": true,
+  "forward_verification": "exact_all_output_tensors",
+  "loaded_state_key_count": 401,
+  "missing_adapter_keys": [],
+  "missing_mutable_buffer_keys": [],
+  "model_load_tested": true,
+  "output_tensor_shapes": {
+    "hv_map": [
+      1,
+      2,
+      256,
+      256
+    ],
+    "nuclei_binary_map": [
+      1,
+      2,
+      256,
+      256
+    ],
+    "nuclei_type_map": [
+      1,
+      6,
+      256,
+      256
+    ],
+    "tissue_types": [
+      1,
+      1
+    ]
+  },
+  "release_dir": "release/huggingface/adapters/cellvit-sam-h-x40/tissue_specific/tonsil/slideind/folda/seed42",
+  "state_reconstruction": "exact_all_tensors",
+  "state_tensor_count": 1034,
+  "status": "ok",
+  "tensor_count": 401,
+  "trainable_parameter_count": 7908779,
+  "training_config": "configs/slide_exp/training/training_sthelar40x_tonsil_5class_slideind_foldA_lora_adaptformer_heads_seed42.yaml",
+  "unexpected_adapter_keys": [],
+  "unexpected_mutable_buffer_keys": [],
+  "verification_timestamp": "2026-08-28T14:13:02.213832+00:00"
+}
